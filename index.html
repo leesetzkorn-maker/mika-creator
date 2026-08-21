@@ -1,345 +1,1046 @@
 <!doctype html>
 <html lang="en">
 <head>
+
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V1V3P6YJE3"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-V1V3P6YJE3');
+</script>
+
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#09090d">
+
 <title>Mika Creator | Content & Video Calls</title>
+
 <style>
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{margin:0;font-family:Arial,sans-serif;background:#09090d;color:#fff;overflow-x:hidden}
 img{max-width:100%;display:block;-webkit-user-drag:none;user-select:none}
-.hero{min-height:680px;min-height:100svh;position:relative;display:flex;align-items:center;justify-content:center;text-align:center;overflow:hidden;background:#09090d}
-.hero-photos{position:absolute;inset:0;display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
-.hero-photos img{width:100%;height:100%;object-fit:cover}
-.shade{position:absolute;inset:0;background:linear-gradient(180deg,#0003,#0009)}
-.hero-content{position:relative;z-index:2;width:100%;max-width:800px;padding:28px 20px}
-.eyebrow{letter-spacing:3px;font-size:13px;color:#ff79ba}
-.hero h1{font-size:clamp(52px,10vw,86px);margin:12px 0}
+
+.hero{
+min-height:100svh;
+position:relative;
+display:flex;
+align-items:center;
+justify-content:center;
+text-align:center;
+overflow:hidden;
+background:#09090d
+}
+
+.hero-photos{
+position:absolute;
+inset:0;
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:5px
+}
+
+.hero-photos img{
+width:100%;
+height:100%;
+object-fit:cover
+}
+
+.shade{
+position:absolute;
+inset:0;
+background:linear-gradient(180deg,#0003,#0009)
+}
+
+.hero-content{
+position:relative;
+z-index:2;
+width:100%;
+max-width:800px;
+padding:28px 20px
+}
+
+.eyebrow{
+letter-spacing:3px;
+font-size:13px;
+color:#ff79ba
+}
+
+.hero h1{
+font-size:clamp(52px,10vw,86px);
+margin:12px 0
+}
+
 .hero h1 span{color:#ff4fa3}
-.hero p{font-size:18px;line-height:1.6}
-.btn{display:inline-block;padding:14px 24px;border-radius:12px;margin:5px;background:#ff4fa3;color:#fff;text-decoration:none;font-weight:bold;border:0;cursor:pointer;min-height:48px}
-.secondary{background:#15151c;border:1px solid #555}
-.container{width:min(92%,1100px);margin:auto}
+
+.hero p{
+font-size:18px;
+line-height:1.6
+}
+
+.btn{
+display:inline-block;
+padding:14px 24px;
+border-radius:12px;
+margin:5px;
+background:#ff4fa3;
+color:#fff;
+text-decoration:none;
+font-weight:bold;
+border:0;
+cursor:pointer;
+min-height:48px
+}
+
+.secondary{
+background:#15151c;
+border:1px solid #555
+}
+
+.container{
+width:min(92%,1100px);
+margin:auto
+}
+
 section{padding:70px 0}
 .dark{background:#0f0f15}
-.title{text-align:center;margin-bottom:35px}
-.title small{color:#ff4fa3;text-transform:uppercase;letter-spacing:2px}
-.bio{max-width:820px;margin:auto;text-align:center;font-size:18px;line-height:1.8;color:#ddd}
-.whygrid{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}
+
+.title{
+text-align:center;
+margin-bottom:35px
+}
+
+.title small{
+color:#ff4fa3;
+text-transform:uppercase;
+letter-spacing:2px
+}
+
+.bio{
+max-width:820px;
+margin:auto;
+text-align:center;
+font-size:18px;
+line-height:1.8;
+color:#ddd
+}
+
+.whygrid{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:15px
+}
+
 .why{text-align:center}
-.card{background:#17171f;border:1px solid #292933;border-radius:18px;padding:28px}
-.trustedbox{max-width:900px;margin:auto;padding:32px;border:1px solid #34343e;border-radius:24px;background:#17171f}
-.trustgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.featured{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-.featured img{width:100%;height:330px;object-fit:cover;border-radius:18px;border:1px solid #292933}
-.price-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
-.price-card{position:relative;background:#17171f;border:1px solid #292933;border-radius:20px;padding:28px;text-align:center}
-.price-card.featured-price{border-color:#ff4fa3;box-shadow:0 0 30px #ff4fa322}
-.price{font-size:34px;font-weight:800;margin:14px 0;color:#ff79ba}
-.price-card ul{list-style:none;padding:0;line-height:1.9;color:#ddd}
-.price-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:#ff4fa3;padding:6px 12px;border-radius:20px;font-size:12px;font-weight:bold}
-.hotel-gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:28px}
-.gallery-count{text-align:center;color:#aaa;margin-top:-18px;margin-bottom:22px}
-.hotel-photo-wrap{position:relative;overflow:hidden;border-radius:16px}
-.hotel-photo{width:100%;height:300px;object-fit:cover;border-radius:16px;border:1px solid #292933;display:block}
-.hotel-photo-wrap:after{content:'© Mika Creator • All Rights Reserved';position:absolute;left:12px;bottom:10px;padding:5px 8px;border-radius:7px;background:#0009;color:#fff;font-size:11px;letter-spacing:.3px;pointer-events:none}
-.contactgrid{display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:850px;margin:auto}
-.contact{text-align:center;background:#17171f;border:1px solid #292933;border-radius:18px;padding:30px}
-.float-contact{position:fixed;left:50%;bottom:max(16px,env(safe-area-inset-bottom));transform:translateX(-50%);z-index:1000;display:flex;gap:8px;padding:8px;background:#111118e8;border:1px solid #333;border-radius:18px;backdrop-filter:blur(10px);box-shadow:0 8px 30px #0008}
-.float-contact a{padding:11px 17px;border-radius:11px;text-decoration:none;color:#fff;font-weight:bold;font-size:14px}
+
+.card{
+background:#17171f;
+border:1px solid #292933;
+border-radius:18px;
+padding:28px
+}
+
+.trustedbox{
+max-width:900px;
+margin:auto;
+padding:32px;
+border:1px solid #34343e;
+border-radius:24px;
+background:#17171f
+}
+
+.trustgrid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px
+}
+
+.featured{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:18px
+}
+
+.featured img{
+width:100%;
+height:330px;
+object-fit:cover;
+border-radius:18px;
+border:1px solid #292933
+}
+
+.price-grid{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:18px
+}
+
+.price-card{
+position:relative;
+background:#17171f;
+border:1px solid #292933;
+border-radius:20px;
+padding:28px;
+text-align:center
+}
+
+.price-card.featured-price{
+border-color:#ff4fa3;
+box-shadow:0 0 30px #ff4fa322
+}
+
+.price{
+font-size:34px;
+font-weight:800;
+margin:14px 0;
+color:#ff79ba
+}
+
+.price-card ul{
+list-style:none;
+padding:0;
+line-height:1.9;
+color:#ddd
+}
+
+.price-badge{
+position:absolute;
+top:-12px;
+left:50%;
+transform:translateX(-50%);
+background:#ff4fa3;
+padding:6px 12px;
+border-radius:20px;
+font-size:12px;
+font-weight:bold
+}
+
+.hotel-gallery{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:14px;
+margin-top:28px
+}
+
+.gallery-count{
+text-align:center;
+color:#aaa;
+margin-top:-18px;
+margin-bottom:22px
+}
+
+.hotel-photo-wrap{
+position:relative;
+overflow:hidden;
+border-radius:16px
+}
+
+.hotel-photo{
+width:100%;
+height:300px;
+object-fit:cover;
+border-radius:16px;
+border:1px solid #292933;
+display:block
+}
+
+.hotel-photo-wrap:after{
+content:'© Mika Creator • All Rights Reserved';
+position:absolute;
+left:12px;
+bottom:10px;
+padding:5px 8px;
+border-radius:7px;
+background:#0009;
+color:#fff;
+font-size:11px;
+letter-spacing:.3px;
+pointer-events:none
+}
+
+.contactgrid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:18px;
+max-width:850px;
+margin:auto
+}
+
+.contact{
+text-align:center;
+background:#17171f;
+border:1px solid #292933;
+border-radius:18px;
+padding:30px
+}
+
+.float-contact{
+position:fixed;
+left:50%;
+bottom:max(16px,env(safe-area-inset-bottom));
+transform:translateX(-50%);
+z-index:1000;
+display:flex;
+gap:8px;
+padding:8px;
+background:#111118e8;
+border:1px solid #333;
+border-radius:18px;
+backdrop-filter:blur(10px);
+box-shadow:0 8px 30px #0008
+}
+
+.float-contact a{
+padding:11px 17px;
+border-radius:11px;
+text-decoration:none;
+color:#fff;
+font-weight:bold;
+font-size:14px
+}
+
 .wa{background:#20a85a}
 .tg{background:#238bd2}
-.modal{position:fixed;inset:0;background:#000b;display:none;align-items:center;justify-content:center;padding:16px;z-index:5000}
+
+.modal{
+position:fixed;
+inset:0;
+background:#000b;
+display:none;
+align-items:center;
+justify-content:center;
+padding:16px;
+z-index:5000
+}
+
 .modal.open{display:flex}
-.modal-box{width:min(460px,100%);max-height:90svh;overflow:auto;background:#17171f;border:1px solid #3a3a46;border-radius:24px;padding:30px;text-align:center;box-shadow:0 20px 60px #000b}
-.modal-box h3{margin-top:0;font-size:24px}
-.service-name{color:#ff79ba;font-weight:bold;font-size:18px}
-.modal-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:22px}
-.modal-actions a{padding:15px;border-radius:13px;text-decoration:none;color:#fff;font-weight:bold}
+
+.modal-box{
+width:min(460px,100%);
+max-height:90svh;
+overflow:auto;
+background:#17171f;
+border:1px solid #3a3a46;
+border-radius:24px;
+padding:30px;
+text-align:center;
+box-shadow:0 20px 60px #000b
+}
+
+.modal-box h3{
+margin-top:0;
+font-size:24px
+}
+
+.service-name{
+color:#ff79ba;
+font-weight:bold;
+font-size:18px
+}
+
+.modal-actions{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:12px;
+margin-top:22px
+}
+
+.modal-actions a{
+padding:15px;
+border-radius:13px;
+text-decoration:none;
+color:#fff;
+font-weight:bold
+}
+
 .modal-wa{background:#20a85a}
 .modal-tg{background:#238bd2}
-.close-modal{background:transparent;border:1px solid #444;color:#bbb;padding:10px 18px;border-radius:10px;margin-top:14px;cursor:pointer}
+
+.close-modal{
+background:transparent;
+border:1px solid #444;
+color:#bbb;
+padding:10px 18px;
+border-radius:10px;
+margin-top:14px;
+cursor:pointer
+}
+
 @media(max-width:800px){
-.hero{min-height:100svh}
-.hero-photos{grid-template-columns:repeat(3,1fr);gap:2px}
+
+.hero-photos{
+grid-template-columns:repeat(3,1fr);
+gap:2px
+}
+
 .hero-content{padding:24px 16px}
-.hero h1{font-size:clamp(48px,16vw,70px)}
+
+.hero h1{
+font-size:clamp(48px,16vw,70px)
+}
+
 .hero p{font-size:16px}
-.whygrid,.hotel-gallery,.featured{grid-template-columns:1fr}
+
+.whygrid,
+.hotel-gallery,
+.featured{
+grid-template-columns:1fr
+}
+
 .trustgrid{grid-template-columns:1fr}
-.price-grid{grid-template-columns:1fr 1fr}
+
+.price-grid{
+grid-template-columns:1fr 1fr
+}
+
 .hotel-photo{height:360px}
+
 .featured img{height:430px}
+
 section{padding:55px 0}
-.float-contact{width:calc(100% - 24px);justify-content:center}
-.float-contact a{flex:1;text-align:center}
+
+.float-contact{
+width:calc(100% - 24px);
+justify-content:center
+}
+
+.float-contact a{
+flex:1;
+text-align:center
+}
+
 .btn{padding:13px 18px}
 }
+
 @media(max-width:560px){
-.hero{min-height:100svh}
-.hero-photos{grid-template-columns:1fr 1fr 1fr}
-.hero-photos img:nth-child(3){display:none}
+
+.hero-photos{
+grid-template-columns:1fr 1fr 1fr
+}
+
+.hero-photos img:nth-child(3){
+display:none
+}
+
 .hero-content{padding:20px 14px}
-.eyebrow{font-size:11px;letter-spacing:2px}
-.hero h1{margin:10px 0;font-size:56px}
-.hero p{font-size:15px;line-height:1.5;margin:10px auto 18px}
-.hero-content .btn{display:block;width:100%;margin:7px 0}
+
+.eyebrow{
+font-size:11px;
+letter-spacing:2px
+}
+
+.hero h1{
+margin:10px 0;
+font-size:56px
+}
+
+.hero p{
+font-size:15px;
+line-height:1.5;
+margin:10px auto 18px
+}
+
+.hero-content .btn{
+display:block;
+width:100%;
+margin:7px 0
+}
+
 .price-grid{grid-template-columns:1fr}
+
 .price-card{padding:24px 20px}
+
 .featured img{height:380px}
+
 .hotel-photo{height:330px}
+
 .contactgrid{grid-template-columns:1fr}
+
 .contact{padding:24px 18px}
+
 .trustedbox{padding:24px 18px}
-.bio{font-size:16px;line-height:1.7}
+
+.bio{
+font-size:16px;
+line-height:1.7
+}
+
 .title h2{font-size:27px}
-.float-contact{bottom:max(10px,env(safe-area-inset-bottom));padding:6px;gap:6px}
-.float-contact a{font-size:13px;padding:10px 8px}
+
+.float-contact{
+bottom:max(10px,env(safe-area-inset-bottom));
+padding:6px;
+gap:6px
+}
+
+.float-contact a{
+font-size:13px;
+padding:10px 8px
+}
+
 .modal-actions{grid-template-columns:1fr}
+
 .modal-box{padding:24px 18px}
 }
+
 @media(max-width:380px){
+
 .hero h1{font-size:50px}
+
 .float-contact a{font-size:12px}
+
 .container{width:94%}
 }
 </style>
 </head>
+
 <body>
+
 <section class="hero">
+
 <div class="hero-photos">
+
 <img src="WhatsApp%20Image%202026-08-20%20at%2013.11.48.jpeg" alt="Mika lifestyle photo 1">
+
 <img src="WhatsApp%20Image%202026-08-20%20at%2014.23.11%20%281%29.jpeg" alt="Mika lifestyle photo 2">
+
 <img src="WhatsApp%20Image%202026-08-20%20at%2014.23.11.jpeg" alt="Mika lifestyle photo 3">
+
 </div>
+
 <div class="shade"></div>
+
 <div class="hero-content">
+
 <div class="eyebrow">✨ MIKA • CREATOR • VIDEO CALLS</div>
+
 <h1>Meet <span>Mika.</span></h1>
-<p>Creative content, lifestyle photography and personal video calls — all in one place.</p>
+
+<p>
+Creative content, lifestyle photography and personal video calls — all in one place.
+</p>
+
 <a class="btn" href="#contact">💬 Contact Mika</a>
+
 <a class="btn secondary" href="#gallery">Explore Gallery</a>
+
 </div>
 </section>
+
 
 <section>
+
 <div class="container">
+
 <div class="title">
+
 <small>A little about Mika</small>
+
 <h2>Meet Mika 👋</h2>
+
 </div>
+
 <p class="bio">
-Welcome to Mika’s world… where the waterpark meets the mountains and the farm turns into something much more intimate.<br><br>
-It starts with a slow walk through nature — warm sun, open trails, and the sound of water nearby. The higher we go, the hotter it gets. Clothes slowly come off. By the time we reach the rocks overlooking the valley, the teasing has already begun.<br><br>
-What follows is pure girl-on-girl chemistry… soft touches that turn into something deeper, bodies pressed together in the open air, and those close-up moments that leave nothing to the imagination. You’ll also find the slower, more intense videos — including the ones where we take our time on our knees, looking straight into the camera.<br><br>
-Every video is filmed in real outdoor locations: waterpark, mountain trails, and quiet farm spots. Natural light, real settings, and that raw, unfiltered energy.<br><br>
-This is not soft, polished studio content.<br>
-This is Mika in nature — playful, intimate, and unapologetically sensual.<br><br>
-Browse the gallery… then message me if you want the private videos or a personal video call.
+
+Welcome to Mika’s world — a place for creative content, lifestyle photography and memorable moments.
+
+<br><br>
+
+Mika enjoys creating content in real locations, from beautiful outdoor spaces and travel destinations to relaxed lifestyle settings.
+
+<br><br>
+
+Every project is created with attention to detail, natural surroundings and a personal touch.
+
+<br><br>
+
+Explore the gallery, discover the different content options and get in touch directly for more information.
+
+<br><br>
+
+Whether you're interested in creative content or a personal video call, Mika is here to connect with you.
+
 </p>
+
 </div>
+
 </section>
+
 
 <section class="dark">
+
 <div class="container">
+
 <div class="title">
+
 <small>Featured</small>
+
 <h2>✨ Featured Moments</h2>
+
 </div>
+
 <div class="featured">
-<img src="gallery/IMG_20260604_151045.jpg" alt="Featured hotel lifestyle photo" loading="lazy">
-<img src="gallery/IMG_20260604_151223.jpg" alt="Featured hotel lifestyle photo" loading="lazy">
-<img src="gallery/IMG_20260605_184346.jpg" alt="Featured hotel lifestyle photo" loading="lazy">
+
+<img src="gallery/IMG_20260604_151045.jpg" alt="Featured Mika lifestyle photo" loading="lazy">
+
+<img src="gallery/IMG_20260604_151223.jpg" alt="Featured Mika lifestyle photo" loading="lazy">
+
+<img src="gallery/IMG_20260605_184346.jpg" alt="Featured Mika lifestyle photo" loading="lazy">
+
 </div>
+
 </div>
+
 </section>
 
+
 <section id="pricing">
+
 <div class="container">
+
 <div class="title">
+
 <small>Simple & clear</small>
+
 <h2>💎 Services & Pricing</h2>
+
 <p>Choose an option below, then contact Mika directly for details.</p>
+
 </div>
+
 <div class="price-grid">
+
 <div class="price-card">
+
 <h3>Content 1</h3>
+
 <div class="price">R400</div>
+
 <ul>
 <li>2 videos</li>
 <li>5 photos</li>
 </ul>
-<button class="btn" onclick="openEnquiry('Content 1 — R400')">Enquire</button>
+
+<button class="btn" onclick="openEnquiry('Content 1 — R400')">
+Enquire
+</button>
+
 </div>
+
+
 <div class="price-card">
+
 <h3>Content 2</h3>
+
 <div class="price">R550</div>
+
 <ul>
 <li>5 videos</li>
 <li>10 photos</li>
 </ul>
-<button class="btn" onclick="openEnquiry('Content 2 — R550')">Enquire</button>
+
+<button class="btn" onclick="openEnquiry('Content 2 — R550')">
+Enquire
+</button>
+
 </div>
+
+
 <div class="price-card featured-price">
+
 <div class="price-badge">POPULAR</div>
+
 <h3>Content 3</h3>
+
 <div class="price">R700</div>
+
 <ul>
 <li>7 videos</li>
 <li>15 photos</li>
 </ul>
-<button class="btn" onclick="openEnquiry('Content 3 — R700')">Enquire</button>
+
+<button class="btn" onclick="openEnquiry('Content 3 — R700')">
+Enquire
+</button>
+
 </div>
+
+
 <div class="price-card">
+
 <h3>Content 4</h3>
+
 <div class="price">R1,000</div>
+
 <ul>
 <li>10 videos</li>
 <li>20 photos</li>
 </ul>
-<button class="btn" onclick="openEnquiry('Content 4 — R1,000')">Enquire</button>
+
+<button class="btn" onclick="openEnquiry('Content 4 — R1,000')">
+Enquire
+</button>
+
 </div>
+
 </div>
+
+
 <div style="max-width:520px;margin:22px auto 0;text-align:center;background:#17171f;border:1px solid #292933;border-radius:20px;padding:24px">
+
 <h3>📹 Video Calls</h3>
+
 <div class="price">R450</div>
+
 <p>10–15 minute video call</p>
-<button class="btn" onclick="openEnquiry('Video Call — R450')">Enquire</button>
+
+<button class="btn" onclick="openEnquiry('Video Call — R450')">
+Enquire
+</button>
+
 </div>
+
 </div>
+
 </section>
+
 
 <section class="dark">
+
 <div class="container">
+
 <div class="title">
+
 <small>Why Mika?</small>
+
 <h2>Simple. Direct. Personal.</h2>
+
 </div>
+
 <div class="whygrid">
-<div class="card why">💬<h3>Direct Contact</h3><p>Official contact channels.</p></div>
-<div class="card why">✨<h3>Creative Ideas</h3><p>Different concepts and locations.</p></div>
-<div class="card why">🎯<h3>Custom Projects</h3><p>Discuss ideas beforehand.</p></div>
-<div class="card why">📱<h3>Mobile Friendly</h3><p>Easy to browse.</p></div>
+
+<div class="card why">
+💬
+<h3>Direct Contact</h3>
+<p>Official contact channels.</p>
 </div>
+
+<div class="card why">
+✨
+<h3>Creative Ideas</h3>
+<p>Different concepts and locations.</p>
 </div>
+
+<div class="card why">
+🎯
+<h3>Custom Projects</h3>
+<p>Discuss ideas beforehand.</p>
+</div>
+
+<div class="card why">
+📱
+<h3>Mobile Friendly</h3>
+<p>Easy to browse.</p>
+</div>
+
+</div>
+
+</div>
+
 </section>
 
+
 <section>
+
 <div class="container">
+
 <div class="title">
+
 <small>Confidence before contact</small>
+
 <h2>🔐 Trusted & Transparent</h2>
+
 </div>
+
 <div class="trustedbox">
+
 <h3>Clear communication comes first.</h3>
-<p>Contact Mika directly, understand available options and discuss custom requests before anything is agreed.</p>
+
+<p>
+Contact Mika directly, understand available options and discuss custom requests before anything is agreed.
+</p>
+
 <div class="trustgrid">
+
 <div>✓ Direct communication</div>
 <div>✓ Clear content options</div>
 <div>✓ Custom requests discussed beforehand</div>
 <div>✓ Official WhatsApp & Telegram contact</div>
 <div>✓ No hidden booking fees</div>
 <div>✓ Verify payment details directly</div>
+
 </div>
-<p><strong>Safety first:</strong> Always verify the recipient name and payment details directly with Mika before sending money.</p>
+
+<p>
+<strong>Safety first:</strong>
+Always verify the recipient name and payment details directly with Mika before sending money.
+</p>
+
 </div>
+
 </div>
+
 </section>
+
 
 <section class="dark" id="gallery">
+
 <div class="container">
+
 <div class="title">
+
 <small>Explore the vibe</small>
+
 <h2>📸 Hotels & Travel</h2>
-<p class="gallery-count">21 Photos • © Mika Creator — All Rights Reserved</p>
+
+<p class="gallery-count">
+21 Photos • © Mika Creator — All Rights Reserved
+</p>
+
 </div>
+
 <div class="hotel-gallery" id="hotelGallery"></div>
+
 </div>
+
 </section>
+
 
 <section id="contact">
+
 <div class="container">
+
 <div class="title">
+
 <small>Let's connect</small>
+
 <h2>Contact Mika</h2>
+
 </div>
+
 <div class="contactgrid">
+
 <div class="contact">
+
 <h3>💬 WhatsApp</h3>
+
 <p>Message Mika directly.</p>
-<a class="btn" href="https://wa.me/27682427999" target="_blank">WhatsApp Mika</a>
+
+<a class="btn" href="https://wa.me/27682427999" target="_blank">
+WhatsApp Mika
+</a>
+
 </div>
+
+
 <div class="contact">
+
 <h3>✈️ Telegram</h3>
+
 <p>Connect with Mika.</p>
-<a class="btn" href="https://t.me/+270704782029" target="_blank">Telegram Mika</a>
+
+<a class="btn" href="https://t.me/+270704782029" target="_blank">
+Telegram Mika
+</a>
+
 </div>
+
 </div>
+
 </div>
+
 </section>
 
-<footer style="text-align:center;padding:30px;color:#888">© 2026 Mika Creator • All Rights Reserved</footer>
+
+<footer style="text-align:center;padding:30px;color:#888">
+
+© 2026 Mika Creator • All Rights Reserved
+
+</footer>
+
 
 <div class="float-contact">
-<a class="wa" href="https://wa.me/27682427999" target="_blank">💬 WhatsApp</a>
-<a class="tg" href="https://t.me/+270704782029" target="_blank">✈️ Telegram</a>
+
+<a class="wa" href="https://wa.me/27682427999" target="_blank">
+💬 WhatsApp
+</a>
+
+<a class="tg" href="https://t.me/+270704782029" target="_blank">
+✈️ Telegram
+</a>
+
 </div>
+
 
 <div class="modal" id="enquiryModal" onclick="if(event.target===this)closeEnquiry()">
+
 <div class="modal-box">
+
 <h3>Choose how to enquire</h3>
+
 <p>You selected:</p>
+
 <div class="service-name" id="selectedService"></div>
-<p style="color:#aaa">Choose WhatsApp or Telegram. A message will be prepared for you.</p>
+
+<p style="color:#aaa">
+Choose WhatsApp or Telegram. A message will be prepared for you.
+</p>
+
 <div class="modal-actions">
-<a id="waEnquiry" class="modal-wa" target="_blank">💬 WhatsApp</a>
-<a id="tgEnquiry" class="modal-tg" target="_blank">✈️ Telegram</a>
-</div>
-<button class="close-modal" onclick="closeEnquiry()">Cancel</button>
-</div>
+
+<a id="waEnquiry" class="modal-wa" target="_blank">
+💬 WhatsApp
+</a>
+
+<a id="tgEnquiry" class="modal-tg" target="_blank">
+✈️ Telegram
+</a>
+
 </div>
 
+<button class="close-modal" onclick="closeEnquiry()">
+Cancel
+</button>
+
+</div>
+
+</div>
+
+
 <script>
-const hotelPhotos=['IMG_20260521_152726.jpg','IMG_20260521_152935.jpg','IMG_20260521_152938.jpg','IMG_20260521_153005.jpg','IMG_20260521_153241.jpg','IMG_20260521_153246.jpg','IMG_20260521_153301.jpg','IMG_20260604_151045.jpg','IMG_20260604_151110.jpg','IMG_20260604_151145.jpg','IMG_20260604_151154.jpg','IMG_20260604_151223.jpg','IMG_20260604_151407.jpg','IMG_20260604_151536.jpg','IMG_20260604_151707.jpg','IMG_20260605_184346.jpg','IMG_20260605_184622.jpg','IMG_20260605_184905.jpg'];
-const newPhotos=['WhatsApp Image 2026-08-20 at 13.11.48.jpeg','WhatsApp Image 2026-08-20 at 14.23.11 (1).jpeg','WhatsApp Image 2026-08-20 at 14.23.11.jpeg'];
+
+const hotelPhotos=[
+'IMG_20260521_152726.jpg',
+'IMG_20260521_152935.jpg',
+'IMG_20260521_152938.jpg',
+'IMG_20260521_153005.jpg',
+'IMG_20260521_153241.jpg',
+'IMG_20260521_153246.jpg',
+'IMG_20260521_153301.jpg',
+'IMG_20260604_151045.jpg',
+'IMG_20260604_151110.jpg',
+'IMG_20260604_151145.jpg',
+'IMG_20260604_151154.jpg',
+'IMG_20260604_151223.jpg',
+'IMG_20260604_151407.jpg',
+'IMG_20260604_151536.jpg',
+'IMG_20260604_151707.jpg',
+'IMG_20260605_184346.jpg',
+'IMG_20260605_184622.jpg',
+'IMG_20260605_184905.jpg'
+];
+
+const newPhotos=[
+'WhatsApp Image 2026-08-20 at 13.11.48.jpeg',
+'WhatsApp Image 2026-08-20 at 14.23.11 (1).jpeg',
+'WhatsApp Image 2026-08-20 at 14.23.11.jpeg'
+];
+
 const allPhotos=[...hotelPhotos,...newPhotos];
+
 const hg=document.getElementById('hotelGallery');
+
 allPhotos.forEach((name,n)=>{
+
 const wrap=document.createElement('div');
+
 wrap.className='hotel-photo-wrap';
+
 const img=document.createElement('img');
+
 img.className='hotel-photo';
+
 img.loading='lazy';
+
 img.alt='Mika gallery photo '+(n+1);
-img.src=hotelPhotos.includes(name)?'gallery/'+encodeURIComponent(name):encodeURIComponent(name);
+
+img.src=hotelPhotos.includes(name)
+?'gallery/'+encodeURIComponent(name)
+:encodeURIComponent(name);
+
 wrap.appendChild(img);
-hg.appendChild(wrap)
+
+hg.appendChild(wrap);
+
 });
+
+
 function openEnquiry(service){
-const message=`Hi Mika 👋 I would like to enquire about ${service}. Please send me the details.`;
+
+const message=
+`Hi Mika 👋 I would like to enquire about ${service}. Please send me the details.`;
+
 document.getElementById('selectedService').textContent=service;
-document.getElementById('waEnquiry').href='https://wa.me/27682427999?text='+encodeURIComponent(message);
-document.getElementById('tgEnquiry').href='https://t.me/+270704782029?text='+encodeURIComponent(message);
-document.getElementById('enquiryModal').classList.add('open')
+
+document.getElementById('waEnquiry').href=
+'https://wa.me/27682427999?text='+encodeURIComponent(message);
+
+document.getElementById('tgEnquiry').href=
+'https://t.me/+270704782029?text='+encodeURIComponent(message);
+
+document.getElementById('enquiryModal').classList.add('open');
+
 }
+
+
 function closeEnquiry(){
-document.getElementById('enquiryModal').classList.remove('open')
+
+document.getElementById('enquiryModal').classList.remove('open');
+
 }
-document.addEventListener('contextmenu',e=>{if(e.target.closest('.hotel-photo-wrap')||e.target.tagName==='IMG')e.preventDefault()});
-document.addEventListener('dragstart',e=>{if(e.target.tagName==='IMG')e.preventDefault()});
-document.addEventListener('selectstart',e=>{if(e.target.tagName==='IMG')e.preventDefault()});
-document.addEventListener('touchstart',e=>{if(e.target.closest('.hotel-photo-wrap')){e.target.style.webkitTouchCallout='none'}},{passive:true});
+
+
+document.addEventListener('contextmenu',e=>{
+
+if(
+e.target.closest('.hotel-photo-wrap') ||
+e.target.tagName==='IMG'
+){
+e.preventDefault();
+}
+
+});
+
+
+document.addEventListener('dragstart',e=>{
+
+if(e.target.tagName==='IMG'){
+e.preventDefault();
+}
+
+});
+
+
+document.addEventListener('selectstart',e=>{
+
+if(e.target.tagName==='IMG'){
+e.preventDefault();
+}
+
+});
+
+
+document.addEventListener('touchstart',e=>{
+
+if(e.target.closest('.hotel-photo-wrap')){
+e.target.style.webkitTouchCallout='none';
+}
+
+},{passive:true});
+
 </script>
+
 </body>
 </html>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-V1V3P6YJE3"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-V1V3P6YJE3');
-</script>
