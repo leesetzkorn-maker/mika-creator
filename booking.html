@@ -4,77 +4,47 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#09090d">
-<title>Book an Appointment | Mika Creator</title>
+<title>Booking Request | Mika Creator</title>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#09090d;color:#fff;min-height:100vh}.wrap{width:min(92%,720px);margin:auto;padding:30px 0 60px}.back{color:#ff79ba;text-decoration:none;font-weight:bold}.box{margin-top:25px;background:#17171f;border:1px solid #292933;border-radius:24px;padding:28px;box-shadow:0 20px 60px #0008}h1{font-size:clamp(34px,8vw,54px);margin:12px 0}.sub{color:#bbb;line-height:1.6}.notice{background:#21151d;border:1px solid #6b304d;border-radius:15px;padding:16px;margin:22px 0;line-height:1.5}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}label{display:block;font-weight:bold;margin:14px 0 7px}input,select,textarea{width:100%;padding:14px;border-radius:11px;border:1px solid #444;background:#0f0f15;color:#fff;font-size:16px;font-family:inherit}textarea{min-height:110px;resize:vertical}button{width:100%;margin-top:22px;padding:15px;border:0;border-radius:12px;background:#ff4fa3;color:#fff;font-size:16px;font-weight:bold;cursor:pointer}.small{font-size:13px;color:#999;margin-top:15px;text-align:center}.success{display:none;margin-top:18px;padding:14px;border-radius:12px;background:#15231b;border:1px solid #285c3b;color:#d9ffe7;line-height:1.5}@media(max-width:560px){.grid{grid-template-columns:1fr}.box{padding:22px 18px}}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#09090d;color:#fff;min-height:100vh}.wrap{width:min(92%,760px);margin:auto;padding:30px 0 60px}.back{color:#ff79ba;text-decoration:none;font-weight:bold}.box{margin-top:25px;background:#17171f;border:1px solid #292933;border-radius:24px;padding:28px;box-shadow:0 20px 60px #0008}h1{font-size:clamp(34px,8vw,54px);margin:12px 0}.sub{color:#bbb;line-height:1.6}.notice{background:#21151d;border:1px solid #6b304d;border-radius:15px;padding:16px;margin:22px 0;line-height:1.5}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}label{display:block;font-weight:bold;margin:14px 0 7px}input,select,textarea{width:100%;padding:14px;border-radius:11px;border:1px solid #444;background:#0f0f15;color:#fff;font-size:16px;font-family:inherit}textarea{min-height:110px;resize:vertical}button{width:100%;margin-top:22px;padding:15px;border:0;border-radius:12px;background:#ff4fa3;color:#fff;font-size:16px;font-weight:bold;cursor:pointer}.contact{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.contact a{flex:1;min-width:180px;text-align:center;padding:13px;border-radius:11px;text-decoration:none;color:#fff;font-weight:bold}.wa{background:#20a85a}.tg{background:#238bd2}.small{font-size:13px;color:#999;margin-top:15px;text-align:center}.success{display:none;margin-top:18px;padding:14px;border-radius:12px;background:#15231b;border:1px solid #285c3b;color:#d9ffe7;line-height:1.5}@media(max-width:560px){.grid{grid-template-columns:1fr}.box{padding:22px 18px}}
 </style>
 </head>
 <body>
 <div class="wrap">
 <a class="back" href="index.html">← Back to Mika Creator</a>
 <div class="box">
-<div style="color:#ff79ba;letter-spacing:2px;font-size:12px">APPOINTMENTS</div>
-<h1>Book an Appointment</h1>
-<p class="sub">Send an appointment request and Mika will confirm the date, time and location with you directly.</p>
-<div class="notice"><strong>⏱️ Please request your appointment at least 30 minutes in advance.</strong><br>Submitting this form does not automatically confirm the appointment. Confirmation is made directly after the request is received.</div>
+<div style="color:#ff79ba;letter-spacing:2px;font-size:12px">BOOKING REQUEST</div>
+<h1>Let's connect.</h1>
+<p class="sub">Send your details by email and Mika will review the request and confirm availability directly.</p>
+<div class="notice"><strong>📅 This is a booking request, not an automatic confirmation.</strong><br>Your requested date and time remain subject to availability and confirmation.</div>
 <form id="bookingForm">
-<label for="service">What would you like to discuss?</label>
-<select id="service" required>
-<option value="">Choose an option</option>
-<option>Creative project</option>
-<option>Lifestyle photography</option>
-<option>Video call</option>
-<option>General enquiry</option>
-</select>
-<div class="grid">
-<div><label for="date">Preferred date</label><input id="date" type="date" required></div>
-<div><label for="time">Preferred time</label><input id="time" type="time" required></div>
-</div>
-<label for="name">Your name</label>
-<input id="name" type="text" placeholder="Your name" autocomplete="name" required>
-<label for="whatsapp">WhatsApp number</label>
-<input id="whatsapp" type="tel" placeholder="e.g. 082 123 4567" autocomplete="tel" required>
-<label for="area">Preferred area</label>
-<select id="area" required>
-<option value="">Choose an area</option>
-<option>Wonderboom South</option>
-<option>Wonderboom</option>
-<option>Doornpoort</option>
-</select>
-<label for="notes">Additional notes</label>
-<textarea id="notes" placeholder="Anything Mika should know about your request?"></textarea>
-<button type="submit">💬 Send Appointment Request</button>
-<div class="success" id="success">Your WhatsApp message is being prepared. Please send it to complete the request.</div>
-<p class="small">Your details are placed into a WhatsApp message for direct confirmation. No appointment is confirmed until Mika confirms it.</p>
+<label for="service">What are you enquiring about?</label>
+<select id="service" required><option value="">Choose an option</option><option>Content / Creator enquiry</option><option>Lifestyle photography</option><option>Video call</option><option>General enquiry</option></select>
+<div class="grid"><div><label for="date">Preferred date</label><input id="date" type="date" required></div><div><label for="time">Preferred time</label><input id="time" type="time" required></div></div>
+<label for="name">Full name</label><input id="name" type="text" placeholder="Your full name" autocomplete="name" required>
+<div class="grid"><div><label for="age">Age</label><input id="age" type="number" min="18" max="100" placeholder="18+" required></div><div><label for="whatsapp">WhatsApp number</label><input id="whatsapp" type="tel" placeholder="e.g. 082 123 4567" autocomplete="tel" required></div></div>
+<label for="area">Preferred area</label><input id="area" type="text" placeholder="Area / suburb" autocomplete="address-level2">
+<label for="notes">Additional notes</label><textarea id="notes" placeholder="Anything Mika should know about your request?"></textarea>
+<button type="submit">📧 Send Booking Request by Email</button>
+<div class="success" id="success">Your email app should open with the booking details prepared. Please review and send it.</div>
+<p class="small">Your information is used only to handle this booking request. The appointment is confirmed only after Mika confirms it.</p>
 </form>
-</div>
-</div>
+<div class="contact"><a class="wa" href="https://wa.me/27682427999" target="_blank" rel="noopener">💬 WhatsApp</a><a class="tg" href="https://t.me/+270704782029" target="_blank" rel="noopener">✈️ Telegram</a></div>
+</div></div>
 <script>
-const dateInput=document.getElementById('date');
 const form=document.getElementById('bookingForm');
-const now=new Date();
-const minDate=new Date();
-minDate.setHours(0,0,0,0);
-dateInput.min=minDate.toISOString().split('T')[0];
+const dateInput=document.getElementById('date');
+const minDate=new Date();minDate.setHours(0,0,0,0);dateInput.min=minDate.toISOString().split('T')[0];
 form.addEventListener('submit',function(e){
  e.preventDefault();
- const requestedDate=dateInput.value;
- const requestedTime=document.getElementById('time').value;
- const chosen=new Date(requestedDate+'T'+requestedTime);
- const minimum=new Date();
- minimum.setMinutes(minimum.getMinutes()+30);
- if(Number.isNaN(chosen.getTime())||chosen.getTime()<minimum.getTime()){
-  alert('Please choose an appointment at least 30 minutes from now.');
-  return;
- }
- const service=document.getElementById('service').value;
- const name=document.getElementById('name').value.trim();
- const whatsapp=document.getElementById('whatsapp').value.trim();
- const area=document.getElementById('area').value;
- const notes=document.getElementById('notes').value.trim()||'None';
- const message=`Hi Mika 👋 I would like to request an appointment.\n\nTopic: ${service}\nPreferred date: ${requestedDate}\nPreferred time: ${requestedTime}\nName: ${name}\nWhatsApp: ${whatsapp}\nPreferred area: ${area}\nNotes: ${notes}\n\nI understand that this is a request and that the appointment is only confirmed after direct confirmation.`;
+ const date=dateInput.value,time=document.getElementById('time').value;
+ const chosen=new Date(date+'T'+time),minimum=new Date();minimum.setMinutes(minimum.getMinutes()+30);
+ if(Number.isNaN(chosen.getTime())||chosen.getTime()<minimum){alert('Please choose a future date and time.');return;}
+ const service=document.getElementById('service').value,name=document.getElementById('name').value.trim(),age=document.getElementById('age').value,whatsapp=document.getElementById('whatsapp').value.trim(),area=document.getElementById('area').value.trim()||'Not specified',notes=document.getElementById('notes').value.trim()||'None';
+ const subject='Mika Creator Booking Request - '+name;
+ const body=`Hello Mika,\n\nI would like to make a booking request.\n\nService/enquiry: ${service}\nPreferred date: ${date}\nPreferred time: ${time}\nName: ${name}\nAge: ${age}\nWhatsApp: ${whatsapp}\nArea: ${area}\nAdditional notes: ${notes}\n\nI understand this is a request and is only confirmed after Mika confirms availability.`;
  document.getElementById('success').style.display='block';
- window.open('https://wa.me/27682427999?text='+encodeURIComponent(message),'_blank','noopener');
+ window.location.href='mailto:YOUR-EMAIL-HERE?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
 });
 </script>
 </body>
