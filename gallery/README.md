@@ -1,13 +1,13 @@
 # Mika Gallery
 
-Upload normal/lifestyle photos into these folders:
+Photos are organised by location / type:
 
-- `waterpark/`
-- `farm/`
-- `hotels/`
-- `outdoor/`
-- `custom/`
+- **girl-on-girl/** → Duo outdoor shots (WhatsApp 2026-08-24 series)
+- **mountain/** → Rocky outdoor / mountain shots (IMG_20260609 series)
+- **hotels/** → Hotel / bedroom indoor shots (IMG_20260604 series)
+- **indoor/** → House / sofa indoor shots (IMG_20260521 series)
+- **outdoor/** → Other outdoor photos
+- **waterpark/** → Waterpark shoots
+- **farm/** → Farm location shoots
 
-You can upload multiple images at once in GitHub. The website gallery can then be expanded to display them by category.
-
-Recommended image formats: JPG, JPEG, PNG, WEBP.
+Just drag the photos into the correct folder on GitHub.
