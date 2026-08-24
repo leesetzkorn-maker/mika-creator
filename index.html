@@ -16,7 +16,6 @@ a{text-decoration:none;color:inherit}
 img{max-width:100%;display:block}
 .container{width:min(1120px,92%);margin:0 auto}
 
-/* NAV */
 nav{position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(9,9,13,.82);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,255,255,.06)}
 .nav{min-height:72px;display:flex;align-items:center;justify-content:space-between}
 .logo{font-weight:800;font-size:22px;letter-spacing:.5px}
@@ -25,7 +24,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(9,9,13,.82);b
 .links a{transition:color .2s}
 .links a:hover{color:#ff79ba}
 
-/* HERO */
 .hero{min-height:100svh;padding:120px 0 100px;display:flex;align-items:center;text-align:center;position:relative;overflow:hidden}
 .hero-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 30%;z-index:0;filter:saturate(1.05) brightness(.85);transform:scale(1.02)}
 .hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.25) 0%,rgba(9,9,13,.55) 40%,rgba(9,9,13,.92) 100%);z-index:1}
@@ -45,7 +43,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(9,9,13,.82);b
 .btn.ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.25)}
 .btn.ghost:hover{background:rgba(255,255,255,.08)}
 
-/* SECTIONS */
 section{padding:90px 0}
 .dark{background:#0c0c12}
 .title{text-align:center;margin-bottom:48px}
@@ -55,7 +52,6 @@ section{padding:90px 0}
 
 .bio{max-width:720px;margin:0 auto;text-align:center;color:rgba(255,255,255,.78);font-size:17px;line-height:1.85}
 
-/* CARDS */
 .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
 .card{background:#14141c;border:1px solid rgba(255,255,255,.06);border-radius:20px;padding:32px 26px;transition:border-color .25s,transform .25s}
 .card:hover{border-color:rgba(255,121,186,.25);transform:translateY(-4px)}
@@ -63,13 +59,11 @@ section{padding:90px 0}
 .card h3{font-size:20px;font-weight:700;margin-bottom:10px}
 .card p{color:rgba(255,255,255,.55);font-size:15px;line-height:1.6}
 
-/* GALLERY */
 .gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
 .photo{aspect-ratio:1;overflow:hidden;border-radius:18px;background:#12121a;border:1px solid rgba(255,255,255,.05);position:relative}
 .photo img{width:100%;height:100%;object-fit:cover;transition:transform .45s ease}
 .photo:hover img{transform:scale(1.06)}
 
-/* PRICES */
 .prices{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
 .price-card{background:#14141c;border:1px solid rgba(255,255,255,.06);border-radius:20px;padding:32px 24px;text-align:center;transition:border-color .25s,transform .25s}
 .price-card:hover{border-color:rgba(255,121,186,.3);transform:translateY(-4px)}
@@ -80,7 +74,6 @@ section{padding:90px 0}
 .price-card .btn{width:100%}
 .featured{border-color:rgba(255,121,186,.35);background:linear-gradient(180deg,#1a1218 0%,#14141c 100%)}
 
-/* CONTACT */
 .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:720px;margin:0 auto}
 .contact{background:#14141c;border:1px solid rgba(255,255,255,.06);border-radius:20px;padding:36px 28px;text-align:center}
 .contact h3{font-size:20px;margin-bottom:8px}
@@ -90,7 +83,6 @@ section{padding:90px 0}
 .btn.tg{background:#238bd2;color:#fff}
 .btn.tg:hover{background:#2b9ae8}
 
-/* FAQ */
 .faq{max-width:680px;margin:0 auto}
 details{border-bottom:1px solid rgba(255,255,255,.08);padding:20px 0}
 summary{cursor:pointer;font-weight:700;font-size:16px;list-style:none;display:flex;justify-content:space-between;align-items:center}
@@ -98,12 +90,10 @@ summary::after{content:'+';font-size:22px;opacity:.5;transition:transform .2s}
 details[open] summary::after{transform:rotate(45deg)}
 details p{color:rgba(255,255,255,.55);margin-top:12px;font-size:15px;line-height:1.7}
 
-/* FOOTER */
 footer{text-align:center;color:rgba(255,255,255,.4);padding:40px 0;border-top:1px solid rgba(255,255,255,.06);font-size:14px}
 .footer-links{display:flex;justify-content:center;gap:24px;margin-top:14px}
 .footer-links a:hover{color:#ff79ba}
 
-/* FLOAT BAR */
 .float{position:fixed;z-index:40;left:50%;bottom:18px;transform:translateX(-50%);display:flex;gap:8px;padding:8px;background:rgba(17,17,24,.92);border:1px solid rgba(255,255,255,.1);border-radius:18px;box-shadow:0 12px 40px rgba(0,0,0,.5);backdrop-filter:blur(12px)}
 .float a{padding:12px 20px;border-radius:12px;color:#fff;font-weight:700;font-size:13px;transition:transform .2s}
 .float a:hover{transform:translateY(-2px)}
@@ -111,7 +101,6 @@ footer{text-align:center;color:rgba(255,255,255,.4);padding:40px 0;border-top:1p
 .float .wa{background:#20a85a}
 .float .tg{background:#238bd2}
 
-/* RESPONSIVE */
 @media(max-width:860px){
 .links{display:none}
 .cards,.prices,.contact-grid{grid-template-columns:1fr}
@@ -150,7 +139,7 @@ footer{text-align:center;color:rgba(255,255,255,.4);padding:40px 0;border-top:1p
 <h1>Meet Mika.<br><span>Creator</span></h1>
 <p>Erotic photos, videos & private video calls. Outdoor, raw and unapologetically adult.</p>
 <div class="buttons">
-<a class="btn primary" href="booking.html">Book Now</a>
+<a class="btn primary" href="https://wa.me/27682427999?text=Hi%20Mika%2C%20I%27m%20interested%20in%20your%20content.%20Can%20you%20tell%20me%20more%20about%20the%20packages%20and%20what%20videos%20I%20can%20choose%20from%3F" target="_blank" rel="noopener">Book Now</a>
 <a class="btn secondary" href="#gallery">View Gallery</a>
 <a class="btn ghost" href="#contact">Contact</a>
 </div>
@@ -234,7 +223,7 @@ Adults only. Browse the gallery, then get in touch for private videos or a perso
 <li>2 videos</li>
 <li>5 photos</li>
 </ul>
-<a class="btn secondary" href="booking.html">Enquire</a>
+<a class="btn secondary" href="https://wa.me/27682427999?text=Hi%20Mika%2C%20I%27m%20interested%20in%20Content%201%20(R400).%20Can%20you%20explain%20to%20me%20more%20about%20what%20videos%20I%20can%20choose%20from%3F" target="_blank" rel="noopener">Enquire on WhatsApp</a>
 </div>
 <div class="price-card featured">
 <h3>Content 2</h3>
@@ -243,7 +232,7 @@ Adults only. Browse the gallery, then get in touch for private videos or a perso
 <li>5 videos</li>
 <li>10 photos</li>
 </ul>
-<a class="btn primary" href="booking.html">Enquire</a>
+<a class="btn primary" href="https://wa.me/27682427999?text=Hi%20Mika%2C%20I%27m%20interested%20in%20Content%202%20(R550).%20Can%20you%20explain%20to%20me%20more%20about%20what%20videos%20I%20can%20choose%20from%3F" target="_blank" rel="noopener">Enquire on WhatsApp</a>
 </div>
 <div class="price-card">
 <h3>Content 3</h3>
@@ -252,14 +241,14 @@ Adults only. Browse the gallery, then get in touch for private videos or a perso
 <li>7 videos</li>
 <li>15 photos</li>
 </ul>
-<a class="btn secondary" href="booking.html">Enquire</a>
+<a class="btn secondary" href="https://wa.me/27682427999?text=Hi%20Mika%2C%20I%27m%20interested%20in%20Content%203%20(R700).%20Can%20you%20explain%20to%20me%20more%20about%20what%20videos%20I%20can%20choose%20from%3F" target="_blank" rel="noopener">Enquire on WhatsApp</a>
 </div>
 </div>
 <div class="price-card" style="max-width:420px;margin:24px auto 0">
 <h3>Video Call</h3>
 <div class="price">R450</div>
 <p style="color:rgba(255,255,255,.55);margin-bottom:20px">10–15 minute private session</p>
-<a class="btn primary" href="booking.html">Enquire</a>
+<a class="btn primary" href="https://wa.me/27682427999?text=Hi%20Mika%2C%20I%27m%20interested%20in%20a%20Video%20Call%20(R450).%20Can%20you%20tell%20me%20more%20about%20availability%20and%20how%20it%20works%3F" target="_blank" rel="noopener">Enquire on WhatsApp</a>
 </div>
 </div>
 </section>
@@ -273,11 +262,11 @@ Adults only. Browse the gallery, then get in touch for private videos or a perso
 <div class="faq">
 <details>
 <summary>How do I make an enquiry?</summary>
-<p>Use WhatsApp or Telegram to ask about availability and options.</p>
+<p>Click any of the WhatsApp buttons. A message is already prepared for you — just send it.</p>
 </details>
 <details>
 <summary>How do I make a booking?</summary>
-<p>Use Book Now and send your details. A booking is only confirmed after Mika confirms availability.</p>
+<p>Message on WhatsApp. Mika will confirm availability and guide you.</p>
 </details>
 <details>
 <summary>Which areas can I select?</summary>
@@ -301,7 +290,7 @@ Adults only. Browse the gallery, then get in touch for private videos or a perso
 <div class="contact">
 <h3>WhatsApp</h3>
 <p>068 242 7999</p>
-<a class="btn wa" href="https://wa.me/27682427999" target="_blank" rel="noopener">WhatsApp Mika</a>
+<a class="btn wa" href="https://wa.me/27682427999?text=Hi%20Mika%2C%20I%27m%20interested%20in%20your%20content.%20Can%20you%20tell%20me%20more%20about%20the%20packages%20and%20what%20videos%20I%20can%20choose%20from%3F" target="_blank" rel="noopener">WhatsApp Mika</a>
 </div>
 <div class="contact">
 <h3>Telegram</h3>
@@ -317,14 +306,14 @@ Adults only. Browse the gallery, then get in touch for private videos or a perso
 <div class="footer-links">
 <a href="#home">Home</a>
 <a href="#gallery">Gallery</a>
-<a href="booking.html">Book</a>
+<a href="#packages">Packages</a>
 <a href="#contact">Contact</a>
 </div>
 </footer>
 
 <div class="float">
-<a class="booking" href="booking.html">Book</a>
-<a class="wa" href="https://wa.me/27682427999" target="_blank" rel="noopener">WhatsApp</a>
+<a class="booking" href="https://wa.me/27682427999?text=Hi%20Mika%2C%20I%27m%20interested%20in%20your%20content.%20Can%20you%20tell%20me%20more%20about%20the%20packages%20and%20what%20videos%20I%20can%20choose%20from%3F" target="_blank" rel="noopener">Book</a>
+<a class="wa" href="https://wa.me/27682427999?text=Hi%20Mika%2C%20I%27m%20interested%20in%20your%20content.%20Can%20you%20tell%20me%20more%20about%20the%20packages%20and%20what%20videos%20I%20can%20choose%20from%3F" target="_blank" rel="noopener">WhatsApp</a>
 <a class="tg" href="https://t.me/+270704782029" target="_blank" rel="noopener">Telegram</a>
 </div>
 </body>
