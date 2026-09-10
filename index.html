@@ -9,8 +9,115 @@
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-V1V3P6YJE3"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-V1V3P6YJE3');</script>
 <link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/age-gate.css">
+<style>
+.review-form{max-width:680px;margin:0 auto 56px;background:#14141c;border:1px solid rgba(255,255,255,.06);border-radius:22px;padding:36px 32px}
+.rating-row{margin-bottom:26px}
+.rating-label{font-size:14px;font-weight:600;color:rgba(255,255,255,.75);margin-bottom:10px}
+.stars{display:flex;flex-wrap:wrap;gap:6px}
+.stars button{width:40px;height:40px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:#1a1a24;color:rgba(255,255,255,.5);font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;font-family:inherit}
+.stars button:hover{border-color:rgba(255,121,186,.4);color:#fff}
+.stars button.selected{background:#ff4fa3;border-color:#ff4fa3;color:#fff;box-shadow:0 4px 16px rgba(255,79,163,.35)}
+.review-input{width:100%;background:#1a1a24;border:1px solid rgba(255,255,255,.1);border-radius:14px;color:#fff;padding:14px 16px;font-size:15px;font-family:inherit;resize:vertical;transition:border-color .2s}
+.review-input:focus{outline:none;border-color:rgba(255,121,186,.4)}
+textarea.review-input{min-height:110px;margin-bottom:18px}
+.review-grid{display:grid;gap:14px;margin-bottom:22px}
+.review-success{display:none;background:rgba(32,168,90,.12);border:1px solid rgba(32,168,90,.3);color:#4ade80;font-size:15px;font-weight:600;padding:16px 20px;border-radius:14px;margin-bottom:22px}
+.review-success.show{display:block}
+.reviews-list{max-width:900px;margin:0 auto}
+.reviews-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.review-card{background:#14141c;border:1px solid rgba(255,255,255,.06);border-radius:18px;padding:24px;transition:border-color .25s}
+.review-card:hover{border-color:rgba(255,121,186,.2)}
+.review-card .head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px}
+.review-card .name{font-weight:700;font-size:16px}
+.review-card .date{font-size:12px;color:rgba(255,255,255,.4)}
+.review-card .comment{color:rgba(255,255,255,.75);font-size:14px;line-height:1.7;margin-bottom:16px;word-wrap:break-word}
+.rating-summary{display:grid;gap:10px}
+.rating-summary .row{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:rgba(255,255,255,.55)}
+.rating-summary .value{display:inline-flex;align-items:center;gap:6px;font-weight:700;color:#ff79ba}
+.rating-bar{height:6px;background:#22222c;border-radius:100px;overflow:hidden;flex:1;margin:0 12px}
+.rating-bar span{display:block;height:100%;background:linear-gradient(90deg,#ff79ba,#ff4fa3);border-radius:100px}
+@media(max-width:720px){.reviews-grid{grid-template-columns:1fr}.review-form{padding:28px 20px}.stars button{width:34px;height:34px}}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+.about-photo{position:relative;border-radius:22px;overflow:hidden;aspect-ratio:3/4}
+.about-photo img{width:100%;height:100%;object-fit:cover}
+.about-photo::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.1) 0%,rgba(0,0,0,.35) 100%);pointer-events:none}
+.about-text .title{text-align:left;margin-bottom:24px}
+.about-text .title small{display:block;color:#ff79ba;text-transform:uppercase;letter-spacing:2.5px;font-size:12px;font-weight:600;margin-bottom:10px}
+.about-text .title h2{font-size:clamp(28px,5vw,36px);font-weight:800;letter-spacing:-.5px}
+.about-bio{color:rgba(255,255,255,.78);font-size:17px;line-height:1.85;margin-bottom:32px}
+.enjoy-label{font-size:13px;text-transform:uppercase;letter-spacing:2px;color:rgba(255,255,255,.45);font-weight:600;margin-bottom:14px}
+.enjoy-chips{display:flex;flex-wrap:wrap;gap:8px}
+.enjoy-chip{padding:8px 16px;border-radius:100px;font-size:13px;font-weight:600;background:rgba(255,255,255,.06);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.08);transition:all .2s}
+.enjoy-chip:hover{border-color:rgba(255,121,186,.3);color:#ff79ba}
+@media(max-width:860px){.about-grid{grid-template-columns:1fr;gap:32px}.about-text .title{text-align:center}.about-bio{text-align:center}}
+.comfort{max-width:720px;margin:52px auto 0;background:linear-gradient(180deg,#17121d 0%,#14141c 100%);border:1px solid rgba(255,121,186,.14);border-radius:22px;padding:38px 34px;position:relative;overflow:hidden}
+.comfort::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:200px;height:1px;background:linear-gradient(90deg,transparent,rgba(255,121,186,.55),transparent)}
+.comfort-head{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.comfort-head .icon{width:44px;height:44px;border-radius:14px;background:rgba(255,79,163,.12);border:1px solid rgba(255,79,163,.22);display:flex;align-items:center;justify-content:center;color:#ff79ba;flex-shrink:0}
+.comfort-head .icon svg{width:22px;height:22px}
+.comfort-head h3{font-size:20px;font-weight:800;letter-spacing:-.3px}
+.comfort .comfort-text{color:rgba(255,255,255,.75);font-size:15px;line-height:1.85;margin-bottom:24px}
+.comfort-list{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0}
+.comfort-list li{display:flex;align-items:center;gap:11px;font-size:14px;color:rgba(255,255,255,.82);padding:12px 15px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:13px}
+.comfort-list li svg{width:19px;height:19px;color:#ff79ba;flex-shrink:0}
+@media(max-width:640px){.comfort{padding:30px 22px}.comfort-list{grid-template-columns:1fr}}
+.locations{max-width:900px;margin:48px auto 0}
+.locations-head{text-align:center;max-width:660px;margin:0 auto 28px}
+.locations-head h3{font-size:clamp(20px,4vw,26px);font-weight:800;letter-spacing:-.3px;margin-bottom:12px}
+.locations-head p{color:rgba(255,255,255,.6);font-size:15px;line-height:1.75}
+.locations-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.location-card{position:relative;border-radius:16px;overflow:hidden;aspect-ratio:4/5;background:#12121a;border:1px solid rgba(255,255,255,.06);transition:all .3s}
+.location-card:hover{transform:translateY(-4px);border-color:rgba(255,121,186,.25);box-shadow:0 14px 34px rgba(0,0,0,.35)}
+.location-card img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+.location-card:hover img{transform:scale(1.06)}
+.location-card .loc-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.05) 30%,rgba(0,0,0,.85) 100%);z-index:1}
+.location-card .loc-info{position:absolute;bottom:0;left:0;right:0;padding:18px 16px;z-index:2}
+.location-card h4{font-size:18px;font-weight:800;margin-bottom:4px}
+.location-card p{font-size:13px;color:rgba(255,255,255,.65);line-height:1.5}
+@media(max-width:860px){.locations-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.locations-grid{grid-template-columns:1fr}}
+.how-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:1000px;margin:0 auto}
+.how-col{background:#14141c;border:1px solid rgba(255,255,255,.06);border-radius:22px;padding:36px 30px;position:relative;overflow:hidden}
+.how-col::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,121,186,.4),transparent)}
+.how-badge{display:inline-block;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#ff79ba;font-weight:700;padding:5px 12px;border:1px solid rgba(255,121,186,.25);border-radius:100px;background:rgba(255,121,186,.08);margin-bottom:16px}
+.how-col h3{font-size:clamp(19px,3vw,23px);font-weight:800;margin-bottom:6px;letter-spacing:-.3px}
+.how-col-head{color:rgba(255,255,255,.5);font-size:14px;line-height:1.7;margin-bottom:22px}
+.steps{list-style:none;margin:0 0 26px}
+.steps li{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.steps li:last-child{border-bottom:none}
+.step-num{width:34px;height:34px;border-radius:11px;background:rgba(255,121,186,.12);border:1px solid rgba(255,121,186,.25);color:#ff79ba;font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.steps h4{font-size:15px;font-weight:700;margin-bottom:3px}
+.steps p{font-size:13.5px;color:rgba(255,255,255,.55);line-height:1.65}
+.how-actions{display:flex;flex-wrap:wrap;gap:10px}
+.how-actions .btn{padding:13px 20px;font-size:14px}
+.how-note{font-size:12.5px;color:rgba(255,255,255,.4);margin-top:20px;line-height:1.7;border-top:1px dashed rgba(255,255,255,.08);padding-top:16px}
+.modal{display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.82);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:20px;overflow-y:auto}
+.modal.open{display:flex}
+.modal-box{background:#15151d;border:1px solid rgba(255,121,186,.18);border-radius:22px;max-width:560px;width:100%;max-height:90vh;overflow-y:auto;padding:34px 30px;position:relative;animation:ageIn .35s ease-out;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+.modal-box h3{font-size:22px;font-weight:800;margin-bottom:8px;letter-spacing:-.3px}
+.modal-box .modal-sub{color:rgba(255,255,255,.55);font-size:14px;line-height:1.7;margin-bottom:22px}
+.modal-close{position:absolute;top:16px;right:18px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.08);border:none;color:rgba(255,255,255,.7);font-size:16px;cursor:pointer;transition:background .2s;z-index:2}
+.modal-close:hover{background:rgba(255,255,255,.18);color:#fff}
+.modal-group{margin-bottom:16px}
+.modal-label{display:block;font-size:13px;font-weight:700;color:rgba(255,255,255,.75);margin-bottom:8px}
+.modal-select,.modal-input,.modal-textarea{width:100%;background:#1b1b25;border:1px solid rgba(255,255,255,.1);border-radius:12px;color:#fff;padding:12px 14px;font-size:14px;font-family:inherit;transition:border-color .2s;-webkit-appearance:none;appearance:none}
+.modal-select:focus,.modal-input:focus,.modal-textarea:focus{outline:none;border-color:rgba(255,121,186,.45)}
+.modal-textarea{resize:vertical;min-height:80px}
+.modal-divider{height:1px;background:rgba(255,255,255,.07);margin:20px 0}
+.modal-callout{background:rgba(255,121,186,.07);border:1px solid rgba(255,121,186,.16);border-radius:14px;padding:16px 18px;font-size:13.5px;line-height:1.7;color:rgba(255,255,255,.7);margin-bottom:20px}
+.modal-note{font-size:12px;color:rgba(255,255,255,.4);line-height:1.6;margin-top:16px}
+.modal-actions{display:flex;flex-wrap:wrap;gap:10px}
+.modal-actions .btn{flex:1;justify-content:center;padding:13px 16px;font-size:14px;min-width:140px}
+.detail-item{display:flex;justify-content:space-between;gap:14px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:14px}
+.detail-item span{color:rgba(255,255,255,.5)}
+.detail-item b{color:#fff;font-weight:600;text-align:right}
+@media(max-width:860px){.how-grid{grid-template-columns:1fr}.modal-box{padding:28px 22px}}
+@media(max-width:480px){.modal-actions .btn{min-width:100%}}
+</style>
 </head>
 <body oncontextmenu="return false;">
+<script src="assets/js/age-gate.js"></script>
 <nav>
 <div class="container nav">
 <a class="logo" href="#home">MIKA <span>CREATOR</span></a>
@@ -20,6 +127,7 @@
 <a href="gallery.html">Gallery</a>
 <a href="#packages">Packages</a>
 <a href="booking.html">Book</a>
+<a href="#reviews">Reviews</a>
 <a href="#contact">Contact</a>
 </div>
 </div>
@@ -27,11 +135,11 @@
 
 <section class="hero" id="home">
 <div class="hero-slides" id="heroSlides">
-<img src="gallery/WhatsApp%20Image%202026-08-24%20at%2009.14.32.jpeg" alt="Mika" class="active">
-<img src="gallery/WhatsApp%20Image%202026-08-24%20at%2009.14.33%20(2).jpeg" alt="Mika">
-<img src="gallery/WhatsApp%20Image%202026-08-24%20at%2009.14.33%20(1).jpeg" alt="Mika">
-<img src="gallery/WhatsApp%20Image%202026-08-24%20at%2009.14.36%20(1).jpeg" alt="Mika">
-<img src="assets/images/IMG_20260609_112346.jpg" alt="Mika">
+<img src="gallery/mika%20river/IMG_20260702_154157.jpg" alt="Mika" class="active">
+<img src="gallery/mika%20river/IMG_20260702_154201.jpg" alt="Mika">
+<img src="gallery/mika%20river/IMG_20260702_154205.jpg" alt="Mika">
+<img src="gallery/mika%20river/IMG_20260702_154217.jpg" alt="Mika">
+<img src="gallery/mika%20river/IMG_20260702_154226.jpg" alt="Mika">
 </div>
 <div class="hero-overlay"></div>
 <div class="container hero-content">
@@ -48,16 +156,30 @@
 
 <section id="about">
 <div class="container">
+<div class="about-grid">
+<div class="about-photo">
+<img src="gallery/mountain/IMG_20260609_112414.jpg" alt="Mika outdoors">
+</div>
+<div class="about-text">
 <div class="title">
 <small>About Mika</small>
-<h2>18+ Adult Content</h2>
+<h2>A little about me</h2>
 </div>
-<p class="bio">
-Welcome to Mika’s official space.<br><br>
-Erotic photos and videos shot in real outdoor locations — waterparks, mountain trails, farms and natural settings. Slow teasing, girl-on-girl chemistry, bodies in nature, and close-up moments that leave very little to the imagination.<br><br>
-Natural light. Raw feel. No heavy studio production — just confident, playful and fully sensual content.<br><br>
-Adults only. Browse the gallery, then get in touch for private videos or a personal video call.
+<p class="about-bio">
+I'm Mika — creative, confident and happiest outdoors. I enjoy natural locations, fresh air and discovering beautiful places, which is why outdoor shoots are my favourite.<br><br>
+Studio and indoor shoots can sometimes feel a little too quiet for me, but I always bring my own energy and personality to every set.
 </p>
+<div class="enjoy-label">What I enjoy</div>
+<div class="enjoy-chips">
+<span class="enjoy-chip">Outdoor shoots</span>
+<span class="enjoy-chip">Nature</span>
+<span class="enjoy-chip">Rivers</span>
+<span class="enjoy-chip">Mountains</span>
+<span class="enjoy-chip">Travel</span>
+<span class="enjoy-chip">Creating fun content</span>
+</div>
+</div>
+</div>
 </div>
 </section>
 
@@ -69,19 +191,138 @@ Adults only. Browse the gallery, then get in touch for private videos or a perso
 </div>
 <div class="cards">
 <div class="card">
-<div class="icon">📸</div>
+<div class="icon">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M2.5 8.5A2.5 2.5 0 0 1 5 6h10.5A2.5 2.5 0 0 1 18 8.5v7a2.5 2.5 0 0 1-2.5 2.5H5A2.5 2.5 0 0 1 2.5 15.5z"/>
+<path d="M18 10.2 21.5 8.4v7.2L18 13.8"/>
+<circle cx="11.2" cy="12" r="2.9"/>
+<path d="M4.6 12h.01"/>
+<circle cx="17" cy="4.2" r=".9" fill="currentColor" stroke="none"/>
+</svg>
+</div>
 <h3>Erotic Content</h3>
 <p>Custom erotic photos and video packages filmed outdoors.</p>
+<a class="btn secondary card-link" href="https://wa.me/27682427999?text=Hi%20Mika%2C%20I%27m%20interested%20in%20your%20Erotic%20Content%20service.%20Please%20can%20you%20tell%20me%20the%20available%20options%2C%20price%20and%20availability%3F" target="_blank" rel="noopener">Ask about this service</a>
 </div>
 <div class="card">
-<div class="icon">🎥</div>
+<div class="icon">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M5.5 3.5A1.5 1.5 0 0 1 7 2h10a1.5 1.5 0 0 1 1.5 1.5v17A1.5 1.5 0 0 1 17 22H7a1.5 1.5 0 0 1-1.5-1.5z"/>
+<circle cx="12" cy="8.5" r="1.7"/>
+<path d="M9.2 13.4c0-1.6 1.3-2.8 2.8-2.8s2.8 1.2 2.8 2.8"/>
+<path d="M4 7h-1.2M4 10h-1.7M4 13h-1.2" opacity=".5"/>
+</svg>
+</div>
 <h3>Video Calls</h3>
 <p>Personal one-on-one adult video call sessions.</p>
+<a class="btn secondary card-link" href="https://wa.me/27682427999?text=Hi%20Mika%2C%20I%27m%20interested%20in%20your%20Video%20Calls%20service.%20Please%20can%20you%20tell%20me%20the%20available%20options%2C%20price%20and%20availability%3F" target="_blank" rel="noopener">Ask about this service</a>
 </div>
 <div class="card">
-<div class="icon">📍</div>
+<div class="icon">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M12 21.5c-3.6-3.4-6-6.2-6-9.1a6 6 0 1 1 12 0c0 2.9-2.4 5.7-6 9.1z"/>
+<circle cx="12" cy="12.4" r="2.3"/>
+<path d="M11.5 12.4h1M12.4 11.6v2" opacity=".5"/>
+<path d="M3.5 5h3.2M6.7 5L4.6 3.2M6.7 5l-2.1 1.8" opacity=".55"/>
+</svg>
+</div>
 <h3>Locations</h3>
 <p>Waterpark, mountain, farm and local area requests available.</p>
+<a class="btn secondary card-link" href="https://wa.me/27682427999?text=Hi%20Mika%2C%20I%27m%20interested%20in%20your%20Locations%20service.%20Please%20can%20you%20tell%20me%20the%20available%20options%2C%20price%20and%20availability%3F" target="_blank" rel="noopener">Ask about this service</a>
+</div>
+</div>
+
+<div class="comfort">
+<div class="comfort-head">
+<div class="icon">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<circle cx="12" cy="13" r="7.5"/>
+<path d="M9.2 10.5h.01M14.8 10.5h.01"/>
+<path d="M9.5 15c1.2 1.6 3.8 1.6 5 0"/>
+</svg>
+</div>
+<h3>Your comfort comes first</h3>
+</div>
+<p class="comfort-text">Feeling shy or nervous? That's completely okay. You are welcome to keep your camera off — there is no pressure to show your face, speak, or know exactly what to say. We can keep it relaxed and go at your pace. This time is for you to feel comfortable, enjoy yourself, and have a private experience your way.</p>
+<ul class="comfort-list">
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M3 8.5A2.5 2.5 0 0 1 5.5 6h9A2.5 2.5 0 0 1 17 8.5v7a2.5 2.5 0 0 1-2.5 2.5h-9A2.5 2.5 0 0 1 3 15.5z"/>
+<path d="M17 10.2 20.5 8.4v7.2L17 13.8"/>
+<line x1="2.5" y1="2.5" x2="21.5" y2="21.5" opacity=".55"/>
+</svg>Camera on or off — your choice</li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<circle cx="12" cy="12" r="8.5"/>
+<path d="M8.8 9.8h.01M15.2 9.8h.01"/>
+<path d="M9 14.5c1.6 1.7 4.4 1.7 6 0"/>
+</svg>No pressure to show your face</li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M4.5 14a7.5 7.5 0 1 1 15 0"/>
+<path d="M12 14l3.8-3"/>
+<circle cx="12" cy="14" r="1.5"/>
+</svg>You set the pace</li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M3.5 7.5c5-2.4 12-2.4 17 0"/>
+<path d="M5 11.5h2.4l1.6 3 2.5-1 2.5 1 1.6-3H19"/>
+<circle cx="12" cy="14" r="1.2"/>
+<path d="M3 18h18" opacity=".5"/>
+</svg>You can end the call at any time</li>
+</ul>
+</div>
+
+<div class="locations">
+<div class="locations-head">
+<h3>Locations that match the mood</h3>
+<p>Every experience feels different depending on the setting. Whether it's the comfort of an indoor space, the natural beauty of a river or mountain, a quiet hotel setting, or a private outdoor location, the right atmosphere helps create something unforgettable. I especially enjoy outdoor locations because they feel free, natural and full of energy.</p>
+</div>
+<div class="locations-grid">
+<div class="location-card">
+<img src="gallery/indoor/IMG_20260521_152753.jpg" alt="Indoor location" loading="lazy">
+<div class="loc-overlay"></div>
+<div class="loc-info">
+<h4>Indoor</h4>
+<p>Warm, calm and private — a cosy intimate setting.</p>
+</div>
+</div>
+<div class="location-card">
+<img src="gallery/hotels/IMG_20260521_152726.jpg" alt="Hotel location" loading="lazy">
+<div class="loc-overlay"></div>
+<div class="loc-info">
+<h4>Hotels</h4>
+<p>Quiet, polished and discreet — a refined stay.</p>
+</div>
+</div>
+<div class="location-card">
+<img src="gallery/girl-on-girl/WhatsApp%20Image%202026-08-24%20at%2009.14.33%20(1).jpeg" alt="Outdoor location" loading="lazy">
+<div class="loc-overlay"></div>
+<div class="loc-info">
+<h4>Outdoor</h4>
+<p>Open air and natural light — free and full of energy.</p>
+</div>
+</div>
+<div class="location-card">
+<img src="gallery/mika%20river/IMG_20260702_150820.jpg" alt="River location" loading="lazy">
+<div class="loc-overlay"></div>
+<div class="loc-info">
+<h4>River</h4>
+<p>Peaceful water and fresh air — slow and serene.</p>
+</div>
+</div>
+<div class="location-card">
+<img src="gallery/mountain/IMG_20260609_112414.jpg" alt="Mountain location" loading="lazy">
+<div class="loc-overlay"></div>
+<div class="loc-info">
+<h4>Mountain</h4>
+<p>High views and open sky — wild and adventurous.</p>
+</div>
+</div>
+<div class="location-card">
+<img src="gallery/farm/IMG_20260607_085413.jpg" alt="Farm location" loading="lazy">
+<div class="loc-overlay"></div>
+<div class="loc-info">
+<h4>Farm</h4>
+<p>Rustic green space and golden light — grounded and natural.</p>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -132,6 +373,159 @@ Adults only. Browse the gallery, then get in touch for private videos or a perso
 </div>
 </section>
 
+<section class="dark" id="how-it-works">
+<div class="container">
+<div class="title">
+<small>How It Works</small>
+<h2>A simple, clear process</h2>
+<p>Everything you need to know before you book or order.</p>
+</div>
+
+<div class="how-grid">
+<div class="how-col">
+<span class="how-badge">Booking Flow</span>
+<h3>How booking works</h3>
+<p class="how-col-head">Book a service or video call in a few simple steps.</p>
+<ol class="steps">
+<li><span class="step-num">1</span><div><h4>Choose your service</h4><p>Select the service or experience you are interested in.</p></div></li>
+<li><span class="step-num">2</span><div><h4>Check the details</h4><p>Click “More Info” below that service to see what is included, availability, duration, and any relevant options.</p></div></li>
+<li><span class="step-num">3</span><div><h4>Send your request</h4><p>Tell me the date/time you prefer and any details you would like to discuss.</p></div></li>
+<li><span class="step-num">4</span><div><h4>Payment</h4><p>Payment is required upfront to secure the booking. The booking is only confirmed once payment has been received and verified.</p></div></li>
+<li><span class="step-num">5</span><div><h4>Confirmation</h4><p>After payment is confirmed, you receive confirmation and the final details for your booking.</p></div></li>
+</ol>
+<div class="how-actions">
+<button class="btn primary" data-modal="booking-details">More Info</button>
+<a class="btn secondary" href="booking.html">Book Now</a>
+</div>
+<p class="how-note">Please only book if you are 18+. All arrangements are handled respectfully and based on mutual agreement.</p>
+</div>
+
+<div class="how-col">
+<span class="how-badge">Content Flow</span>
+<h3>How content orders work</h3>
+<p class="how-col-head">Buy gallery or custom content your way.</p>
+<ol class="steps">
+<li><span class="step-num">1</span><div><h4>Choose what you want</h4><p>Choose a specific gallery, a mixed selection, or a custom content request.</p></div></li>
+<li><span class="step-num">2</span><div><h4>View more information</h4><p>Each gallery/category has a “More Info” option with all the order details.</p></div></li>
+<li><span class="step-num">3</span><div><h4>Select your options</h4><p>Pick your gallery, type of content, length, style, and any personalised extras.</p></div></li>
+<li><span class="step-num">4</span><div><h4>Payment first</h4><p>All payments are made upfront. Your order will begin once payment has been received and verified.</p></div></li>
+<li><span class="step-num">5</span><div><h4>Order confirmation</h4><p>After payment confirmation, what you selected is confirmed with an expected delivery timeframe.</p></div></li>
+</ol>
+<div class="how-actions">
+<button class="btn primary" data-modal="content-details">More Info</button>
+<a class="btn secondary" href="gallery.html">Browse Gallery</a>
+</div>
+<p class="how-note">Custom orders are only described behind the “More Info” button so the page stays clean and clear.</p>
+</div>
+</div>
+</div>
+</section>
+
+<!-- Service / Booking Details Modal -->
+<div class="modal" id="modal-booking-details">
+<div class="modal-box">
+<button class="modal-close" data-close aria-label="Close">✕</button>
+<h3>Booking a service</h3>
+<p class="modal-sub">Here is what each service includes before you send a request.</p>
+
+<div class="detail-item"><span>Erotic Content</span><b>Photos &amp; videos</b></div>
+<div class="detail-item"><span>Video Call</span><b>10–15 min session</b></div>
+<div class="detail-item"><span>Availability</span><b>To be confirmed</b></div>
+<div class="detail-item"><span>Location</span><b>Doornpoort / Wonderboom</b></div>
+<div class="detail-item"><span>Payment</span><b>Upfront, verified</b></div>
+<div class="detail-item"><span>Areas outside your area</span><b>Special requests</b></div>
+
+<div class="modal-divider"></div>
+<div class="modal-callout">You are welcome to keep your camera off, take your time, and go at your own pace. Every arrangement is handled respectfully and based on mutual agreement.</div>
+<div class="modal-actions">
+<a class="btn primary" href="https://wa.me/27682427999?text=Hi%20Mika%2C%20I%20would%20like%20to%20book%20a%20service.%20Can%20you%20share%20the%20details%20and%20confirmation%20options%3F" target="_blank" rel="noopener">Continue to payment</a>
+<a class="btn secondary" href="booking.html">Send Booking Request</a>
+</div>
+<p class="modal-note">Payment is required upfront. The booking is only confirmed once payment has been received and verified.</p>
+</div>
+</div>
+
+<!-- Content Order Modal -->
+<div class="modal" id="modal-content-details">
+<div class="modal-box">
+<button class="modal-close" data-close aria-label="Close">✕</button>
+<h3>Build your content order</h3>
+<p class="modal-sub">Custom content is created around your selected preferences. Tell me the style, location, pose/concept, video length, and any personalised text you would like included. Every request is reviewed before confirmation.</p>
+
+<div class="modal-group">
+<label class="modal-label">1. Gallery selection</label>
+<select class="modal-select" id="order-gallery">
+<option value="">Choose a gallery</option>
+<option>Farm</option>
+<option>Girl on Girl</option>
+<option>Hotels</option>
+<option>Indoor</option>
+<option>Mika River</option>
+<option>Mountain</option>
+<option>Waterpark</option>
+</select>
+</div>
+
+<div class="modal-group">
+<label class="modal-label">2. Order type</label>
+<select class="modal-select" id="order-type">
+<option value="">Select order type</option>
+<option>Gallery selection</option>
+<option>Mixed gallery selection</option>
+<option>Custom request</option>
+</select>
+</div>
+
+<div class="modal-group">
+<label class="modal-label">3. Content type</label>
+<select class="modal-select" id="order-content-type">
+<option value="">Photo, video, or both</option>
+<option>Photos</option>
+<option>Videos</option>
+<option>Both photos and videos</option>
+</select>
+</div>
+
+<div class="modal-group">
+<label class="modal-label">4. Preferred video length</label>
+<select class="modal-select" id="order-length">
+<option value="">Select length</option>
+<option>Short (under 5 min)</option>
+<option>Medium (5–10 min)</option>
+<option>Long (10–15 min)</option>
+</select>
+</div>
+
+<div class="modal-group">
+<label class="modal-label">5. Preferred location / style</label>
+<input class="modal-input" id="order-style" type="text" placeholder="e.g. Outdoor, river, mountain, farm, indoor…">
+</div>
+
+<div class="modal-group">
+<label class="modal-label">6. Preferred pose or concept</label>
+<input class="modal-input" id="order-concept" type="text" placeholder="Describe the pose, mood or concept…">
+</div>
+
+<div class="modal-group">
+<label class="modal-label">7. Personalised text / name (optional)</label>
+<input class="modal-input" id="order-personal" type="text" placeholder="e.g. Your name written on a note…">
+</div>
+
+<div class="modal-group">
+<label class="modal-label">8. Extra notes or requests</label>
+<textarea class="modal-textarea" id="order-notes" placeholder="Anything else you would like to add?"></textarea>
+</div>
+
+<div class="modal-actions">
+<button class="btn primary" id="continuePayment">Continue to payment</button>
+<a class="btn secondary" href="gallery.html">Choose this gallery</a>
+<button class="btn ghost" id="buildCustom">Build a custom request</button>
+<button class="btn ghost" id="askQuestion">Ask a question</button>
+</div>
+<p class="modal-note">All payments are made upfront. Your order will begin once payment has been received and verified.</p>
+</div>
+</div>
+
 <section>
 <div class="container">
 <div class="title">
@@ -180,6 +574,48 @@ Adults only. Browse the gallery, then get in touch for private videos or a perso
 </div>
 </section>
 
+<section class="dark" id="reviews">
+<div class="container">
+<div class="title">
+<small>Client Reviews</small>
+<h2>Rate My Service</h2>
+<p>Tell me about your experience. Your privacy matters — you appear only under a nickname.</p>
+</div>
+
+<div class="review-form" id="reviewForm">
+<div class="review-success" id="reviewSuccess">Thank you! Your review has been submitted.</div>
+
+<div class="rating-row">
+<div class="rating-label">How was my service?</div>
+<div class="stars" data-question="service"></div>
+</div>
+
+<div class="rating-row">
+<div class="rating-label">Were your needs fulfilled?</div>
+<div class="stars" data-question="needs"></div>
+</div>
+
+<div class="rating-row">
+<div class="rating-label">How was the content?</div>
+<div class="stars" data-question="content"></div>
+</div>
+
+<textarea class="review-input" id="reviewComment" placeholder="Your feedback (optional)…"></textarea>
+
+<div class="review-grid">
+<input class="review-input" id="reviewNickname" type="text" placeholder="Nickname or alias (optional — shows as “Anonymous”)">
+</div>
+
+<button class="btn primary" id="submitReview">Submit Review</button>
+</div>
+
+<div class="reviews-list" id="reviewsList">
+<h3 style="text-align:center;color:rgba(255,255,255,.4);margin-bottom:24px;font-size:15px" id="reviewsHeading">No reviews yet — be the first!</h3>
+<div class="reviews-grid" id="reviewsGrid"></div>
+</div>
+</div>
+</section>
+
 <footer>
 <div>© 2026 Mika Creator • 18+ Adult Content • All Rights Reserved</div>
 <div class="footer-note">All photos and content are copyrighted. Unauthorised use, download or distribution is strictly prohibited.</div>
@@ -187,6 +623,7 @@ Adults only. Browse the gallery, then get in touch for private videos or a perso
 <a href="#home">Home</a>
 <a href="gallery.html">Gallery</a>
 <a href="#packages">Packages</a>
+<a href="#reviews">Reviews</a>
 <a href="#contact">Contact</a>
 </div>
 </footer>
@@ -210,6 +647,210 @@ Adults only. Browse the gallery, then get in touch for private videos or a perso
   // Basic protection
   document.addEventListener('contextmenu', function(e){ e.preventDefault(); });
   document.addEventListener('dragstart', function(e){ if(e.target.tagName === 'IMG') e.preventDefault(); });
+
+  // Client reviews
+  (function(){
+    var ratings = { service: 0, needs: 0, content: 0 };
+
+    document.querySelectorAll('.stars').forEach(function(container){
+      for (var n = 1; n <= 10; n++) {
+        (function(num){
+          var b = document.createElement('button');
+          b.textContent = num;
+          b.type = 'button';
+          b.onclick = function(){
+            ratings[container.dataset.question] = num;
+            container.querySelectorAll('button').forEach(function(x, i){
+              x.className = (i < num) ? 'selected' : '';
+            });
+          };
+          container.appendChild(b);
+        })(n);
+      }
+    });
+
+    function loadReviews(){
+      try { return JSON.parse(localStorage.getItem('mika_reviews') || '[]'); }
+      catch(e){ return []; }
+    }
+    function saveReviews(list){
+      localStorage.setItem('mika_reviews', JSON.stringify(list));
+    }
+
+    function renderReviews(){
+      var list = loadReviews();
+      var grid = document.getElementById('reviewsGrid');
+      var heading = document.getElementById('reviewsHeading');
+      grid.innerHTML = '';
+      if (!list.length) {
+        heading.textContent = 'No reviews yet — be the first!';
+        return;
+      }
+      heading.textContent = list.length + ' review' + (list.length !== 1 ? 's' : '');
+      list.slice().reverse().forEach(function(r){
+        var card = document.createElement('div');
+        card.className = 'review-card';
+
+        var head = document.createElement('div');
+        head.className = 'head';
+        var name = document.createElement('span');
+        name.className = 'name';
+        name.textContent = r.nickname || 'Anonymous';
+        var date = document.createElement('span');
+        date.className = 'date';
+        date.textContent = r.date;
+        head.appendChild(name);
+        head.appendChild(date);
+
+        var comment = document.createElement('p');
+        comment.className = 'comment';
+        comment.textContent = r.comment || (r.comment === '' ? '' : '');
+
+        var summary = document.createElement('div');
+        summary.className = 'rating-summary';
+        var labels = [
+          { q: 'service', t: 'Service' },
+          { q: 'needs', t: 'Needs fulfilled' },
+          { q: 'content', t: 'Content' }
+        ];
+        labels.forEach(function(l){
+          var row = document.createElement('div');
+          row.className = 'row';
+          var label = document.createElement('span');
+          label.textContent = l.t;
+          row.appendChild(label);
+          var bar = document.createElement('div');
+          bar.className = 'rating-bar';
+          var fill = document.createElement('span');
+          fill.style.width = (r[l.q] * 10) + '%';
+          bar.appendChild(fill);
+          row.appendChild(bar);
+          var val = document.createElement('span');
+          val.className = 'value';
+          val.textContent = r[l.q] || '—';
+          row.appendChild(val);
+          summary.appendChild(row);
+        });
+
+        card.appendChild(head);
+        card.appendChild(comment);
+        card.appendChild(summary);
+        grid.appendChild(card);
+      });
+    }
+
+    document.getElementById('submitReview').addEventListener('click', function(){
+      if (!ratings.service || !ratings.needs || !ratings.content) {
+        document.getElementById('reviewSuccess').textContent = 'Please select all three ratings before submitting.';
+        document.getElementById('reviewSuccess').classList.add('show');
+        document.getElementById('reviewSuccess').style.color = '#f87171';
+        setTimeout(function(){
+          document.getElementById('reviewSuccess').style.color = '#4ade80';
+          document.getElementById('reviewSuccess').classList.remove('show');
+        }, 3000);
+        return;
+      }
+      var nickname = document.getElementById('reviewNickname').value.trim();
+      var comment = document.getElementById('reviewComment').value.trim();
+      var list = loadReviews();
+      list.push({
+        nickname: nickname,
+        comment: comment,
+        service: ratings.service,
+        needs: ratings.needs,
+        content: ratings.content,
+        date: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
+      });
+      saveReviews(list);
+      ratings = { service: 0, needs: 0, content: 0 };
+      document.querySelectorAll('.stars').forEach(function(c){
+        c.querySelectorAll('button').forEach(function(x){ x.className = ''; });
+      });
+      document.getElementById('reviewNickname').value = '';
+      document.getElementById('reviewComment').value = '';
+      var success = document.getElementById('reviewSuccess');
+      success.textContent = 'Thank you! Your review has been submitted.';
+      success.style.color = '#4ade80';
+      success.classList.add('show');
+      setTimeout(function(){ success.classList.remove('show'); }, 3500);
+      renderReviews();
+    });
+
+    renderReviews();
+  })();
+
+  // How It Works modals
+  (function(){
+    var WA = 'https://wa.me/27682427999?text=';
+
+    function openModal(id){
+      var m = document.getElementById('modal-' + id);
+      if(!m) return;
+      m.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeModal(m){
+      m.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    document.querySelectorAll('[data-modal]').forEach(function(btn){
+      btn.addEventListener('click', function(){ openModal(btn.dataset.modal); });
+    });
+
+    document.querySelectorAll('.modal').forEach(function(m){
+      m.querySelectorAll('[data-close]').forEach(function(c){
+        c.addEventListener('click', function(){ closeModal(m); });
+      });
+      m.addEventListener('click', function(e){
+        if(e.target === m) closeModal(m);
+      });
+    });
+
+    document.addEventListener('keydown', function(e){
+      if(e.key === 'Escape') document.querySelectorAll('.modal').forEach(function(m){ closeModal(m); });
+    });
+
+    function val(id){
+      var el = document.getElementById(id);
+      return el ? el.value.trim() : '';
+    }
+
+    function buildOrderMessage(){
+      var parts = [];
+      var g = val('order-gallery'), t = val('order-type'), c = val('order-content-type');
+      var l = val('order-length'), s = val('order-style'), p = val('order-concept');
+      var per = val('order-personal'), n = val('order-notes');
+      if(g) parts.push('Gallery: ' + g);
+      if(t) parts.push('Order type: ' + t);
+      if(c) parts.push('Content: ' + c);
+      if(l) parts.push('Video length: ' + l);
+      if(s) parts.push('Location/style: ' + s);
+      if(p) parts.push('Pose/concept: ' + p);
+      if(per) parts.push('Personalised text: ' + per);
+      if(n) parts.push('Notes: ' + n);
+      var msg = "Hi Mika, I'd like to place a content order.";
+      if(parts.length) msg += '\n\n' + parts.join('\n');
+      else msg += ' Can you help me choose?';
+      msg += '\n\nPlease confirm payment details and expected delivery time.';
+      return encodeURIComponent(msg);
+    }
+
+    document.getElementById('continuePayment').addEventListener('click', function(){
+      window.open(WA + buildOrderMessage(), '_blank');
+    });
+
+    document.getElementById('buildCustom').addEventListener('click', function(){
+      var t = document.getElementById('order-type');
+      if(t) t.value = 'Custom request';
+      var s = document.getElementById('order-style');
+      if(s) s.focus();
+    });
+
+    document.getElementById('askQuestion').addEventListener('click', function(){
+      window.open(WA + encodeURIComponent("Hi Mika, I have a question before placing an order."), '_blank');
+    });
+  })();
 })();
 </script>
 </body>

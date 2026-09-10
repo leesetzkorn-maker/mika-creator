@@ -7,8 +7,26 @@
 <meta name="description" content="Mika Creator | Gallery of erotic photos, videos and private video calls in Pretoria. 18+ Adult Content.">
 <title>Gallery | Mika Creator</title>
 <link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/age-gate.css">
+<style>
+.folders{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:960px;margin:0 auto}
+.folder-card{position:relative;border-radius:22px;overflow:hidden;aspect-ratio:4/5;cursor:pointer;border:1px solid rgba(255,255,255,.06);transition:all .3s}
+.folder-card:hover{transform:translateY(-5px);border-color:rgba(255,121,186,.3);box-shadow:0 20px 50px rgba(0,0,0,.4)}
+.folder-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .5s}
+.folder-card:hover img{transform:scale(1.08)}
+.folder-card .overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.08) 0%,rgba(0,0,0,.72) 100%);z-index:1;transition:background .3s}
+.folder-card:hover .overlay{background:linear-gradient(180deg,rgba(0,0,0,.2) 0%,rgba(0,0,0,.85) 100%)}
+.folder-card .info{position:absolute;bottom:0;left:0;right:0;padding:28px 24px;z-index:2}
+.folder-card h3{font-size:22px;font-weight:800;margin-bottom:4px}
+.folder-card .count{font-size:13px;color:rgba(255,255,255,.55);font-weight:500}
+.folder-card .view-cue{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) translateY(8px);z-index:2;opacity:0;transition:all .3s;pointer-events:none;padding:10px 22px;border-radius:100px;background:rgba(255,79,163,.9);font-size:13px;font-weight:700;color:#fff;letter-spacing:.3px;white-space:nowrap}
+.folder-card:hover .view-cue{opacity:1;transform:translate(-50%,-50%) translateY(0)}
+@media(max-width:860px){.folders{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.folders{grid-template-columns:1fr}.folder-card{aspect-ratio:3/4}.folder-card .view-cue{opacity:.85;transform:translate(-50%,-50%) translateY(0)}}
+</style>
 </head>
 <body oncontextmenu="return false;">
+<script src="assets/js/age-gate.js"></script>
 <nav>
 <div class="container nav">
 <a class="logo" href="index.html">MIKA <span>CREATOR</span></a>
@@ -27,31 +45,15 @@
 <div class="container">
 <div class="title">
 <small>Gallery</small>
-<h2>Selected Shots</h2>
-<p>A taste of what’s waiting. © All rights reserved.</p>
+<h2>Photo Collections</h2>
+<p>Choose a collection to explore. © All rights reserved.</p>
 </div>
 </div>
 </section>
 
 <section>
 <div class="container">
-<div class="gallery">
-<div class="photo"><img src="gallery/WhatsApp%20Image%202026-08-24%20at%2009.14.32.jpeg" alt="Mika" loading="lazy"></div>
-<div class="photo"><img src="gallery/WhatsApp%20Image%202026-08-24%20at%2009.14.33%20(1).jpeg" alt="Mika" loading="lazy"></div>
-<div class="photo"><img src="gallery/WhatsApp%20Image%202026-08-24%20at%2009.14.33%20(2).jpeg" alt="Mika" loading="lazy"></div>
-<div class="photo"><img src="gallery/WhatsApp%20Image%202026-08-24%20at%2009.14.33.jpeg" alt="Mika" loading="lazy"></div>
-<div class="photo"><img src="gallery/WhatsApp%20Image%202026-08-24%20at%2009.14.34.jpeg" alt="Mika" loading="lazy"></div>
-<div class="photo"><img src="gallery/WhatsApp%20Image%202026-08-24%20at%2009.14.36%20(1).jpeg" alt="Mika" loading="lazy"></div>
-<div class="photo"><img src="gallery/WhatsApp%20Image%202026-08-24%20at%2009.14.36.jpeg" alt="Mika" loading="lazy"></div>
-<div class="photo"><img src="gallery/WhatsApp%20Image%202026-08-24%20at%2009.14.37%20(1).jpeg" alt="Mika" loading="lazy"></div>
-<div class="photo"><img src="gallery/WhatsApp%20Image%202026-08-24%20at%2009.14.38.jpeg" alt="Mika" loading="lazy"></div>
-<div class="photo"><img src="assets/images/IMG_20260609_112346.jpg" alt="Mika" loading="lazy"></div>
-<div class="photo"><img src="assets/images/IMG_20260609_112406.jpg" alt="Mika" loading="lazy"></div>
-<div class="photo"><img src="assets/images/IMG_20260609_112408.jpg" alt="Mika" loading="lazy"></div>
-<div class="photo"><img src="assets/images/IMG_20260609_112414.jpg" alt="Mika" loading="lazy"></div>
-<div class="photo"><img src="assets/images/IMG_20260609_112416.jpg" alt="Mika" loading="lazy"></div>
-<div class="photo"><img src="assets/images/WhatsApp%20Image%202026-08-20%20at%2013.11.48.jpeg" alt="Mika" loading="lazy"></div>
-</div>
+<div class="folders" id="folders"></div>
 <p class="copyright">© 2026 Mika Creator. All photos are copyrighted. Unauthorised use, download or distribution is prohibited.</p>
 </div>
 </section>
@@ -73,10 +75,34 @@
 <a class="tg" href="https://t.me/+270704782029" target="_blank" rel="noopener">Telegram</a>
 </div>
 
+<script src="gallery/data.js"></script>
 <script>
 (function(){
-  document.addEventListener('contextmenu', function(e){ e.preventDefault(); });
-  document.addEventListener('dragstart', function(e){ if(e.target.tagName === 'IMG') e.preventDefault(); });
+  var covers = {
+    'Farm': 'farm/IMG_20260607_085413.jpg',
+    'Girl on Girl': 'girl-on-girl/WhatsApp%20Image%202026-08-24%20at%2009.14.33%20(1).jpeg',
+    'Hotels': 'hotels/IMG_20260521_152726.jpg',
+    'Indoor': 'indoor/IMG_20260521_152753.jpg',
+    'Mika River': 'mika%20river/IMG_20260702_150820.jpg',
+    'Mountain': 'mountain/IMG_20260609_112414.jpg',
+    'Waterpark': 'waterpark/IMG_20260607_161245.jpg'
+  };
+  var slug = {
+    'Farm': 'gallery/farm', 'Girl on Girl': 'gallery/girl-on-girl', 'Hotels': 'gallery/hotels',
+    'Indoor': 'gallery/indoor', 'Mika River': 'gallery/mika%20river', 'Mountain': 'gallery/mountain', 'Waterpark': 'gallery/waterpark'
+  };
+  var container = document.getElementById('folders');
+  Object.keys(GALLERY_DATA).forEach(function(cat) {
+    var card = document.createElement('a');
+    card.className = 'folder-card';
+    card.href = slug[cat] + '/';
+    card.innerHTML = '<img src="gallery/' + covers[cat] + '" alt="' + cat + '" loading="lazy">' +
+      '<div class="overlay"></div>' +
+      '<span class="view-cue">View Gallery</span>' +
+      '<div class="info"><h3>' + cat + '</h3>' +
+      '<div class="count">' + GALLERY_DATA[cat].length + ' photos</div></div>';
+    container.appendChild(card);
+  });
 })();
 </script>
 </body>

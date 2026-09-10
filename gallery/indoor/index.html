@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#09090d">
+<title>Indoor Collection | Mika Creator</title>
+<link rel="stylesheet" href="../assets/css/category.css">
+<link rel="stylesheet" href="../assets/css/age-gate.css">
+</head>
+<body oncontextmenu="return false;">
+<script src="../assets/js/age-gate.js"></script>
+<section class="cat-hero">
+<img src="../gallery/indoor/IMG_20260521_152753.jpg" alt="Indoor Collection">
+<div class="grad"></div>
+<div class="hero-content">
+<a class="back" href="../gallery.html">\u2190 Back to Gallery</a>
+<h1>Indoor</h1>
+<p class="sub">14 photos &bull; &copy; Mika Creator</p>
+</div>
+</section>
+<div class="container">
+<div class="cat-gallery" id="gallery"></div>
+<div class="cat-order"><a href="https://wa.me/27682427999?text=Hi%20Mika%2C%20I%27m%20interested%20in%20the%20Indoor%20gallery.%20Please%20can%20you%20tell%20me%20the%20available%20options%20and%20how%20to%20order%3F" target="_blank" rel="noopener">Ask about this gallery</a></div>
+<p class="copyright">&copy; 2026 Mika Creator. All photos are copyrighted.</p>
+</div>
+<footer>
+<div>&copy; 2026 Mika Creator &bull; 18+ Adult Content &bull; All Rights Reserved</div>
+<div class="footer-note">Unauthorised use, download or distribution is strictly prohibited.</div>
+<div class="footer-links">
+<a href="../index.html">Home</a>
+<a href="../gallery.html">Gallery</a>
+<a href="../booking.html">Book</a>
+</div>
+</footer>
+<div class="float">
+<a class="booking" href="https://wa.me/27682427999" target="_blank" rel="noopener">Book</a>
+<a class="wa" href="https://wa.me/27682427999" target="_blank" rel="noopener">WhatsApp</a>
+<a class="tg" href="https://t.me/+270704782029" target="_blank" rel="noopener">Telegram</a>
+</div>
+<script src="../assets/js/gallery.js"></script>
+<script>
+(function(){
+  var g = document.getElementById('gallery');
+  var photos = ["IMG_20260521_152614.jpg","IMG_20260521_152632.jpg","IMG_20260521_152704.jpg","IMG_20260521_152717.jpg","IMG_20260521_152726.jpg","IMG_20260521_152748.jpg","IMG_20260521_152753.jpg","IMG_20260521_152819_BURST002.jpg","IMG_20260521_152821.jpg","IMG_20260521_152911.jpg","IMG_20260521_152923.jpg","IMG_20260521_152935.jpg","IMG_20260521_152938.jpg","IMG_20260521_153005.jpg"];
+  photos.forEach(function(name, i){
+    var wrap = document.createElement('div');
+    wrap.className = 'cat-photo';
+    wrap.dataset.cat = 'Indoor';
+    wrap.dataset.index = i;
+    var img = document.createElement('img');
+    img.src = '../gallery/indoor/' + encodeURIComponent(name);
+    img.alt = 'Mika - Indoor';
+    img.loading = 'lazy';
+    img.onerror = function(){ wrap.remove(); };
+    wrap.appendChild(img);
+    g.appendChild(wrap);
+  });
+  MikaGallery.init();
+})();
+</script>
+</body>
+</html>

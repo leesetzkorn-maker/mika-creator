@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#09090d">
+<title>Mountain Collection | Mika Creator</title>
+<link rel="stylesheet" href="../../assets/css/category.css">
+<link rel="stylesheet" href="../../assets/css/age-gate.css">
+</head>
+<body oncontextmenu="return false;">
+<script src="../../assets/js/age-gate.js"></script>
+<section class="cat-hero">
+<img src="../../gallery/mountain/IMG_20260609_112414.jpg" alt="Mountain Collection">
+<div class="grad"></div>
+<div class="hero-content">
+<a class="back" href="../../gallery.html">\u2190 Back to Gallery</a>
+<h1>Mountain</h1>
+<p class="sub">35 photos &bull; &copy; Mika Creator</p>
+</div>
+</section>
+<div class="container">
+<div class="cat-gallery" id="gallery"></div>
+<div class="cat-order"><a href="https://wa.me/27682427999?text=Hi%20Mika%2C%20I%27m%20interested%20in%20the%20Mountain%20gallery.%20Please%20can%20you%20tell%20me%20the%20available%20options%20and%20how%20to%20order%3F" target="_blank" rel="noopener">Ask about this gallery</a></div>
+<p class="copyright">&copy; 2026 Mika Creator. All photos are copyrighted.</p>
+</div>
+<footer>
+<div>&copy; 2026 Mika Creator &bull; 18+ Adult Content &bull; All Rights Reserved</div>
+<div class="footer-note">Unauthorised use, download or distribution is strictly prohibited.</div>
+<div class="footer-links">
+<a href="../../index.html">Home</a>
+<a href="../../gallery.html">Gallery</a>
+<a href="../../booking.html">Book</a>
+</div>
+</footer>
+<div class="float">
+<a class="booking" href="https://wa.me/27682427999" target="_blank" rel="noopener">Book</a>
+<a class="wa" href="https://wa.me/27682427999" target="_blank" rel="noopener">WhatsApp</a>
+<a class="tg" href="https://t.me/+270704782029" target="_blank" rel="noopener">Telegram</a>
+</div>
+<script src="../../assets/js/gallery.js"></script>
+<script>
+(function(){
+  var g = document.getElementById('gallery');
+  var photos = ["IMG_20260609_112339.jpg","IMG_20260609_112344.jpg","IMG_20260609_112346.jpg","IMG_20260609_112406.jpg","IMG_20260609_112408.jpg","IMG_20260609_112414.jpg","IMG_20260609_112416.jpg","IMG_20260609_112427.jpg","IMG_20260609_112429.jpg","IMG_20260609_112432.jpg","IMG_20260609_113438.jpg","IMG_20260609_113441.jpg","IMG_20260609_113447.jpg","IMG_20260609_113455.jpg","IMG_20260609_113458.jpg","IMG_20260609_113502.jpg","IMG_20260609_113506.jpg","IMG_20260609_113508.jpg","IMG_20260609_113519.jpg","IMG_20260609_113525.jpg","IMG_20260609_113526.jpg","IMG_20260609_113529.jpg","IMG_20260609_113532.jpg","IMG_20260609_113533.jpg","IMG_20260609_113537.jpg","IMG_20260609_113544.jpg","IMG_20260609_113546.jpg","IMG_20260609_113553.jpg","IMG_20260609_113556.jpg","IMG_20260609_153136.jpg","IMG_20260609_153137.jpg","IMG_20260609_153147.jpg","WhatsApp Image 2026-08-24 at 09.14.37 (1).jpeg","WhatsApp Image 2026-08-24 at 09.14.37 (2).jpeg","WhatsApp Image 2026-08-24 at 09.14.38.jpeg"];
+  photos.forEach(function(name, i){
+    var wrap = document.createElement('div');
+    wrap.className = 'cat-photo';
+    wrap.dataset.cat = 'Mountain';
+    wrap.dataset.index = i;
+    var img = document.createElement('img');
+    img.src = '../../gallery/mountain/' + encodeURIComponent(name);
+    img.alt = 'Mika - Mountain';
+    img.loading = 'lazy';
+    img.onerror = function(){ wrap.remove(); };
+    wrap.appendChild(img);
+    g.appendChild(wrap);
+  });
+  MikaGallery.init();
+})();
+</script>
+</body>
+</html>

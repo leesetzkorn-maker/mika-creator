@@ -1,0 +1,18 @@
+#ageGate{position:fixed;inset:0;z-index:9999;background:radial-gradient(1200px 800px at 50% -10%,#1a1220 0%,rgba(9,9,13,.98) 60%,#09090d 100%);display:flex;align-items:center;justify-content:center;padding:24px}
+#ageGate .age-card{max-width:460px;width:100%;background:rgba(17,17,24,.95);border:1px solid rgba(255,121,186,.18);border-radius:24px;padding:44px 36px;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.6);animation:ageIn .5s ease-out}
+@keyframes ageIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.age-logo{font-weight:800;font-size:22px;letter-spacing:1px;margin-bottom:4px}
+.age-logo span{color:#ff4fa3}
+.age-tag{font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,.4);font-weight:600}
+.age-line{height:1px;background:rgba(255,255,255,.08);margin:22px 0}
+#ageGate h1{font-size:clamp(24px,5vw,30px);font-weight:800;margin:0 0 12px;letter-spacing:-.3px}
+.age-sub{color:rgba(255,255,255,.55);font-size:14px;line-height:1.7;margin-bottom:28px}
+.age-btns{display:grid;gap:10px}
+.age-btn{display:block;padding:16px 20px;border-radius:14px;font-weight:700;font-size:15px;cursor:pointer;border:none;font-family:inherit;transition:all .22s}
+.age-btn.primary{background:#ff4fa3;color:#fff;box-shadow:0 8px 28px rgba(255,79,163,.35)}
+.age-btn.primary:hover{background:#ff6bb3;transform:translateY(-2px)}
+.age-btn.ghost{background:rgba(255,255,255,.06);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.14)}
+.age-btn.ghost:hover{background:rgba(255,255,255,.12);color:#fff}
+.age-denied h1{color:#f87171}
+.age-note{font-size:12px;color:rgba(255,255,255,.3);margin-top:18px;line-height:1.6}
+@media(max-width:480px){#ageGate .age-card{padding:36px 24px}}
