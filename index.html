@@ -634,6 +634,9 @@ Studio and indoor shoots can sometimes feel a little too quiet for me, but I alw
 <a class="tg" href="https://t.me/+270704782029" target="_blank" rel="noopener">Telegram</a>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/config.js"></script>
+<script src="assets/js/persistence.js"></script>
 <script>
 (function(){
   var slides = document.querySelectorAll('#heroSlides img');
@@ -648,9 +651,17 @@ Studio and indoor shoots can sometimes feel a little too quiet for me, but I alw
   document.addEventListener('contextmenu', function(e){ e.preventDefault(); });
   document.addEventListener('dragstart', function(e){ if(e.target.tagName === 'IMG') e.preventDefault(); });
 
-  // Client reviews
+  // Client reviews (persisted globally via Supabase)
   (function(){
     var ratings = { service: 0, needs: 0, content: 0 };
+    var successEl = document.getElementById('reviewSuccess');
+    var headingEl = document.getElementById('reviewsHeading');
+    var gridEl = document.getElementById('reviewsGrid');
+    var submitBtn = document.getElementById('submitReview');
+    var nicknameEl = document.getElementById('reviewNickname');
+    var commentEl = document.getElementById('reviewComment');
+    var successTimer = null;
+    var baseHeadingColor = headingEl && headingEl.style ? headingEl.style.color : '';
 
     document.querySelectorAll('.stars').forEach(function(container){
       for (var n = 1; n <= 10; n++) {
@@ -669,25 +680,33 @@ Studio and indoor shoots can sometimes feel a little too quiet for me, but I alw
       }
     });
 
-    function loadReviews(){
-      try { return JSON.parse(localStorage.getItem('mika_reviews') || '[]'); }
-      catch(e){ return []; }
-    }
-    function saveReviews(list){
-      localStorage.setItem('mika_reviews', JSON.stringify(list));
+    function showMessage(text, isError){
+      if (successTimer) clearTimeout(successTimer);
+      successEl.textContent = text;
+      successEl.style.color = isError ? '#f87171' : '#4ade80';
+      successEl.classList.add('show');
+      successTimer = setTimeout(function(){
+        successEl.classList.remove('show');
+      }, isError ? 5000 : 3500);
     }
 
-    function renderReviews(){
-      var list = loadReviews();
-      var grid = document.getElementById('reviewsGrid');
-      var heading = document.getElementById('reviewsHeading');
-      grid.innerHTML = '';
-      if (!list.length) {
-        heading.textContent = 'No reviews yet — be the first!';
+    function formatDate(row){
+      if (row.display_date) return row.display_date;
+      if (row.created_at) {
+        var d = new Date(row.created_at);
+        return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+      }
+      return '';
+    }
+
+    function renderReviews(list){
+      gridEl.innerHTML = '';
+      if (!list || !list.length) {
+        headingEl.textContent = 'No reviews yet — be the first!';
         return;
       }
-      heading.textContent = list.length + ' review' + (list.length !== 1 ? 's' : '');
-      list.slice().reverse().forEach(function(r){
+      headingEl.textContent = list.length + ' review' + (list.length !== 1 ? 's' : '');
+      list.forEach(function(r){
         var card = document.createElement('div');
         card.className = 'review-card';
 
@@ -698,13 +717,13 @@ Studio and indoor shoots can sometimes feel a little too quiet for me, but I alw
         name.textContent = r.nickname || 'Anonymous';
         var date = document.createElement('span');
         date.className = 'date';
-        date.textContent = r.date;
+        date.textContent = formatDate(r);
         head.appendChild(name);
         head.appendChild(date);
 
         var comment = document.createElement('p');
         comment.className = 'comment';
-        comment.textContent = r.comment || (r.comment === '' ? '' : '');
+        comment.textContent = r.comment || '';
 
         var summary = document.createElement('div');
         summary.className = 'rating-summary';
@@ -735,48 +754,62 @@ Studio and indoor shoots can sometimes feel a little too quiet for me, but I alw
         card.appendChild(head);
         card.appendChild(comment);
         card.appendChild(summary);
-        grid.appendChild(card);
+        gridEl.appendChild(card);
       });
     }
 
-    document.getElementById('submitReview').addEventListener('click', function(){
+    function resetRatings(){
+      ratings = { service: 0, needs: 0, content: 0 };
+      document.querySelectorAll('.stars').forEach(function(c){
+        c.querySelectorAll('button').forEach(function(x){ x.className = ''; });
+      });
+    }
+
+    submitBtn.addEventListener('click', function(){
       if (!ratings.service || !ratings.needs || !ratings.content) {
-        document.getElementById('reviewSuccess').textContent = 'Please select all three ratings before submitting.';
-        document.getElementById('reviewSuccess').classList.add('show');
-        document.getElementById('reviewSuccess').style.color = '#f87171';
-        setTimeout(function(){
-          document.getElementById('reviewSuccess').style.color = '#4ade80';
-          document.getElementById('reviewSuccess').classList.remove('show');
-        }, 3000);
+        showMessage('Please select all three ratings before submitting.', true);
         return;
       }
-      var nickname = document.getElementById('reviewNickname').value.trim();
-      var comment = document.getElementById('reviewComment').value.trim();
-      var list = loadReviews();
-      list.push({
+      var nickname = nicknameEl.value.trim();
+      var comment = commentEl.value.trim();
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Submitting…';
+
+      Persistence.addReview({
         nickname: nickname,
         comment: comment,
         service: ratings.service,
         needs: ratings.needs,
         content: ratings.content,
         date: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
+      }).then(function(){
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit Review';
+        resetRatings();
+        nicknameEl.value = '';
+        commentEl.value = '';
+        headingEl.style.color = baseHeadingColor;
+        renderReviews(Persistence.getReviews());
+        showMessage('Thank you! Your review has been submitted.');
+      }).catch(function(err){
+        console.error('Review submit failed', err);
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit Review';
+        showMessage('Your review could not be saved. Please try again.', true);
       });
-      saveReviews(list);
-      ratings = { service: 0, needs: 0, content: 0 };
-      document.querySelectorAll('.stars').forEach(function(c){
-        c.querySelectorAll('button').forEach(function(x){ x.className = ''; });
-      });
-      document.getElementById('reviewNickname').value = '';
-      document.getElementById('reviewComment').value = '';
-      var success = document.getElementById('reviewSuccess');
-      success.textContent = 'Thank you! Your review has been submitted.';
-      success.style.color = '#4ade80';
-      success.classList.add('show');
-      setTimeout(function(){ success.classList.remove('show'); }, 3500);
-      renderReviews();
     });
 
-    renderReviews();
+    Persistence.loadIfNeeded()
+      .then(function(){
+        headingEl.style.color = baseHeadingColor;
+        renderReviews(Persistence.getReviews());
+      })
+      .catch(function(err){
+        console.error('Failed to load reviews', err);
+        renderReviews([]);
+        headingEl.textContent = 'Reviews could not be loaded right now. Please try again later.';
+        headingEl.style.color = 'rgba(248,113,113,.85)';
+      });
   })();
 
   // How It Works modals
@@ -853,5 +886,6 @@ Studio and indoor shoots can sometimes feel a little too quiet for me, but I alw
   })();
 })();
 </script>
+<script src="assets/js/protect.js"></script>
 </body>
 </html>

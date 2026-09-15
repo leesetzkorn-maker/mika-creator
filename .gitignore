@@ -11,3 +11,6 @@ Desktop.ini
 # Logs / temp
 *.log
 *.tmp
+
+# Private source images (never pushed to public repo)
+/gallery/new mountain/

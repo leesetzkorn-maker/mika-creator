@@ -161,7 +161,17 @@ var GALLERY_DATA = {
     "IMG_20260609_153147.jpg",
     "WhatsApp Image 2026-08-24 at 09.14.37 (1).jpeg",
     "WhatsApp Image 2026-08-24 at 09.14.37 (2).jpeg",
-    "WhatsApp Image 2026-08-24 at 09.14.38.jpeg"
+    "WhatsApp Image 2026-08-24 at 09.14.38.jpeg",
+    "IMG_20260609_123301.jpg",
+    "IMG_20260609_123312.jpg",
+    "IMG_20260609_123316.jpg",
+    "IMG_20260609_123319.jpg",
+    "IMG_20260609_125630.jpg",
+    "IMG_20260609_125632.jpg",
+    "IMG_20260609_153230.jpg",
+    "IMG_20260609_153233.jpg",
+    "IMG_20260609_153237.jpg",
+    "IMG_20260609_153241.jpg"
   ],
   "Waterpark": [
     "IMG_20260607_161245.jpg",

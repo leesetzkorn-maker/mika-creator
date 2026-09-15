@@ -16,7 +16,7 @@
 <div class="hero-content">
 <a class="back" href="../../gallery.html">\u2190 Back to Gallery</a>
 <h1>Mountain</h1>
-<p class="sub">35 photos &bull; &copy; Mika Creator</p>
+<p class="sub">45 photos &bull; &copy; Mika Creator</p>
 </div>
 </section>
 <div class="container">
@@ -38,11 +38,14 @@
 <a class="wa" href="https://wa.me/27682427999" target="_blank" rel="noopener">WhatsApp</a>
 <a class="tg" href="https://t.me/+270704782029" target="_blank" rel="noopener">Telegram</a>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../../assets/js/config.js"></script>
+<script src="../../assets/js/persistence.js"></script>
 <script src="../../assets/js/gallery.js"></script>
 <script>
 (function(){
   var g = document.getElementById('gallery');
-  var photos = ["IMG_20260609_112339.jpg","IMG_20260609_112344.jpg","IMG_20260609_112346.jpg","IMG_20260609_112406.jpg","IMG_20260609_112408.jpg","IMG_20260609_112414.jpg","IMG_20260609_112416.jpg","IMG_20260609_112427.jpg","IMG_20260609_112429.jpg","IMG_20260609_112432.jpg","IMG_20260609_113438.jpg","IMG_20260609_113441.jpg","IMG_20260609_113447.jpg","IMG_20260609_113455.jpg","IMG_20260609_113458.jpg","IMG_20260609_113502.jpg","IMG_20260609_113506.jpg","IMG_20260609_113508.jpg","IMG_20260609_113519.jpg","IMG_20260609_113525.jpg","IMG_20260609_113526.jpg","IMG_20260609_113529.jpg","IMG_20260609_113532.jpg","IMG_20260609_113533.jpg","IMG_20260609_113537.jpg","IMG_20260609_113544.jpg","IMG_20260609_113546.jpg","IMG_20260609_113553.jpg","IMG_20260609_113556.jpg","IMG_20260609_153136.jpg","IMG_20260609_153137.jpg","IMG_20260609_153147.jpg","WhatsApp Image 2026-08-24 at 09.14.37 (1).jpeg","WhatsApp Image 2026-08-24 at 09.14.37 (2).jpeg","WhatsApp Image 2026-08-24 at 09.14.38.jpeg"];
+  var photos = ["IMG_20260609_112339.jpg","IMG_20260609_112344.jpg","IMG_20260609_112346.jpg","IMG_20260609_112406.jpg","IMG_20260609_112408.jpg","IMG_20260609_112414.jpg","IMG_20260609_112416.jpg","IMG_20260609_112427.jpg","IMG_20260609_112429.jpg","IMG_20260609_112432.jpg","IMG_20260609_113438.jpg","IMG_20260609_113441.jpg","IMG_20260609_113447.jpg","IMG_20260609_113455.jpg","IMG_20260609_113458.jpg","IMG_20260609_113502.jpg","IMG_20260609_113506.jpg","IMG_20260609_113508.jpg","IMG_20260609_113519.jpg","IMG_20260609_113525.jpg","IMG_20260609_113526.jpg","IMG_20260609_113529.jpg","IMG_20260609_113532.jpg","IMG_20260609_113533.jpg","IMG_20260609_113537.jpg","IMG_20260609_113544.jpg","IMG_20260609_113546.jpg","IMG_20260609_113553.jpg","IMG_20260609_113556.jpg","IMG_20260609_153136.jpg","IMG_20260609_153137.jpg","IMG_20260609_153147.jpg","WhatsApp Image 2026-08-24 at 09.14.37 (1).jpeg","WhatsApp Image 2026-08-24 at 09.14.37 (2).jpeg","WhatsApp Image 2026-08-24 at 09.14.38.jpeg","IMG_20260609_123301.jpg","IMG_20260609_123312.jpg","IMG_20260609_123316.jpg","IMG_20260609_123319.jpg","IMG_20260609_125630.jpg","IMG_20260609_125632.jpg","IMG_20260609_153230.jpg","IMG_20260609_153233.jpg","IMG_20260609_153237.jpg","IMG_20260609_153241.jpg"];
   photos.forEach(function(name, i){
     var wrap = document.createElement('div');
     wrap.className = 'cat-photo';
@@ -59,5 +62,6 @@
   MikaGallery.init();
 })();
 </script>
+<script src="../../assets/js/protect.js"></script>
 </body>
 </html>
