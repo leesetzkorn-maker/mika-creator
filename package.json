@@ -1,0 +1,25 @@
+{
+  "name": "mika-creator",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Mika Creator — premium 18+ creator portfolio & gallery (static build + asset pipeline)",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "pipelines": "node scripts/pipeline/run.mjs",
+    "classify": "node scripts/pipeline/classify.mjs",
+    "process": "node scripts/pipeline/process.mjs",
+    "build": "node scripts/build.mjs",
+    "build:gallery": "node scripts/generate/gallery.mjs",
+    "build:sitemap": "node scripts/generate/sitemap.mjs",
+    "migration": "node scripts/generate/vote-migration.mjs",
+    "serve": "node scripts/serve.mjs",
+    "audit": "node scripts/audit.mjs",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "sharp": "^0.33.5"
+  }
+}

@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /private/
+Disallow: /gallery/*/index.html?raw=1
+
+Sitemap: https://www.mikacreator.co.za/sitemap.xml

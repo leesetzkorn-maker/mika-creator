@@ -12,5 +12,19 @@ Desktop.ini
 *.log
 *.tmp
 
-# Private source images (never pushed to public repo)
+# Node
+node_modules/
+
+# Secrets (never commit)
+.env
+.env.local
+.env.*.local
+
+# Private source images + intermediates (never published)
+/private/originals/
+/private/work/
+/private/cache/
+/private/review-state.json
+
+# Legacy private source images (never pushed to public repo)
 /gallery/new mountain/
