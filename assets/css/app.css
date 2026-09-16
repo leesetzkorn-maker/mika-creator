@@ -235,6 +235,25 @@ body::after {
   animation: pulseDown 2.4s ease-in-out infinite;
 }
 .hero-scroll::before { content: ""; width: 1px; height: 44px; background: linear-gradient(var(--gold), transparent); }
+
+/* ---------- hero · mobile ----------
+   Phone viewports use a dedicated 9:16 portrait derivative (hero-bg) so the
+   subject stays framed; the text/CTAs sit in the lower third over a gentle
+   scrim so they never cover Mika's face or the main composition. */
+@media (max-width: 700px) {
+  .hero { align-items: flex-end; padding-bottom: calc(2.6rem + env(safe-area-inset-bottom)); }
+  .hero-bg { background-position: center 35%; }
+  .hero-overlay {
+    background:
+      radial-gradient(120% 80% at 50% 20%, rgba(10, 10, 14, 0.08), rgba(10, 10, 14, 0.30) 55%, rgba(10, 10, 14, 0.74) 100%);
+  }
+  .hero-inner { text-align: center; }
+  .hero-eyebrow { margin-bottom: 1rem; }
+  .hero-title { font-size: clamp(2.7rem, 13vw, 4.2rem); margin-bottom: 0.9rem; }
+  .hero-tagline { font-size: 1.02rem; line-height: 1.5; max-width: 40ch; margin-bottom: 1.8rem; }
+  .hero-actions .btn { padding: 0.85rem 1.5rem; font-size: 0.74rem; }
+  .hero-scroll { display: none; }
+}
 @keyframes pulseDown { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
 
 /* ---------- sections / panels ---------- */

@@ -114,6 +114,7 @@ export async function processAll() {
     const full = sharp(src).rotate().resize({ width: 1700, height: 2200, fit: 'inside' });
     const og = sharp(src).rotate().resize({ width: 1200, height: 630, fit: 'cover', position: 'centre' });
     const hero = sharp(src).rotate().resize({ width: 1920, height: 1080, fit: 'cover', position: 'attention' });
+    const mobile = sharp(src).rotate().resize({ width: 780, height: 1388, fit: 'cover', position: 'attention' });
     const blur = sharp(src)
       .rotate()
       .resize({ width: 900, height: 1200, fit: 'inside' })
@@ -126,6 +127,7 @@ export async function processAll() {
     await writeDerivative(full.composite([{ input: WATERMARK_SVG, gravity: 'southeast', blend: 'over' }]), `${base}.full.webp`, 'webp', 80);
     await writeDerivative(og.composite([{ input: WATERMARK_SVG, gravity: 'southeast', blend: 'over' }]), `${base}.og.jpg`, 'jpeg', 80);
     await writeDerivative(hero.composite([{ input: WATERMARK_SVG, gravity: 'southeast', blend: 'over' }]), `${base}.hero.webp`, 'webp', 78);
+    await writeDerivative(mobile.composite([{ input: WATERMARK_SVG, gravity: 'southeast', blend: 'over' }]), `${base}.mobile.webp`, 'webp', 78);
     await writeDerivative(blur, `${base}.blur.webp`, 'webp', 74);
 
     const classification = classifications.bySlug?.[asset.slug] || {
@@ -165,6 +167,7 @@ export async function processAll() {
         thumb: `assets/images/${asset.collection}/${asset.slug}.thumb.webp`,
         full: `assets/images/${asset.collection}/${asset.slug}.full.webp`,
         hero: `assets/images/${asset.collection}/${asset.slug}.hero.webp`,
+        mobile: `assets/images/${asset.collection}/${asset.slug}.mobile.webp`,
         og: `assets/images/${asset.collection}/${asset.slug}.og.jpg`,
         blur: `assets/images/${asset.collection}/${asset.slug}.blur.webp`,
       },

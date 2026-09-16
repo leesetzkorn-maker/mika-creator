@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "generatedAt": "2026-09-16T14:10:00.411Z",
+  "generatedAt": "2026-09-16T15:00:13.658Z",
   "strategy": "quality-weighted-ranked",
   "preferLandscape": true,
   "maxCandidates": 8,
@@ -19,6 +19,7 @@
       "alt": "Mountain — Mika Creator preview",
       "url": "/assets/images/mountain/mountain-img-20260609-113532.blur.webp",
       "hero": "/assets/images/mountain/mountain-img-20260609-113532.hero.webp",
+      "mobile": "/assets/images/mountain/mountain-img-20260609-113532.mobile.webp",
       "fallback": "/assets/images/mountain/mountain-img-20260609-113532.blur.webp",
       "thumb": "/assets/images/mountain/mountain-img-20260609-113532.thumb.webp",
       "sharpUrl": "/assets/images/mountain/mountain-img-20260609-113532.hero.webp"
@@ -37,6 +38,7 @@
       "alt": "Mika River — Mika Creator preview",
       "url": "/assets/images/mika-river/mika-river-img-20260702-151217.blur.webp",
       "hero": "/assets/images/mika-river/mika-river-img-20260702-151217.hero.webp",
+      "mobile": "/assets/images/mika-river/mika-river-img-20260702-151217.mobile.webp",
       "fallback": "/assets/images/mika-river/mika-river-img-20260702-151217.blur.webp",
       "thumb": "/assets/images/mika-river/mika-river-img-20260702-151217.thumb.webp",
       "sharpUrl": "/assets/images/mika-river/mika-river-img-20260702-151217.hero.webp"
@@ -55,6 +57,7 @@
       "alt": "Mountain — Mika Creator preview",
       "url": "/assets/images/mountain/mountain-img-20260609-113553.blur.webp",
       "hero": "/assets/images/mountain/mountain-img-20260609-113553.hero.webp",
+      "mobile": "/assets/images/mountain/mountain-img-20260609-113553.mobile.webp",
       "fallback": "/assets/images/mountain/mountain-img-20260609-113553.blur.webp",
       "thumb": "/assets/images/mountain/mountain-img-20260609-113553.thumb.webp",
       "sharpUrl": "/assets/images/mountain/mountain-img-20260609-113553.hero.webp"
@@ -73,6 +76,7 @@
       "alt": "Mika River — Mika Creator preview",
       "url": "/assets/images/mika-river/mika-river-img-20260702-151220.blur.webp",
       "hero": "/assets/images/mika-river/mika-river-img-20260702-151220.hero.webp",
+      "mobile": "/assets/images/mika-river/mika-river-img-20260702-151220.mobile.webp",
       "fallback": "/assets/images/mika-river/mika-river-img-20260702-151220.blur.webp",
       "thumb": "/assets/images/mika-river/mika-river-img-20260702-151220.thumb.webp",
       "sharpUrl": "/assets/images/mika-river/mika-river-img-20260702-151220.hero.webp"
@@ -91,6 +95,7 @@
       "alt": "Waterpark — Mika Creator preview",
       "url": "/assets/images/waterpark/waterpark-img-20260607-161247.blur.webp",
       "hero": "/assets/images/waterpark/waterpark-img-20260607-161247.hero.webp",
+      "mobile": "/assets/images/waterpark/waterpark-img-20260607-161247.mobile.webp",
       "fallback": "/assets/images/waterpark/waterpark-img-20260607-161247.blur.webp",
       "thumb": "/assets/images/waterpark/waterpark-img-20260607-161247.thumb.webp",
       "sharpUrl": "/assets/images/waterpark/waterpark-img-20260607-161247.hero.webp"
@@ -109,6 +114,7 @@
       "alt": "Hotels — Mika Creator preview",
       "url": "/assets/images/hotels/hotels-img-20260604-151536.blur.webp",
       "hero": "/assets/images/hotels/hotels-img-20260604-151536.hero.webp",
+      "mobile": "/assets/images/hotels/hotels-img-20260604-151536.mobile.webp",
       "fallback": "/assets/images/hotels/hotels-img-20260604-151536.blur.webp",
       "thumb": "/assets/images/hotels/hotels-img-20260604-151536.thumb.webp",
       "sharpUrl": "/assets/images/hotels/hotels-img-20260604-151536.hero.webp"
@@ -127,6 +133,7 @@
       "alt": "Waterpark — Mika Creator preview",
       "url": "/assets/images/waterpark/waterpark-img-20260607-161245.blur.webp",
       "hero": "/assets/images/waterpark/waterpark-img-20260607-161245.hero.webp",
+      "mobile": "/assets/images/waterpark/waterpark-img-20260607-161245.mobile.webp",
       "fallback": "/assets/images/waterpark/waterpark-img-20260607-161245.blur.webp",
       "thumb": "/assets/images/waterpark/waterpark-img-20260607-161245.thumb.webp",
       "sharpUrl": "/assets/images/waterpark/waterpark-img-20260607-161245.hero.webp"
@@ -145,6 +152,7 @@
       "alt": "Hotels — Mika Creator preview",
       "url": "/assets/images/hotels/hotels-img-20260604-151045.blur.webp",
       "hero": "/assets/images/hotels/hotels-img-20260604-151045.hero.webp",
+      "mobile": "/assets/images/hotels/hotels-img-20260604-151045.mobile.webp",
       "fallback": "/assets/images/hotels/hotels-img-20260604-151045.blur.webp",
       "thumb": "/assets/images/hotels/hotels-img-20260604-151045.thumb.webp",
       "sharpUrl": "/assets/images/hotels/hotels-img-20260604-151045.hero.webp"

@@ -1,6 +1,9 @@
 import { $ } from './ui.mjs';
 import { isVerified } from './age-gate.mjs';
 
+const MOBILE_QUERY = '(max-width: 700px)';
+const mq = () => window.matchMedia(MOBILE_QUERY);
+
 export async function initHero() {
   const hero = $('#hero');
   const bg = $('#hero-bg');
@@ -22,24 +25,25 @@ export async function initHero() {
     return;
   }
 
-  const unlocked = isVerified();
+  // Mobile uses a dedicated portrait derivative (9:16) so the subject stays
+  // framed on phone viewports; desktop keeps the cinematic 16:9 hero crop.
+  const sharpSrc = (c) => {
+    const onMobile = mq().matches;
+    return onMobile ? (c.mobile || c.sharpUrl || c.hero || '') : (c.sharpUrl || c.hero || '');
+  };
 
   let idx = -1;
   let attempts = 0;
   const apply = (candidate) => {
-    const sharp = candidate.sharpUrl || candidate.hero || '';
+    const unlocked = isVerified();
+    const sharp = sharpSrc(candidate);
     if (sharp) bg.dataset.sharp = sharp;
     bg.style.backgroundImage = `url('${unlocked && sharp ? sharp : candidate.url}')`;
     bg.classList.toggle('is-blur', !unlocked && candidate.visibility !== 'public');
     hero.classList.add('loaded');
     hero.dataset.heroActive = candidate.slug;
-    if (!unlocked && candidate.visibility !== 'public') {
-      const note = $('#hero-preview-note');
-      if (note) note.hidden = false;
-    } else {
-      const note = $('#hero-preview-note');
-      if (note) note.hidden = true;
-    }
+    const note = $('#hero-preview-note');
+    if (note) note.hidden = unlocked || candidate.visibility === 'public';
   };
 
   const tryNext = () => {
@@ -50,7 +54,7 @@ export async function initHero() {
     attempts++;
     idx = (idx + 1) % candidates.length;
     const c = candidates[idx];
-    const sharp = unlocked ? (c.sharpUrl || c.hero || '') : '';
+    const sharp = sharpSrc(c);
     const preloadSrc = sharp || c.url;
     const img = new Image();
     img.onload = () => apply(c);
@@ -60,13 +64,30 @@ export async function initHero() {
 
   tryNext();
 
-  document.addEventListener('mika:gate-passed', () => {
-    const sharpSrc = bg.dataset.sharp;
-    if (sharpSrc && bg.classList.contains('is-blur')) {
-      bg.style.backgroundImage = `url('${sharpSrc}')`;
+  const swapToSharp = () => {
+    const sharp = bg.dataset.sharp;
+    if (sharp && bg.classList.contains('is-blur') && isVerified()) {
+      bg.style.backgroundImage = `url('${sharp}')`;
       bg.classList.remove('is-blur');
       const note = $('#hero-preview-note');
       if (note) note.hidden = true;
+    }
+  };
+
+  document.addEventListener('mika:gate-passed', swapToSharp);
+
+  // Swap derivative when the viewport crosses to/from mobile (no reload).
+  mq().addEventListener('change', () => {
+    const c = candidates[idx % candidates.length];
+    if (!c) return;
+    if (isVerified() && !bg.classList.contains('is-blur')) {
+      const sharp = sharpSrc(c);
+      if (sharp) {
+        bg.dataset.sharp = sharp;
+        bg.style.backgroundImage = `url('${sharp}')`;
+      }
+    } else {
+      bg.dataset.sharp = sharpSrc(c);
     }
   });
 }
