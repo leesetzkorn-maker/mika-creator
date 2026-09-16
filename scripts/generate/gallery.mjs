@@ -101,13 +101,25 @@ const pub = (u) => (u && u.startsWith('assets/') ? '/' + u : u);
     candidates: picks,
   });
 
+  // ---- teaser selection (public showcase: a curated few per collection) ---- 
+  const teaserMax = Math.max(1, Math.min(4, site.hero?.teaserMax || 3));
+  const teaserByColl = new Map();
+  for (const { a } of scored) {
+    const list = teaserByColl.get(a.collection) || [];
+    if (list.length >= teaserMax) continue;
+    list.push({ slug: a.slug, thumb: pub(a.urls.thumb), hero: pub(a.urls.hero) });
+    teaserByColl.set(a.collection, list);
+  }
+
   // ---- collections (with cover) ----------------------------------------
   const collections = site.collections.map((c) => {
     const items = perCollection.get(c.slug) || [];
-    const cover =
-      picks.find((p) => p.collection === c.slug) ||
-      items.map((a) => ({ slug: a.slug, quality: a.quality, url: pub(a.urls.blur), alt: `${c.title} — Mika` }))
-        .sort((x, y) => y.quality - x.quality)[0];
+    const teasers = teaserByColl.get(c.slug) || [];
+    const cover = teasers[0]?.thumb
+      ? { slug: teasers[0].slug, url: teasers[0].thumb }
+      : (picks.find((p) => p.collection === c.slug) ||
+         items.map((a) => ({ slug: a.slug, quality: a.quality, url: pub(a.urls.thumb), alt: `${c.title} — Mika` }))
+           .sort((x, y) => y.quality - x.quality)[0]);
     return {
       slug: c.slug,
       title: c.title,
@@ -116,6 +128,7 @@ const pub = (u) => (u && u.startsWith('assets/') ? '/' + u : u);
       count: items.length,
       cover: pub(cover?.url) || null,
       coverSlug: cover?.slug || null,
+      teasers: teasers.map((t) => t.slug),
     };
   });
 

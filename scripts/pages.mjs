@@ -207,13 +207,11 @@ const HERO = () => `<section class="hero" id="hero" aria-label="Introduction">
 </section>`;
 
 function collectionCard(col) {
-  const preview = /\.blur\.webp$/.test(col.cover || '');
   return `<article class="card">
     <div class="card-media">
       <img src="${col.cover}" alt="${col.title} — Mika Creator preview" loading="lazy" draggable="false">
       <div class="card-shade"></div>
       <span class="card-count">${col.count} photos</span>
-      ${preview ? `<div class="lock-badge" style="inset:auto 1rem 1rem auto;width:auto;padding:.4rem .9rem;background:rgba(10,10,14,.55)"><span class="lock-ico" style="width:15px;height:15px">${icons.lock}</span> preview</div>` : ''}
     </div>
     <div class="card-body">
       <h3 class="card-title">${col.title}</h3>
@@ -232,6 +230,22 @@ function pageHero({ eyebrow, title, lead }) {
       <p class="lead">${lead}</p>
     </div>
   </section>`;
+}
+
+function TEASER_CTA() {
+  return `<section class="section section-tight teaser-cta">
+  <div class="container">
+    <div class="cta-strip">
+      <p class="eyebrow">full access</p>
+      <h2 class="display">Want to see the real content?</h2>
+      <p class="lead">Get in touch with Mika.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary btn-lg" href="/connect/">Get in touch with Mika</a>
+      </div>
+      <p class="cta-note">Private galleries and full content available on request.</p>
+    </div>
+  </div>
+</section>`;
 }
 
 /* ---------------- pages ---------------- */
@@ -261,8 +275,8 @@ function pageIndex() {
       </div>
       <div class="panel panel-pad" style="text-align:center">
         <p class="eyebrow">a note on previews</p>
-        <p class="lead" style="font-size:1.15rem">Every gallery here opens as a <strong>safe, blurred preview</strong> — the way premium 18+ content should be handled. Full galleries open once we are connected directly.</p>
-        <a class="btn btn-primary" href="/connect/" style="margin-top:.6rem">Request full access</a>
+        <p class="lead" style="font-size:1.15rem">This is a curated showcase — a small selection of teaser photos from each collection. The full sets stay between Mika and those she invites closer.</p>
+        <a class="btn btn-primary" href="/connect/" style="margin-top:.6rem">Get in touch</a>
       </div>
     </div>
   </div>
@@ -273,7 +287,7 @@ function pageIndex() {
       <p class="eyebrow">the gallery</p>
       <div class="gold-rule"></div>
       <h2 class="section-title">Collections</h2>
-      <p class="lead">Seven worlds, one muse. Browse a blurred preview of each set below before stepping inside.</p>
+      <p class="lead">A curated preview from each world. Full galleries are shared privately — get in touch to see more.</p>
     </div>
     <div class="collection-grid">
       ${gallery.collections.map((col) => collectionCard(col)).join('')}
@@ -287,12 +301,12 @@ function pageIndex() {
   <div class="container">
     <div class="cta-strip">
       <p class="eyebrow">let’s talk</p>
-      <h2 class="display">Prefer a private conversation?</h2>
-      <p class="lead">Message Mika directly on WhatsApp or Telegram — that’s where full gallery access happens.</p>
+      <h2 class="display">Want to see the real content?</h2>
+      <p class="lead">Get in touch with Mika — private galleries and full content available on request.</p>
       <div class="hero-actions">
-        <a class="btn btn-primary btn-lg" href="https://${c.whatsappDomain}/${c.whatsappNumber}" target="_blank" rel="noopener">WhatsApp ${c.whatsappDisplay}</a>
-        <a class="btn btn-ghost btn-lg" href="${c.telegram}" target="_blank" rel="noopener">Telegram</a>
+        <a class="btn btn-primary btn-lg" href="/connect/">Get in touch with Mika</a>
       </div>
+      <p class="cta-note">Private galleries and full content available on request.</p>
     </div>
   </div>
 </section>`;
@@ -302,52 +316,55 @@ function pageGallery() {
   return `${pageHero({
     eyebrow: 'the gallery',
     title: 'Browse the worlds of Mika',
-    lead: 'Original adult galleries, presented as safe blurred previews. Choose a collection to look closer.',
+    lead: 'A curated preview from each collection. Full galleries open once you’re connected with Mika.',
   })}
 <section class="section section-tight" id="collections">
   <div class="container">
+    <div class="section-head">
+      <p class="eyebrow">the gallery</p>
+      <div class="gold-rule"></div>
+      <h2 class="section-title">Collections</h2>
+      <p class="lead">Choose a collection to look closer.</p>
+    </div>
     <div class="collection-grid">
       ${gallery.collections.map((col) => collectionCard(col)).join('')}
     </div>
   </div>
 </section>
-<section class="section">
+<section class="section section-tight">
   <div class="container">
     <div class="section-head">
-      <p class="eyebrow">latest sets</p>
+      <p class="eyebrow">latest teasers</p>
       <div class="gold-rule"></div>
-      <h2 class="section-title">Recently captured</h2>
+      <h2 class="section-title">A glimpse inside</h2>
     </div>
-    <div class="gallery-grid" id="gallery-grid"></div>
-    <div class="load-more">
-      <button class="btn btn-ghost" id="load-more" hidden><span class="load-more-count"></span>Load more</button>
-    </div>
+    <div class="gallery-grid teaser-grid" id="gallery-grid"></div>
   </div>
-</section>`;
+</section>
+${TEASER_CTA()}`;
 }
 
 function pageCollection(col) {
+  const teaserNote = `${col.count} original photos — a select few are shown as previews here.`;
   return `${pageHero({
     eyebrow: 'collection',
     title: col.title,
-    lead: `${col.subtitle ? col.subtitle + '. ' : ''}${col.offer || ''} ${col.count} original photos — shown as safe previews.`,
+    lead: `${col.subtitle ? col.subtitle + '. ' : ''}${col.offer || ''} ${teaserNote}`,
   })}
 <section class="section section-tight">
   <div class="container">
     <div style="display:flex;gap:1rem;align-items:center;justify-content:center;flex-wrap:wrap">
       <button class="like-btn" id="like-btn" data-type="collection" data-object="${col.slug}" aria-pressed="false">${icons.heart}<span class="count" id="like-count">…</span><span>Likes</span></button>
-      <a class="btn btn-primary" href="https://${c.whatsappDomain}/${c.whatsappNumber}?text=${encodeURIComponent(`Hi Mika — I’d like full access to the ${col.title} collection.`)}" target="_blank" rel="noopener">Full access</a>
+      <a class="btn btn-primary" href="/connect/">Get in touch</a>
     </div>
   </div>
 </section>
 <section class="section section-tight">
   <div class="container">
-    <div class="gallery-grid" id="gallery-grid"></div>
-    <div class="load-more">
-      <button class="btn btn-ghost" id="load-more" hidden><span class="load-more-count"></span>Load more</button>
-    </div>
+    <div class="gallery-grid teaser-grid" id="gallery-grid"></div>
   </div>
 </section>
+${TEASER_CTA()}
 <section class="section section-tight">
   <div class="container">
     <div class="panel panel-pad" style="max-width:760px;margin-inline:auto">

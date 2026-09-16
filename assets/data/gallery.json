@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "generatedAt": "2026-09-16T09:54:42.902Z",
+  "generatedAt": "2026-09-16T12:24:23.478Z",
   "owner": {
     "id": "mika",
     "slug": "mika",
@@ -28,8 +28,12 @@
       "subtitle": "Rustic light, golden hour",
       "offer": "Countryside editorial content.",
       "count": 2,
-      "cover": "/assets/images/farm/farm-img-20260607-085413.blur.webp",
-      "coverSlug": "farm-img-20260607-085413"
+      "cover": "/assets/images/farm/farm-img-20260607-085413.thumb.webp",
+      "coverSlug": "farm-img-20260607-085413",
+      "teasers": [
+        "farm-img-20260607-085413",
+        "farm-img-20260607-085012"
+      ]
     },
     {
       "slug": "girl-on-girl",
@@ -37,8 +41,13 @@
       "subtitle": "Duo sets",
       "offer": "Collaborative duo content.",
       "count": 8,
-      "cover": "/assets/images/girl-on-girl/girl-on-girl-whatsapp-image-2026-08-24-at-09-14-33-2.blur.webp",
-      "coverSlug": "girl-on-girl-whatsapp-image-2026-08-24-at-09-14-33-2"
+      "cover": "/assets/images/girl-on-girl/girl-on-girl-whatsapp-image-2026-08-24-at-09-14-32.thumb.webp",
+      "coverSlug": "girl-on-girl-whatsapp-image-2026-08-24-at-09-14-32",
+      "teasers": [
+        "girl-on-girl-whatsapp-image-2026-08-24-at-09-14-32",
+        "girl-on-girl-whatsapp-image-2026-08-24-at-09-14-33-2",
+        "girl-on-girl-whatsapp-image-2026-08-24-at-09-14-33"
+      ]
     },
     {
       "slug": "hotels",
@@ -46,8 +55,13 @@
       "subtitle": "Quiet, polished, discreet",
       "offer": "Refined indoor editorial sets.",
       "count": 40,
-      "cover": "/assets/images/hotels/hotels-img-20260604-151536.blur.webp",
-      "coverSlug": "hotels-img-20260604-151536"
+      "cover": "/assets/images/hotels/hotels-img-20260604-151536.thumb.webp",
+      "coverSlug": "hotels-img-20260604-151536",
+      "teasers": [
+        "hotels-img-20260604-151536",
+        "hotels-img-20260604-151045",
+        "hotels-img-20260604-151707"
+      ]
     },
     {
       "slug": "indoor",
@@ -55,8 +69,13 @@
       "subtitle": "Warm, calm, private",
       "offer": "Intimate studio-inspired sets.",
       "count": 14,
-      "cover": "/assets/images/indoor/indoor-img-20260521-152748.blur.webp",
-      "coverSlug": "indoor-img-20260521-152748"
+      "cover": "/assets/images/indoor/indoor-img-20260521-152748.thumb.webp",
+      "coverSlug": "indoor-img-20260521-152748",
+      "teasers": [
+        "indoor-img-20260521-152748",
+        "indoor-img-20260521-152821",
+        "indoor-img-20260521-152753"
+      ]
     },
     {
       "slug": "mika-river",
@@ -64,8 +83,13 @@
       "subtitle": "Water, light, serenity",
       "offer": "Outdoor river sets, natural light.",
       "count": 53,
-      "cover": "/assets/images/mika-river/mika-river-img-20260702-151217.blur.webp",
-      "coverSlug": "mika-river-img-20260702-151217"
+      "cover": "/assets/images/mika-river/mika-river-img-20260702-151217.thumb.webp",
+      "coverSlug": "mika-river-img-20260702-151217",
+      "teasers": [
+        "mika-river-img-20260702-151217",
+        "mika-river-img-20260702-151220",
+        "mika-river-img-20260702-154205"
+      ]
     },
     {
       "slug": "mountain",
@@ -73,8 +97,13 @@
       "subtitle": "High views, open sky",
       "offer": "Adventurous open-air sets.",
       "count": 45,
-      "cover": "/assets/images/mountain/mountain-img-20260609-113553.blur.webp",
-      "coverSlug": "mountain-img-20260609-113553"
+      "cover": "/assets/images/mountain/mountain-img-20260609-113553.thumb.webp",
+      "coverSlug": "mountain-img-20260609-113553",
+      "teasers": [
+        "mountain-img-20260609-113553",
+        "mountain-img-20260609-113532",
+        "mountain-img-20260609-113544"
+      ]
     },
     {
       "slug": "waterpark",
@@ -82,8 +111,13 @@
       "subtitle": "Playful summer light",
       "offer": "Bright, playful outdoor sets.",
       "count": 7,
-      "cover": "/assets/images/waterpark/waterpark-img-20260607-161247.blur.webp",
-      "coverSlug": "waterpark-img-20260607-161247"
+      "cover": "/assets/images/waterpark/waterpark-img-20260607-161247.thumb.webp",
+      "coverSlug": "waterpark-img-20260607-161247",
+      "teasers": [
+        "waterpark-img-20260607-161247",
+        "waterpark-img-20260607-161245",
+        "waterpark-img-20260607-161251"
+      ]
     }
   ],
   "assets": [

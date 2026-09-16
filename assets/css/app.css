@@ -316,6 +316,14 @@ body::after {
 
 .load-more { display: grid; place-items: center; margin-top: 2.4rem; }
 
+/* ---------- teaser grid (curated showcase) ---------- */
+.teaser-grid { columns: 1; }
+@media (min-width: 640px) { .teaser-grid { columns: 2; } }
+@media (min-width: 1000px) { .teaser-grid { columns: 3; } }
+.teaser-grid .gallery-item img { aspect-ratio: 4 / 3; object-fit: cover; height: auto; }
+
+.cta-note { margin-top: 1.2rem; font-size: 0.75rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); }
+
 .gallery-empty { text-align: center; padding: 5rem 1rem; color: var(--muted); }
 
 /* ---------- lightbox ---------- */

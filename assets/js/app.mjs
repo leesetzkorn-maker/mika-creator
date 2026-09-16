@@ -1,5 +1,5 @@
-import './ui.mjs';
-import { initUI } from './ui.mjs';
+import './modules/ui.mjs';
+import { initUI } from './modules/ui.mjs';
 import { initTracking } from './modules/tracking.mjs';
 import { initProtection } from './modules/protection.mjs';
 import { initAgeGate } from './modules/age-gate.mjs';
