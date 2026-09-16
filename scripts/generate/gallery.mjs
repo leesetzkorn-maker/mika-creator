@@ -61,9 +61,29 @@ const pub = (u) => (u && u.startsWith('assets/') ? '/' + u : u);
   // ---- hero candidates -------------------------------------------------
   const preferLandscape = !!site.hero?.preferLandscape;
   const maxCandidates = Math.max(1, site.hero?.maxCandidates || 8);
+  const pinnedHero = site.hero?.heroImage || '';
   const scored = assetsOrdered
     .map((a) => ({ a, score: candidateScore(a, preferLandscape) }))
     .sort((x, y) => y.score - x.score);
+
+  const makePick = (a, score) => ({
+    slug: a.slug,
+    collection: a.collection,
+    collectionTitle: collTitles.get(a.collection),
+    score,
+    visibility: a.visibility,
+    width: a.width,
+    height: a.height,
+    aspect: a.aspect,
+    quality: a.quality,
+    brightness: a.brightness,
+    alt: `${collTitles.get(a.collection)} — Mika Creator preview`,
+    url: pub(a.visibility === 'public' ? a.urls.hero : a.urls.blur),
+    hero: pub(a.urls.hero),
+    fallback: pub(a.urls.blur),
+    thumb: pub(a.urls.thumb),
+    sharpUrl: pub(a.urls.hero),
+  });
 
   const perCollCount = new Map();
   const picks = [];
@@ -72,24 +92,21 @@ const pub = (u) => (u && u.startsWith('assets/') ? '/' + u : u);
     const used = perCollCount.get(a.collection) || 0;
     if (used >= 2) continue;
     perCollCount.set(a.collection, used + 1);
-    picks.push({
-      slug: a.slug,
-      collection: a.collection,
-      collectionTitle: collTitles.get(a.collection),
-      score,
-      visibility: a.visibility,
-      width: a.width,
-      height: a.height,
-      aspect: a.aspect,
-      quality: a.quality,
-      brightness: a.brightness,
-      alt: `${collTitles.get(a.collection)} — Mika Creator preview`,
-      url: pub(a.visibility === 'public' ? a.urls.hero : a.urls.blur),
-      hero: pub(a.urls.hero),
-      fallback: pub(a.urls.blur),
-      thumb: pub(a.urls.thumb),
-      sharpUrl: pub(a.urls.hero),
-    });
+    picks.push(makePick(a, score));
+  }
+
+  // Pinned hero override: if site.hero.heroImage names a real asset, it is the
+  // main homepage hero (first candidate). It must already be a processed asset.
+  if (pinnedHero) {
+    const pinnedAsset = assetsOrdered.find((x) => x.slug === pinnedHero);
+    if (!pinnedAsset) {
+      throw new Error(`site.hero.heroImage references unknown asset: ${pinnedHero}`);
+    }
+    const pick = picks.find((p) => p.slug === pinnedHero);
+    if (pick) pick.score = 999.9;
+    else picks.unshift(makePick(pinnedAsset, 999.9));
+    picks.sort((x, y) => y.score - x.score);
+    if (picks.length > maxCandidates) picks.length = maxCandidates;
   }
 
   saveJson(HERO_JSON, {

@@ -1,10 +1,28 @@
 {
   "version": 2,
-  "generatedAt": "2026-09-16T12:52:01.796Z",
+  "generatedAt": "2026-09-16T14:10:00.411Z",
   "strategy": "quality-weighted-ranked",
   "preferLandscape": true,
   "maxCandidates": 8,
   "candidates": [
+    {
+      "slug": "mountain-img-20260609-113532",
+      "collection": "mountain",
+      "collectionTitle": "Mountain",
+      "score": 999.9,
+      "visibility": "preview",
+      "width": 4000,
+      "height": 3000,
+      "aspect": 1.333,
+      "quality": 94,
+      "brightness": 125,
+      "alt": "Mountain — Mika Creator preview",
+      "url": "/assets/images/mountain/mountain-img-20260609-113532.blur.webp",
+      "hero": "/assets/images/mountain/mountain-img-20260609-113532.hero.webp",
+      "fallback": "/assets/images/mountain/mountain-img-20260609-113532.blur.webp",
+      "thumb": "/assets/images/mountain/mountain-img-20260609-113532.thumb.webp",
+      "sharpUrl": "/assets/images/mountain/mountain-img-20260609-113532.hero.webp"
+    },
     {
       "slug": "mika-river-img-20260702-151217",
       "collection": "mika-river",
@@ -40,24 +58,6 @@
       "fallback": "/assets/images/mountain/mountain-img-20260609-113553.blur.webp",
       "thumb": "/assets/images/mountain/mountain-img-20260609-113553.thumb.webp",
       "sharpUrl": "/assets/images/mountain/mountain-img-20260609-113553.hero.webp"
-    },
-    {
-      "slug": "mountain-img-20260609-113532",
-      "collection": "mountain",
-      "collectionTitle": "Mountain",
-      "score": 98.6,
-      "visibility": "preview",
-      "width": 4000,
-      "height": 3000,
-      "aspect": 1.333,
-      "quality": 94,
-      "brightness": 125,
-      "alt": "Mountain — Mika Creator preview",
-      "url": "/assets/images/mountain/mountain-img-20260609-113532.blur.webp",
-      "hero": "/assets/images/mountain/mountain-img-20260609-113532.hero.webp",
-      "fallback": "/assets/images/mountain/mountain-img-20260609-113532.blur.webp",
-      "thumb": "/assets/images/mountain/mountain-img-20260609-113532.thumb.webp",
-      "sharpUrl": "/assets/images/mountain/mountain-img-20260609-113532.hero.webp"
     },
     {
       "slug": "mika-river-img-20260702-151220",
