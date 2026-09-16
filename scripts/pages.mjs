@@ -248,6 +248,40 @@ function TEASER_CTA() {
 </section>`;
 }
 
+function CTA_REDVELVET_ESA() {
+  const btns = [];
+  if (c.redvelvet) btns.push(`<a class="btn btn-primary btn-lg cta-brand" data-track="redvelvet" href="${c.redvelvet}" target="_blank" rel="noopener">REDVELVET</a>`);
+  if (c.esa) btns.push(`<a class="btn btn-primary btn-lg cta-brand" data-track="esa" href="${c.esa}" target="_blank" rel="noopener">ESA</a>`);
+  btns.push(`<a class="btn btn-ghost btn-lg" href="/connect/">Contact Mika</a>`);
+  return `<div class="hero-actions">${btns.join('')}</div>`;
+}
+
+function glimpseGrid() {
+  const bySlug = new Map((gallery.assets || []).map((a) => [a.slug, a]));
+  const items = [];
+  for (const col of gallery.collections || []) {
+    const t = (col.teasers || []).slice(0, 1)[0];
+    const asset = bySlug.get(t);
+    if (asset) {
+      items.push({
+        slug: asset.slug,
+        url: asset.urls?.thumb || asset.urls?.blur,
+        col: col.slug,
+        title: col.title,
+      });
+    }
+  }
+  if (!items.length) return '';
+  return `<div class="glimpse-grid">
+    ${items.map((it) => `<a class="glimpse-item" href="/gallery/${it.col}/" aria-label="A glimpse of ${esc(it.title)} — open collection">
+      <img src="${it.url}" alt="${esc(it.title)} glimpse — Mika Creator" loading="lazy" draggable="false">
+      <span class="glimpse-cap">${esc(it.title)}</span>
+    </a>`).join('')}
+  </div>`;
+}
+
+const esc = (s) => String(s || '').replace(/[&<>"']/g, (x) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[x]));
+
 /* ---------------- pages ---------------- */
 
 function pageIndex() {
@@ -258,7 +292,7 @@ function pageIndex() {
     ['100%', 'Original & owned'],
   ];
   return `${HERO()}
-<section class="section" id="about">
+<section class="section section-tight" id="about">
   <div class="container">
     <div class="persona">
       <div>
@@ -274,13 +308,24 @@ function pageIndex() {
         </div>
       </div>
       <div class="panel panel-pad" style="text-align:center">
-        <p class="eyebrow">a note on previews</p>
-        <p class="lead" style="font-size:1.15rem">This is a curated showcase — a small selection of teaser photos from each collection. The full sets stay between Mika and those she invites closer.</p>
+        <p class="eyebrow">a glimpse of mika</p>
+        <p class="lead" style="font-size:1.15rem">This is a curated showcase — a small selection of preview photos from each collection. The full sets stay between Mika and those she invites closer.</p>
         <a class="btn btn-primary" href="/connect/" style="margin-top:.6rem">Get in touch</a>
       </div>
     </div>
   </div>
 </section>
+${glimpseGrid() ? `<section class="section section-tight" id="glimpse">
+  <div class="container">
+    <div class="section-head">
+      <p class="eyebrow">a glimpse of mika</p>
+      <div class="gold-rule"></div>
+      <h2 class="section-title">A glimpse inside</h2>
+      <p class="lead">A small, curated selection — one preview from each world.</p>
+    </div>
+    ${glimpseGrid()}
+  </div>
+</section>` : ''}
 <section class="section section-tight" id="collections">
   <div class="container">
     <div class="section-head">
@@ -300,12 +345,10 @@ function pageIndex() {
 <section class="section section-tight">
   <div class="container">
     <div class="cta-strip">
-      <p class="eyebrow">let’s talk</p>
-      <h2 class="display">Want to see the real content?</h2>
-      <p class="lead">Get in touch with Mika — private galleries and full content available on request.</p>
-      <div class="hero-actions">
-        <a class="btn btn-primary btn-lg" href="/connect/">Get in touch with Mika</a>
-      </div>
+      <p class="eyebrow">ready to know more?</p>
+      <h2 class="display">Get in touch with Mika</h2>
+      <p class="lead">Full gallery access, custom sets and collaborations. Pick the channel that feels right.</p>
+      ${CTA_REDVELVET_ESA()}
       <p class="cta-note">Private galleries and full content available on request.</p>
     </div>
   </div>
@@ -477,8 +520,8 @@ const LEGAL_TEXT = {
     title: 'Privacy policy (18+)',
     sections: [
       ['What we collect', 'We keep the privacy very light: a visitor token stored on your device (localStorage) so your likes and comments can be tied to you for a visit, plus a "verified adult" note so the age gate does not nag you.'],
-      ['Your likes & comments', 'Likes and comments are stored on our secure servers as part of the community features. No profile is created from them.'],
-      ['Analytics', 'We use Google Analytics, which may set cookies and collect pseudonymous usage data to understand how many people visit. Google’s own privacy policy governs that data.'],
+      ['Analytics', 'We collect lightweight, first-party analytics (page views, device type, link clicks) stored on our own secure servers to help Mika understand how the site is used. A pseudonymous visitor token is used — no personally identifiable information is stored. Google Analytics may also be active on this site; Google\'s own privacy policy governs any data it collects.'],
+      ['Your likes & comments', 'Likes and comments are stored on our secure servers as part of the community features. Comments are visible only after manual approval. No profile is created from them.'],
       ['Contact channels', 'Using the WhatsApp, Telegram or Email links will share whatever you choose to send with Mika directly.'],
       ['Advertisers', 'This website does not use third-party advertising or ad-tracking networks.'],
       ['Your rights', 'You may clear your device storage at any time to remove local tokens. For data you posted in comments or distributed serverside, contact ${c.email} to request removal.'],
@@ -514,6 +557,62 @@ function page404() {
 </section>`;
 }
 
+function pageAdmin() {
+  return `
+  <section class="section section-tight" id="admin-app">
+    <div class="container" style="max-width:1100px">
+      <div class="admin-head">
+        <div>
+          <p class="eyebrow">private · admin</p>
+          <h1 class="section-title" style="margin-bottom:0">Dashboard</h1>
+        </div>
+        <div class="admin-head-actions">
+          <button class="btn btn-ghost" id="admin-refresh" hidden>Refresh</button>
+          <button class="btn btn-ghost" id="admin-logout" hidden>Sign out</button>
+        </div>
+      </div>
+
+      <div class="panel panel-pad" id="admin-login" style="max-width:420px;margin:2rem auto">
+        <p class="eyebrow">sign in</p>
+        <div class="gold-rule"></div>
+        <h2 class="section-title" style="font-size:1.8rem">Authorised access only</h2>
+        <p class="muted" style="font-size:.9rem">Sign in with the account Mika created in the Supabase dashboard. This area is private — analytics and moderation live here.</p>
+        <style>#admin-form .field{margin-bottom:1rem}</style>
+        <form id="admin-form" style="margin-top:1.4rem">
+          <div class="field"><label for="admin-email">Email</label><input id="admin-email" name="email" type="email" autocomplete="username" required></div>
+          <div class="field"><label for="admin-password">Password</label><input id="admin-password" name="password" type="password" autocomplete="current-password" required></div>
+          <button class="btn btn-primary" type="submit" id="admin-submit" style="width:100%">Sign in</button>
+          <p class="form-status" id="admin-form-status" role="status" style="text-align:center"></p>
+        </form>
+      </div>
+
+      <div id="admin-view" style="display:none" data-loaded="">
+        <div id="admin-today" class="stat-card accent" style="margin-bottom:1rem"></div>
+        <div class="stat-grid" id="admin-stats"></div>
+
+        <div class="admin-panel">
+          <h3>Daily visitors (7 days)</h3>
+          <div id="admin-chart"></div>
+        </div>
+
+        <div class="admin-grid-2">
+          <div id="admin-pages"></div>
+          <div id="admin-devices"></div>
+        </div>
+        <div class="admin-grid-2">
+          <div id="admin-sources"></div>
+          <div id="admin-engagement"></div>
+        </div>
+
+        <p class="eyebrow" style="margin-top:2.5rem">moderation</p>
+        <div class="gold-rule"></div>
+        <h2 class="section-title" style="font-size:1.8rem">Comments to review</h2>
+        <div id="admin-moderation"></div>
+      </div>
+    </div>
+  </section>`;
+}
+
 /* ---------------- render ---------------- */
 
 export function renderAll() {
@@ -525,6 +624,7 @@ export function renderAll() {
     { path: 'terms/index.html', title: 'Terms of use — Mika Creator', desc: 'Terms of use for the Mika Creator website.', body: () => legalPage(LEGAL_TEXT.terms), attrs: '' },
     { path: 'privacy-18.html', title: 'Privacy (18+) — Mika Creator', desc: 'Privacy policy for the adult website Mika Creator.', body: () => legalPage(LEGAL_TEXT.privacy), attrs: '' },
     { path: '404.html', title: 'Page not found — Mika Creator', desc: 'The page you wanted could not be found.', body: () => page404(), attrs: '', robots: 'noindex,follow' },
+    { path: 'admin/index.html', title: 'Admin — Mika Creator', desc: 'Private admin dashboard.', body: () => pageAdmin(), attrs: 'data-admin', robots: 'noindex,nofollow' },
   ];
 
   const rendered = [];

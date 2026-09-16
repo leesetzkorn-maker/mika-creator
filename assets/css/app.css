@@ -436,6 +436,89 @@ body::after {
 .cta-strip .display { font-size: clamp(2rem, 5vw, 3.2rem); max-width: 22ch; margin-inline: auto; margin-bottom: 1rem; }
 .cta-strip .lead { max-width: 52ch; margin: 0 auto 2.4rem; }
 
+/* ---------- CTA brand buttons ---------- */
+.cta-brand {
+  background: linear-gradient(135deg, var(--rose) 0%, var(--plum) 100%);
+  color: #fff; border-color: transparent;
+  font-weight: 600; letter-spacing: 0.28em;
+  box-shadow: 0 8px 30px rgba(232, 155, 184, 0.22);
+}
+.cta-brand:hover { transform: translateY(-2px); box-shadow: 0 14px 40px rgba(232, 155, 184, 0.35); border-color: transparent; color: #fff; }
+
+/* ---------- glimpse grid ---------- */
+.glimpse-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 1rem;
+}
+.glimpse-item {
+  position: relative; border-radius: var(--r-sm); overflow: hidden;
+  border: 1px solid var(--border-soft);
+  aspect-ratio: 4/3;
+  display: block;
+  transition: transform 0.45s var(--ease), border-color 0.45s var(--ease), box-shadow 0.45s var(--ease);
+}
+.glimpse-item:hover { transform: translateY(-3px); border-color: var(--border); box-shadow: var(--shadow-md); }
+.glimpse-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.8s var(--ease); }
+.glimpse-item:hover img { transform: scale(1.06); }
+.glimpse-cap {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: .55rem .75rem;
+  background: linear-gradient(180deg, transparent, rgba(10,10,14,0.85));
+  font-family: var(--font-sans); font-size: 0.62rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold-bright);
+}
+
+/* ---------- admin dashboard ---------- */
+.admin-head { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.6rem; }
+.admin-head-actions { display: flex; gap: .8rem; }
+.stat-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 1rem;
+  margin-bottom: 1.4rem;
+}
+.stat-card {
+  padding: 1.4rem 1.3rem;
+  background: var(--raised); border: 1px solid var(--border-soft); border-radius: var(--r-md);
+  transition: border-color 0.35s var(--ease);
+}
+.stat-card:hover { border-color: var(--border); }
+.stat-card.accent { border-color: var(--gold); background: linear-gradient(135deg, var(--panel-2), var(--raised)); }
+.stat-value { font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 700; color: var(--gold-bright); line-height: 1; }
+.stat-label { font-size: 0.66rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); margin-top: .35rem; }
+.stat-sub { font-size: 0.75rem; color: var(--text-2); margin-top: .3rem; }
+
+.admin-panel, .admin-panel-wrap {
+  padding: 1.4rem 1.5rem; background: var(--raised); border: 1px solid var(--border-soft); border-radius: var(--r-md);
+  margin-bottom: 1.2rem;
+}
+.admin-panel h3 { font-size: 0.95rem; margin-bottom: 1rem; }
+.admin-list { list-style: none; padding: 0; margin: 0; display: grid; gap: .5rem; }
+.admin-list li { font-size: 0.92rem; color: var(--text-2); padding: .35rem 0; border-bottom: 1px solid var(--border-soft); display: flex; justify-content: space-between; align-items: baseline; }
+.admin-list li:last-child { border-bottom: 0; }
+.admin-list li .pct-num { font-size: 0.72rem; color: var(--muted); letter-spacing: 0.08em; }
+.admin-empty { font-size: 0.88rem; color: var(--faint); }
+.admin-grid-2 { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.2rem; margin-bottom: 1.2rem; }
+.admin-error { padding: 1.6rem; text-align: center; color: var(--rose); font-size: 0.9rem; border: 1px solid rgba(232,155,184,0.25); border-radius: var(--r-md); }
+
+.bar-chart { display: flex; align-items: flex-end; gap: 0.5rem; height: 160px; padding-top: 1.6rem; }
+.bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; }
+.bar { width: 100%; background: linear-gradient(180deg, var(--gold), var(--gold-deep)); border-radius: 4px 4px 0 0; transition: height 0.6s var(--ease); min-height: 2px; }
+.bar-label { font-size: 0.58rem; color: var(--faint); margin-top: .35rem; text-align: center; letter-spacing: 0.04em; }
+
+.pct-row { display: flex; align-items: center; gap: .7rem; padding: .3rem 0; }
+.pct-label { font-size: 0.82rem; color: var(--text-2); min-width: 90px; }
+.pct-track { flex: 1; height: 6px; background: var(--panel); border-radius: 3px; overflow: hidden; }
+.pct-fill { height: 100%; background: linear-gradient(90deg, var(--gold), var(--gold-deep)); border-radius: 3px; transition: width 0.5s var(--ease); }
+.pct-num { font-size: 0.68rem; color: var(--muted); letter-spacing: 0.06em; min-width: 36px; text-align: right; }
+
+.eng-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 1rem; }
+
+.mod-item { padding: 1.1rem 1.3rem; background: var(--panel); border: 1px solid var(--border-soft); border-radius: var(--r-sm); margin-bottom: .8rem; }
+.mod-head { display: flex; flex-wrap: wrap; gap: .7rem; align-items: baseline; margin-bottom: .45rem; }
+.mod-scope { font-size: 0.66rem; color: var(--faint); letter-spacing: 0.12em; text-transform: uppercase; }
+.mod-text { font-family: var(--font-serif); font-size: 1rem; color: var(--text-2); margin: .4rem 0; }
+.mod-actions { display: flex; gap: .7rem; margin-top: .8rem; }
+.mod-actions .btn { padding: .5rem 1.1rem; font-size: 0.66rem; }
+
 /* ---------- footer ---------- */
 .site-footer { border-top: 1px solid var(--border-soft); padding: 4rem 0 2rem; margin-top: 2rem; }
 .footer-grid { display: grid; gap: 2.5rem; grid-template-columns: 1fr; }

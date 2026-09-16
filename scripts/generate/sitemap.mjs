@@ -31,7 +31,7 @@ export function generateSitemap() {
   fs.writeFileSync(path.join(ROOT, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${body}\n</urlset>\n`);
   fs.writeFileSync(
     path.join(ROOT, 'robots.txt'),
-    `User-agent: *\nAllow: /\nDisallow: /private/\nDisallow: /gallery/*/index.html?raw=1\n\nSitemap: ${domain}/sitemap.xml\n`
+    `User-agent: *\nAllow: /\nDisallow: /private/\nDisallow: /admin/\nDisallow: /gallery/*/index.html?raw=1\n\nSitemap: ${domain}/sitemap.xml\n`
   );
   console.log(`sitemap.xml + robots.txt → ${urls.length} URLs under ${domain}`);
 }
