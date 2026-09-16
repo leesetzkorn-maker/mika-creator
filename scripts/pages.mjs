@@ -117,6 +117,7 @@ const icons = {
   mail: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>`,
   heart: `<svg viewBox="0 0 24 24"><path d="M12 21s-7-4.6-9.3-9C1 8.6 2.6 5.5 5.7 5.3c1.9-.1 3.2.9 4.1 2.2L12 9.6l2.2-2.1c.9-1.3 2.2-2.3 4.1-2.2 3.1.2 4.7 3.3 3 6.7-2.3 4.4-9.3 9-9.3 9Z"/></svg>`,
   lock: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>`,
+  camera: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 8h3l1.5-2.5h7L17 8h3v11H4V8Z"/><circle cx="12" cy="13.5" r="3.4"/></svg>`,
 };
 
 const FOOTER = () => `<footer class="site-footer">
@@ -282,6 +283,205 @@ function glimpseGrid() {
 
 const esc = (s) => String(s || '').replace(/[&<>"']/g, (x) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[x]));
 
+/* ---------------- services ---------------- */
+
+const svcPackages = (site.services?.packages || []);
+const videoCall = site.services?.videoCall || {};
+
+function CONTENT_PACKAGES() {
+  if (!svcPackages.length) return '';
+  return `<section class="section section-tight" id="packages">
+  <div class="container">
+    <div class="section-head">
+      <p class="eyebrow">content packages</p>
+      <div class="gold-rule"></div>
+      <h2 class="section-title">Content packages</h2>
+      <p class="lead">Flexible content packages — captured naturally, delivered privately. Choose a package, then request your build below.</p>
+    </div>
+    <div class="pkg-grid">
+      ${svcPackages.map((p) => `
+      <article class="pkg-card${p.featured ? ' is-featured' : ''}">
+        ${p.featured ? '<span class="pkg-badge">Most chosen</span>' : ''}
+        <h3 class="pkg-name">${esc(p.name)}</h3>
+        <div class="pkg-price">${esc(p.price)}</div>
+        <ul class="pkg-spec">
+          <li><strong>${p.videos}</strong> video${p.videos === 1 ? '' : 's'}</li>
+          <li><strong>${p.photos}</strong> photo${p.photos === 1 ? '' : 's'}</li>
+          <li class="pkg-note">${esc(p.note || '')}</li>
+        </ul>
+        <a class="btn btn-primary pkg-cta" href="/?pkg=${esc(p.id)}#custom-build">Request this package</a>
+      </article>`).join('')}
+    </div>
+    <p class="pkg-foot-note muted">Prices in South African Rand (ZAR). Packages are produced as original, individually planned content — contact Mika to confirm availability before ordering.</p>
+  </div>
+</section>`;
+}
+
+function VIDEO_CALL() {
+  const price = videoCall.price || 'R450';
+  const dur = videoCall.duration || '10–15 minutes';
+  return `<section class="section section-tight" id="video-call">
+  <div class="container">
+    <div class="vc-card">
+      <div class="vc-icon">${icons.camera}</div>
+      <p class="eyebrow">video call</p>
+      <h2 class="section-title">Spend time with ${'Mika'}</h2>
+      <p class="vc-meta"><span class="vc-price">${esc(price)}</span><span class="vc-dur">${esc(dur)}</span></p>
+      <p class="vc-tag muted">${esc(videoCall.tag || 'A personal, 1-on-1 chat — the closest way to connect.')}</p>
+      <div class="hero-actions vc-actions">
+        <a class="btn btn-primary btn-lg" href="/?request=video-call#custom-build">Book / request video call</a>
+        <a class="btn btn-ghost btn-lg" href="/connect/" >Prefer WhatsApp?</a>
+      </div>
+      <p class="cta-note">Scheduled at a time that works for you. Availability confirmed directly with Mika.</p>
+    </div>
+  </div>
+</section>`;
+}
+
+function CUSTOM_BUILD() {
+  const colourOptions = ['White', 'Black', 'Gold', 'Red', 'Pink', 'Custom'];
+  const placementOptions = ['Hand', 'Arm', 'Foot', 'Leg', 'Other / describe'];
+  return `<section class="section section-tight" id="custom-build">
+  <div class="container">
+    <div class="section-head">
+      <p class="eyebrow">custom build</p>
+      <div class="gold-rule"></div>
+      <h2 class="section-title">Build your own custom content</h2>
+      <p class="lead">Tell Mika exactly how you want your custom shoot styled and personalised. Every custom request is produced as a quality, individually planned shoot.</p>
+    </div>
+
+    <div class="cb-layout">
+      <div class="panel panel-pad cb-form-panel">
+        <form id="cb-form" novalidate>
+          <input type="hidden" name="source" value="homepage">
+
+          <div class="cb-steps" role="tablist" aria-label="Custom build progress">
+            <span class="cb-dot is-active" data-step="1"></span><span class="cb-dot" data-step="2"></span><span class="cb-dot" data-step="3"></span><span class="cb-dot" data-step="4"></span><span class="cb-dot" data-step="5"></span><span class="cb-dot" data-step="6"></span>
+          </div>
+
+          <div class="cb-step is-active" data-step="1">
+            <h3 class="cb-title">1 · Your details</h3>
+            <div class="field"><label for="cb-name">Your name / display name</label><input id="cb-name" name="name" maxlength="80" autocomplete="name" required></div>
+            <div class="field"><label for="cb-package">Content package</label>
+              <select id="cb-package" name="package">
+                <option value="">Select a package…</option>
+                ${svcPackages.map((p) => `<option value="${esc(p.id)}">${esc(p.name)} — ${esc(p.price)} (${p.videos} videos · ${p.photos} photos)</option>`).join('')}
+                <option value="video-call">Video Call — ${esc(videoCall.price || 'R450')} (${esc(videoCall.duration || '10–15 minutes')})</option>
+                <option value="custom">Custom package / discuss with Mika</option>
+              </select>
+            </div>
+            <input type="text" name="honeypot" id="cb-honeypot" tabindex="-1" autocomplete="off" class="cb-hp" aria-hidden="true">
+          </div>
+
+          <div class="cb-step" data-step="2">
+            <h3 class="cb-title">2 · Content type</h3>
+            <div class="field"><label for="cb-type">Describe your request</label><textarea id="cb-type" name="type" rows="4" maxlength="2000" placeholder="Describe the type of content you are requesting." required></textarea></div>
+            <p class="cb-help">Be as clear and specific as you like. No template needed — this is your space to describe it in your own words.</p>
+          </div>
+
+          <div class="cb-step" data-step="3">
+            <h3 class="cb-title">3 · Custom personalisation</h3>
+            <div class="field"><label for="cb-customword">Custom name / word</label><input id="cb-customword" name="customword" maxlength="40" placeholder="e.g. a name, word or phrase"></div>
+            <div class="field"><label for="cb-colour">Text colour</label>
+              <select id="cb-colour" name="colour">
+                ${colourOptions.map((o) => `<option value="${esc(o.toLowerCase())}">${o}</option>`).join('')}
+              </select>
+            </div>
+            <div class="field"><label for="cb-placement">Text placement</label>
+              <select id="cb-placement" name="placement">
+                ${placementOptions.map((o) => `<option value="${esc(o.toLowerCase())}">${o}</option>`).join('')}
+              </select>
+            </div>
+            <div class="field"><label for="cb-colourcustom">Custom colour</label>
+              <input id="cb-colourcustom" name="colourcustom" maxlength="40" placeholder="Describe or name the colour you have in mind">
+            </div>
+            <p class="cb-help">Whenever a colour or word is written on the body it is done tastefully and only where Mika confirms.</p>
+          </div>
+
+          <div class="cb-step" data-step="4">
+            <h3 class="cb-title">4 · Style &amp; shoot direction</h3>
+            <div class="field"><label for="cb-location">Indoor / outdoor</label>
+              <select id="cb-location" name="location">
+                <option value="">No preference</option><option value="indoor">Indoor</option><option value="outdoor">Outdoor</option><option value="both">Both</option>
+              </select>
+            </div>
+            <div class="field"><label for="cb-lighting">Lighting preference</label><input id="cb-lighting" name="lighting" maxlength="200" placeholder="e.g. natural light, golden hour, moody"></div>
+            <div class="field"><label for="cb-outfit">Outfit / style preference</label><input id="cb-outfit" name="outfit" maxlength="200" placeholder="Describe the look or outfit style you have in mind"></div>
+            <div class="field"><label for="cb-background">Background preference</label><input id="cb-background" name="background" maxlength="200" placeholder="e.g. water, hotel, plain, mountain"></div>
+            <div class="field"><label for="cb-mood">Mood / style</label><input id="cb-mood" name="mood" maxlength="200" placeholder="e.g. soft, confident, playful, elegant"></div>
+            <div class="field"><label for="cb-camera">Camera / photo preference</label><input id="cb-camera" name="camera" maxlength="200" placeholder="Any angles, framing or photo notes"></div>
+            <div class="field"><label for="cb-video">Video preference</label><input id="cb-video" name="video" maxlength="200" placeholder="Any video notes — length, style, audio"></div>
+            <div class="field"><label for="cb-other">Other creative instructions</label><input id="cb-other" name="other" maxlength="500" placeholder="Anything else Mika should know"></div>
+          </div>
+
+          <div class="cb-step" data-step="5">
+            <h3 class="cb-title">5 · Detailed request</h3>
+            <div class="field"><label for="cb-detailed">Describe exactly how you would like your custom shoot planned.</label><textarea id="cb-detailed" name="detailed" rows="6" maxlength="4000" required></textarea></div>
+            <p class="cb-help">Please provide as much detail as possible. Mika will review your request and confirm what can be produced before the order is accepted.</p>
+            <div class="field"><label>Preferred delivery format</label>
+              <div class="cb-chips" id="cb-delivery">
+                ${['Photos', 'Videos', 'Photos + Videos'].map((d, i) => `<button type="button" class="chip cb-chip" data-value="${esc(d.toLowerCase().replace(/\s+/g, '-'))}">${d}</button>`).join('')}
+              </div>
+              <input type="hidden" name="delivery" id="cb-delivery-val" value="">
+            </div>
+          </div>
+
+          <div class="cb-step" data-step="6">
+            <h3 class="cb-title">6 · Contact details</h3>
+            <div class="field"><label for="cb-contact-name">Name</label><input id="cb-contact-name" name="contactname" maxlength="80" autocomplete="name" required></div>
+            <div class="field"><label for="cb-email">Email</label><input id="cb-email" name="email" type="email" maxlength="120" autocomplete="email" required></div>
+            <div class="field"><label for="cb-method">Preferred contact method</label>
+              <select id="cb-method" name="method">
+                <option value="whatsapp">WhatsApp</option>
+                <option value="telegram">Telegram</option>
+                <option value="email">Email</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="cb-nav">
+            <button type="button" class="btn btn-ghost cb-prev" hidden>Back</button>
+            <button type="button" class="btn btn-primary cb-next">Continue</button>
+            <button type="submit" class="btn btn-primary cb-submit" hidden>Request custom build</button>
+          </div>
+          <p class="form-status cb-status" id="cb-status" role="status"></p>
+          <p class="cb-privacy muted">Only Mika reads these requests. Contact details are used solely to respond to your request — never shared publicly.</p>
+        </form>
+
+        <div class="cb-done" id="cb-done" hidden>
+          <div class="cb-done-mark">✓</div>
+          <h3 class="cb-title" style="text-align:center">Request received</h3>
+          <p class="cb-help" style="text-align:center">Your custom request has been received. Mika will review the details and contact you regarding availability, pricing and production.</p>
+          <div class="cb-done-links" id="cb-done-links"></div>
+        </div>
+      </div>
+
+      <aside class="quality-panel">
+        <div class="quality-card">
+          <p class="eyebrow">the promise</p>
+          <div class="gold-rule"></div>
+          <h3 class="section-title" style="font-size:1.7rem">Quality custom shoots</h3>
+          <p class="muted">Every custom request is individually planned and produced with attention to:</p>
+          <ul class="quality-list">
+            <li>Image quality</li>
+            <li>Lighting</li>
+            <li>Composition</li>
+            <li>Styling</li>
+            <li>Personalisation</li>
+            <li>Requested colours</li>
+            <li>Requested text</li>
+            <li>Requested placement</li>
+            <li>Video / photo specifications</li>
+            <li>Customer instructions</li>
+          </ul>
+          <p class="muted" style="font-size:.9rem">Nothing is promised automatically — all custom requests remain subject to Mika's confirmation and availability.</p>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>`;
+}
+
 /* ---------------- pages ---------------- */
 
 function pageIndex() {
@@ -326,6 +526,9 @@ ${glimpseGrid() ? `<section class="section section-tight" id="glimpse">
     ${glimpseGrid()}
   </div>
 </section>` : ''}
+${CONTENT_PACKAGES()}
+${VIDEO_CALL()}
+${CUSTOM_BUILD()}
 <section class="section section-tight" id="collections">
   <div class="container">
     <div class="section-head">
@@ -618,7 +821,7 @@ function pageAdmin() {
 export function renderAll() {
   const checks = [];
   const pages = [
-    { path: 'index.html', title: site.seo?.title, desc: site.seo?.description, body: () => pageIndex(), attrs: 'data-hero data-gallery' },
+    { path: 'index.html', title: site.seo?.title, desc: site.seo?.description, body: () => pageIndex(), attrs: 'data-hero data-gallery data-custom-build' },
     { path: 'gallery/index.html', title: 'Gallery — Mika Creator | 18+', desc: 'Browse the 18+ photo collections of Mika. Safe blurred previews, original content, seven worlds to explore.', body: () => pageGallery(), attrs: 'data-gallery' },
     { path: 'connect/index.html', title: 'Connect — Mika Creator', desc: 'Reach Mika on WhatsApp, Telegram or email. Full gallery access and custom set requests happen here.', body: () => pageConnect(), attrs: 'data-reviews' },
     { path: 'terms/index.html', title: 'Terms of use — Mika Creator', desc: 'Terms of use for the Mika Creator website.', body: () => legalPage(LEGAL_TEXT.terms), attrs: '' },

@@ -24,6 +24,15 @@
     "insertCommentFunc": "insert_comment",
     "insertReviewFunc": "add_review"
   },
+  "services": {
+    "packages": [
+      { "id": "content-1", "name": "Content 1", "price": "R400", "videos": 2, "photos": 6, "note": "Starting package — perfect for a first set." },
+      { "id": "content-2", "name": "Content 2", "price": "R550", "videos": 4, "photos": 10, "note": "A balanced mix for a fuller set." },
+      { "id": "content-3", "name": "Content 3", "price": "R700", "videos": 6, "photos": 16, "note": "More scenes, more variety. Popular choice.", "featured": true },
+      { "id": "content-4", "name": "Content 4", "price": "R1000", "videos": 8, "photos": 20, "note": "The complete custom experience." }
+    ],
+    "videoCall": { "name": "Video Call", "price": "R450", "duration": "10–15 minutes", "tag": "Personal chat with Mika" }
+  },
   "contact": {
     "whatsappDomain": "wa.me",
     "whatsappNumber": "27682427999",
@@ -55,6 +64,7 @@
   ],
   "hero": {
     "maxCandidates": 8,
-    "preferLandscape": true
+    "preferLandscape": true,
+    "heroImage": "mountain-img-20260609-113532"
   }
 }
