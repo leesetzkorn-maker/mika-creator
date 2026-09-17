@@ -1,0 +1,6 @@
+{
+  "collection": "esa",
+  "collectionTitle": "ESA",
+  "status": "pending-source-images",
+  "message": "ESA gallery collection reserved for the newly supplied image set. Add the processed derivatives to assets/images/esa/ and include them in the gallery generation source before publishing."
+}
