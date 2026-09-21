@@ -236,13 +236,52 @@ body::after {
 }
 .hero-scroll::before { content: ""; width: 1px; height: 44px; background: linear-gradient(var(--gold), transparent); }
 
+/* hero slideshow layers — each slide is a full-bleed background layer that
+   crossfades in via opacity; the container keeps the existing blur/lock/zoom
+   behaviour applied to the whole unit. */
+.hero-slide {
+  position: absolute; inset: 0;
+  background-size: cover; background-position: center 30%;
+  opacity: 0; visibility: hidden;
+  transition: opacity 1.4s var(--ease), visibility 1.4s;
+  will-change: opacity;
+}
+.hero-slide.is-active { opacity: 1; visibility: visible; }
+.hero-single .hero-ctrl, .hero-single .hero-dots { display: none; }
+
+.hero-ctrl {
+  position: absolute; top: 50%; transform: translateY(-50%); z-index: 3;
+  width: 48px; height: 48px; border-radius: var(--r-pill);
+  display: grid; place-items: center;
+  font-family: var(--font-serif); font-size: 1.7rem; line-height: 1;
+  color: var(--text-2); background: rgba(10, 10, 14, 0.35);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  transition: background 0.35s var(--ease), color 0.35s var(--ease), border-color 0.35s var(--ease);
+}
+.hero-ctrl:hover { background: rgba(10, 10, 14, 0.65); color: var(--gold-bright); border-color: var(--gold); }
+.hero-prev { left: 1.4rem; }
+.hero-next { right: 1.4rem; }
+
+.hero-dots {
+  position: absolute; left: 2.2rem; bottom: 2.5rem; z-index: 3;
+  display: flex; gap: 0.6rem; align-items: center;
+}
+.hero-dot {
+  width: 10px; height: 10px; padding: 0; border-radius: var(--r-pill);
+  background: rgba(255, 255, 255, 0.32); border: 1px solid transparent;
+  transition: background 0.35s var(--ease), transform 0.35s var(--ease);
+}
+.hero-dot:hover { background: rgba(236, 215, 171, 0.7); }
+.hero-dot.is-active { background: var(--gold-bright); transform: scale(1.3); pointer-events: none; }
+
 /* ---------- hero · mobile ----------
    Phone viewports use a dedicated 9:16 portrait derivative (hero-bg) so the
    subject stays framed; the text/CTAs sit in the lower third over a gentle
    scrim so they never cover Mika's face or the main composition. */
 @media (max-width: 700px) {
   .hero { align-items: flex-end; padding-bottom: calc(2.6rem + env(safe-area-inset-bottom)); }
-  .hero-bg { background-position: center 35%; }
+  .hero-slide { background-position: center 35%; }
   .hero-overlay {
     background:
       radial-gradient(120% 80% at 50% 20%, rgba(10, 10, 14, 0.08), rgba(10, 10, 14, 0.30) 55%, rgba(10, 10, 14, 0.74) 100%);
@@ -253,6 +292,15 @@ body::after {
   .hero-tagline { font-size: 1.02rem; line-height: 1.5; max-width: 40ch; margin-bottom: 1.8rem; }
   .hero-actions .btn { padding: 0.85rem 1.5rem; font-size: 0.74rem; }
   .hero-scroll { display: none; }
+  .hero-ctrl { width: 40px; height: 40px; font-size: 1.45rem; }
+  .hero-prev { left: 0.7rem; }
+  .hero-next { right: 0.7rem; }
+  .hero-dots { left: 50%; transform: translateX(-50%); bottom: calc(1.2rem + env(safe-area-inset-bottom)); }
+  .hero-dot { width: 8px; height: 8px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-slide { transition: opacity 0.2s linear; }
 }
 @keyframes pulseDown { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
 

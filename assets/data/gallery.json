@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "generatedAt": "2026-09-16T15:00:13.661Z",
+  "generatedAt": "2026-09-21T09:20:31.988Z",
   "owner": {
     "id": "mika",
     "slug": "mika",
@@ -117,6 +117,20 @@
         "waterpark-img-20260607-161247",
         "waterpark-img-20260607-161245",
         "waterpark-img-20260607-161251"
+      ]
+    },
+    {
+      "slug": "new-shoot",
+      "title": "New Shoot",
+      "subtitle": "Fresh scenes, new light",
+      "offer": "A brand-new editorial set, just captured.",
+      "count": 6,
+      "cover": "/assets/images/new-shoot/new-shoot-1000248919.thumb.webp",
+      "coverSlug": "new-shoot-1000248919",
+      "teasers": [
+        "new-shoot-1000248919",
+        "new-shoot-1000248928",
+        "new-shoot-1000248926"
       ]
     }
   ],
@@ -4006,6 +4020,144 @@
         "mobile": "/assets/images/waterpark/waterpark-img-20260607-162042.mobile.webp",
         "blur": "/assets/images/waterpark/waterpark-img-20260607-162042.blur.webp",
         "sharp": "/assets/images/waterpark/waterpark-img-20260607-162042.thumb.webp"
+      }
+    },
+    {
+      "slug": "new-shoot-1000248919",
+      "collection": "new-shoot",
+      "collectionTitle": "New Shoot",
+      "width": 1074,
+      "height": 774,
+      "aspect": 1.388,
+      "megapixels": 0.8,
+      "quality": 78,
+      "brightness": 137,
+      "contrast": 77,
+      "colorfulness": 58,
+      "visibility": "preview",
+      "blurRequired": true,
+      "urls": {
+        "thumb": "/assets/images/new-shoot/new-shoot-1000248919.thumb.webp",
+        "full": "/assets/images/new-shoot/new-shoot-1000248919.full.webp",
+        "hero": "/assets/images/new-shoot/new-shoot-1000248919.hero.webp",
+        "mobile": "/assets/images/new-shoot/new-shoot-1000248919.mobile.webp",
+        "blur": "/assets/images/new-shoot/new-shoot-1000248919.blur.webp",
+        "sharp": "/assets/images/new-shoot/new-shoot-1000248919.thumb.webp"
+      }
+    },
+    {
+      "slug": "new-shoot-1000248920",
+      "collection": "new-shoot",
+      "collectionTitle": "New Shoot",
+      "width": 1078,
+      "height": 1313,
+      "aspect": 0.821,
+      "megapixels": 1.4,
+      "quality": 66,
+      "brightness": 100,
+      "contrast": 61,
+      "colorfulness": 11,
+      "visibility": "preview",
+      "blurRequired": true,
+      "urls": {
+        "thumb": "/assets/images/new-shoot/new-shoot-1000248920.thumb.webp",
+        "full": "/assets/images/new-shoot/new-shoot-1000248920.full.webp",
+        "hero": "/assets/images/new-shoot/new-shoot-1000248920.hero.webp",
+        "mobile": "/assets/images/new-shoot/new-shoot-1000248920.mobile.webp",
+        "blur": "/assets/images/new-shoot/new-shoot-1000248920.blur.webp",
+        "sharp": "/assets/images/new-shoot/new-shoot-1000248920.thumb.webp"
+      }
+    },
+    {
+      "slug": "new-shoot-1000248925",
+      "collection": "new-shoot",
+      "collectionTitle": "New Shoot",
+      "width": 1076,
+      "height": 1314,
+      "aspect": 0.819,
+      "megapixels": 1.4,
+      "quality": 65,
+      "brightness": 111,
+      "contrast": 82,
+      "colorfulness": 35,
+      "visibility": "preview",
+      "blurRequired": true,
+      "urls": {
+        "thumb": "/assets/images/new-shoot/new-shoot-1000248925.thumb.webp",
+        "full": "/assets/images/new-shoot/new-shoot-1000248925.full.webp",
+        "hero": "/assets/images/new-shoot/new-shoot-1000248925.hero.webp",
+        "mobile": "/assets/images/new-shoot/new-shoot-1000248925.mobile.webp",
+        "blur": "/assets/images/new-shoot/new-shoot-1000248925.blur.webp",
+        "sharp": "/assets/images/new-shoot/new-shoot-1000248925.thumb.webp"
+      }
+    },
+    {
+      "slug": "new-shoot-1000248926",
+      "collection": "new-shoot",
+      "collectionTitle": "New Shoot",
+      "width": 1060,
+      "height": 1306,
+      "aspect": 0.812,
+      "megapixels": 1.4,
+      "quality": 78,
+      "brightness": 134,
+      "contrast": 66,
+      "colorfulness": 68,
+      "visibility": "preview",
+      "blurRequired": true,
+      "urls": {
+        "thumb": "/assets/images/new-shoot/new-shoot-1000248926.thumb.webp",
+        "full": "/assets/images/new-shoot/new-shoot-1000248926.full.webp",
+        "hero": "/assets/images/new-shoot/new-shoot-1000248926.hero.webp",
+        "mobile": "/assets/images/new-shoot/new-shoot-1000248926.mobile.webp",
+        "blur": "/assets/images/new-shoot/new-shoot-1000248926.blur.webp",
+        "sharp": "/assets/images/new-shoot/new-shoot-1000248926.thumb.webp"
+      }
+    },
+    {
+      "slug": "new-shoot-1000248927",
+      "collection": "new-shoot",
+      "collectionTitle": "New Shoot",
+      "width": 1078,
+      "height": 799,
+      "aspect": 1.349,
+      "megapixels": 0.9,
+      "quality": 73,
+      "brightness": 103,
+      "contrast": 65,
+      "colorfulness": 55,
+      "visibility": "preview",
+      "blurRequired": true,
+      "urls": {
+        "thumb": "/assets/images/new-shoot/new-shoot-1000248927.thumb.webp",
+        "full": "/assets/images/new-shoot/new-shoot-1000248927.full.webp",
+        "hero": "/assets/images/new-shoot/new-shoot-1000248927.hero.webp",
+        "mobile": "/assets/images/new-shoot/new-shoot-1000248927.mobile.webp",
+        "blur": "/assets/images/new-shoot/new-shoot-1000248927.blur.webp",
+        "sharp": "/assets/images/new-shoot/new-shoot-1000248927.thumb.webp"
+      }
+    },
+    {
+      "slug": "new-shoot-1000248928",
+      "collection": "new-shoot",
+      "collectionTitle": "New Shoot",
+      "width": 1078,
+      "height": 816,
+      "aspect": 1.321,
+      "megapixels": 0.9,
+      "quality": 75,
+      "brightness": 134,
+      "contrast": 84,
+      "colorfulness": 33,
+      "visibility": "preview",
+      "blurRequired": true,
+      "urls": {
+        "thumb": "/assets/images/new-shoot/new-shoot-1000248928.thumb.webp",
+        "full": "/assets/images/new-shoot/new-shoot-1000248928.full.webp",
+        "hero": "/assets/images/new-shoot/new-shoot-1000248928.hero.webp",
+        "mobile": "/assets/images/new-shoot/new-shoot-1000248928.mobile.webp",
+        "blur": "/assets/images/new-shoot/new-shoot-1000248928.blur.webp",
+        "sharp": "/assets/images/new-shoot/new-shoot-1000248928.thumb.webp"
       }
     }
   ]

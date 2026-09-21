@@ -60,11 +60,19 @@
     { "slug": "indoor", "title": "Indoor", "subtitle": "Warm, calm, private", "offer": "Intimate studio-inspired sets." },
     { "slug": "mika-river", "title": "Mika River", "subtitle": "Water, light, serenity", "offer": "Outdoor river sets, natural light." },
     { "slug": "mountain", "title": "Mountain", "subtitle": "High views, open sky", "offer": "Adventurous open-air sets." },
-    { "slug": "waterpark", "title": "Waterpark", "subtitle": "Playful summer light", "offer": "Bright, playful outdoor sets." }
+    { "slug": "waterpark", "title": "Waterpark", "subtitle": "Playful summer light", "offer": "Bright, playful outdoor sets." },
+    { "slug": "new-shoot", "title": "New Shoot", "subtitle": "Fresh scenes, new light", "offer": "A brand-new editorial set, just captured." }
   ],
   "hero": {
     "maxCandidates": 8,
     "preferLandscape": true,
-    "heroImage": "mountain-img-20260609-113532"
+    "slides": [
+      "new-shoot-1000248919",
+      "new-shoot-1000248920",
+      "new-shoot-1000248925",
+      "new-shoot-1000248926",
+      "new-shoot-1000248927",
+      "new-shoot-1000248928"
+    ]
   }
 }

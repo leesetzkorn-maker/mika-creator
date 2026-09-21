@@ -1,5 +1,7 @@
 import { $ } from './ui.mjs';
 
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (x) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[x]));
+
 const base = window.MIKA_CONFIG?.assets?.base || 'assets/data/';
 
 function accessModal(item) {
@@ -17,9 +19,9 @@ function accessModal(item) {
       <h3 style="font-size:1.5rem">See the real content</h3>
       <p class="muted" style="font-size:.9rem;margin-top:.6rem">This is a preview. Reach Mika directly for the full ${item?.collectionTitle || 'gallery'}.</p>
       <div style="display:grid;gap:.8rem;margin-top:1.6rem">
-        ${wa ? `<a class="btn btn-primary" href="${wa}" target="_blank" rel="noopener">WhatsApp Mika</a>` : ''}
-        ${tg ? `<a class="btn btn-ghost" href="${tg}" target="_blank" rel="noopener">Telegram</a>` : ''}
-        ${mail ? `<a class="btn btn-ghost" href="${mail}">Email</a>` : ''}
+        ${wa ? `<a class="btn btn-primary" href="${wa}" target="_blank" rel="noopener" data-gallery-name="${esc(item.collectionTitle || '')}">WhatsApp Mika</a>` : ''}
+        ${tg ? `<a class="btn btn-ghost" href="${tg}" target="_blank" rel="noopener" data-gallery-name="${esc(item.collectionTitle || '')}">Telegram</a>` : ''}
+        ${mail ? `<a class="btn btn-ghost" href="${mail}" data-gallery-name="${esc(item.collectionTitle || '')}">Email</a>` : ''}
       </div>
       <button class="btn btn-ghost" data-close style="margin-top:1.2rem">Close</button>
     </div>`;
@@ -93,8 +95,4 @@ export async function initGallery() {
     requestAnimationFrame(() => el.classList.add('revealed'));
   }
   grid.appendChild(frag);
-
-  if (typeof window.MikaTrackGallery !== 'function') {
-    window.MikaTrackGallery = (label) => window.gtag?.('event', 'view_item', { item_name: label });
-  }
 }

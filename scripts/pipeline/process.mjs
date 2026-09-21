@@ -18,7 +18,13 @@ import {
 import sharp from 'sharp';
 
 const MANIFEST = path.join(WORK_DIR, 'manifest.json');
+const ASSETS_META = path.join(WORK_DIR, 'assets-meta.json');
 const CLASSIFICATIONS = path.join(ROOT, 'private', 'cache', 'classifications.json');
+
+const DERIVE_SUFFIXES = [
+  ['thumb', 'webp'], ['full', 'webp'], ['hero', 'webp'],
+  ['mobile', 'webp'], ['og', 'jpg'], ['blur', 'webp'],
+];
 
 const WATERMARK_SVG = Buffer.from(
   `<svg xmlns="http://www.w3.org/2000/svg" width="340" height="46">
@@ -98,6 +104,14 @@ export async function processAll() {
   const classifications = loadJson(CLASSIFICATIONS, null)?.bySlug || {};
   if (!manifest.assets.length) throw new Error('manifest missing — run collect first');
 
+  // Incremental skip: assets already present in assets-meta.json whose public
+  // derivatives all exist on disk are carried forward untouched, so re-runs
+  // only process newly collected images. A full re-run still works the same
+  // way — the generated files are byte-for-byte identical.
+  const previous = new Map(loadJson(ASSETS_META, { assets: [] }).assets.map((a) => [a.slug, a]));
+  const hasAllDerivatives = (base) =>
+    DERIVE_SUFFIXES.every(([name, ext]) => fs.existsSync(`${base}.${name}.${ext}`));
+
   let done = 0, skipped = 0;
   const out = [];
 
@@ -108,6 +122,13 @@ export async function processAll() {
       continue;
     }
     const base = path.join(IMAGES_DIR, asset.collection, asset.slug);
+
+    const prevEntry = previous.get(asset.slug);
+    if (prevEntry && hasAllDerivatives(base)) {
+      out.push(prevEntry);
+      skipped++;
+      continue;
+    }
     const meta = await computeMetrics(src);
 
     const thumb = sharp(src).rotate().resize({ width: 520, height: 720, fit: 'inside' });

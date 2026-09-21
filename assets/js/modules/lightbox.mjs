@@ -42,6 +42,14 @@ function show(preview, name) {
   if (cap) cap.textContent = c ? `${c} — Mika Creator` : '';
   lb.classList.add('open');
   document.body.style.overflow = 'hidden';
+
+  // Each become-visible image in the lightbox = one gallery_image_view event.
+  if (items.length && it?.urls) {
+    window.MikaTrack?.('gallery_image_view', {
+      gallery_name: it.collectionTitle || it.collection || name || 'Preview',
+      image_index: current + 1,
+    });
+  }
 }
 
 export function closeLightbox() {

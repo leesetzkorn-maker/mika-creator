@@ -40,7 +40,8 @@ function ogImage() {
 }
 
 function head({ title, description, path: p = '/', robots = 'index,follow', bodyAttrs = '' } = {}) {
-  const canonical = domain + (p === '/' ? '/' : p);
+  const canonicalPath = p === '/' ? '/' : p.startsWith('/') ? p : '/' + p;
+  const canonical = domain + canonicalPath;
   const og = ogImage();
   return `<!doctype html>
 <html lang="en">
@@ -57,6 +58,7 @@ function head({ title, description, path: p = '/', robots = 'index,follow', body
 <meta name="referrer" content="strict-origin-when-cross-origin">
 ${CSP()}
 <meta property="og:type" content="website">
+<meta property="og:locale" content="en_ZA">
 <meta property="og:site_name" content="${site.brand?.name} ${site.brand?.suffix}">
 <meta property="og:title" content="${title}">
 <meta property="og:description" content="${description}">
@@ -70,17 +72,42 @@ ${CSP()}
 ${FONTS}
 <link rel="stylesheet" href="${APP_CSS}">
 ${CONFIG()}
-<script type="application/ld+json">${JSON.stringify({
-  '@context': 'https://schema.org',
-  '@type': 'WebSite',
-  name: `${site.brand?.name} ${site.brand?.suffix}`,
-  url: domain,
-  description: site.seo?.description,
-})}</script>
+<script type="application/ld+json">${JSON.stringify(STRUCTURED_DATA())}</script>
 </head>
 <body${bodyAttrs ? ' ' + bodyAttrs : ''}>
 ${NAV()}
 <main id="main">`;
+}
+
+function STRUCTURED_DATA() {
+  const persona = (site.personas || []).find((p) => p.active) || {};
+  const graph = [
+    {
+      '@type': 'WebSite',
+      '@id': `${domain}/#website`,
+      url: domain,
+      name: `${site.brand?.name} ${site.brand?.suffix}`,
+      description: site.seo?.description,
+    },
+    {
+      '@type': 'Organization',
+      '@id': `${domain}/#organization`,
+      url: domain,
+      name: `${site.brand?.name} ${site.brand?.suffix}`,
+      logo: `${domain}/${site.seo?.ogImage || 'assets/images/brand/og-cover.jpg'}`,
+    },
+  ];
+  if (persona.name || persona.bio) {
+    graph.push({
+      '@type': 'Person',
+      '@id': `${domain}/#person`,
+      name: persona.name || 'Mika',
+      url: domain,
+      description: (persona.bio || site.brand?.tagline || '').slice(0, 300),
+      sameAs: c.telegram ? [c.telegram] : [],
+    });
+  }
+  return { '@context': 'https://schema.org', '@graph': graph };
 }
 
 const NAV = () => {
@@ -204,6 +231,9 @@ const HERO = () => `<section class="hero" id="hero" aria-label="Introduction">
       <a class="btn btn-ghost btn-lg" href="/#collections">View collections</a>
     </div>
   </div>
+  <button class="hero-ctrl hero-prev" id="hero-prev" type="button" aria-label="Previous slide">‹</button>
+  <button class="hero-ctrl hero-next" id="hero-next" type="button" aria-label="Next slide">›</button>
+  <div class="hero-dots" id="hero-dots" aria-label="Slideshow navigation"></div>
   <div class="hero-scroll">Scroll</div>
 </section>`;
 
@@ -218,7 +248,7 @@ function collectionCard(col) {
       <h3 class="card-title">${col.title}</h3>
       <p class="card-sub">${col.subtitle || col.offer || ''}</p>
     </div>
-    <a class="card-link" href="/gallery/${col.slug}/" aria-label="Open collection: ${col.title}"></a>
+    <a class="card-link" href="/gallery/${col.slug}/" data-gallery-name="${esc(col.title)}" aria-label="Open collection: ${esc(col.title)}"></a>
   </article>`;
 }
 
@@ -274,7 +304,7 @@ function glimpseGrid() {
   }
   if (!items.length) return '';
   return `<div class="glimpse-grid">
-    ${items.map((it) => `<a class="glimpse-item" href="/gallery/${it.col}/" aria-label="A glimpse of ${esc(it.title)} — open collection">
+    ${items.map((it) => `<a class="glimpse-item" href="/gallery/${it.col}/" data-gallery-name="${esc(it.title)}" aria-label="A glimpse of ${esc(it.title)} — open collection">
       <img src="${it.url}" alt="${esc(it.title)} glimpse — Mika Creator" loading="lazy" draggable="false">
       <span class="glimpse-cap">${esc(it.title)}</span>
     </a>`).join('')}
@@ -638,7 +668,7 @@ function pageConnect() {
   return `${pageHero({
     eyebrow: 'connect',
     title: 'Talk to Mika',
-    lead: 'The fastest way to full gallery access and custom requests — pick your favourite channel.',
+    lead: 'Based in Pretoria, South Africa — the fastest way to full gallery access and custom requests is to pick your favourite channel below.',
   })}
 <section class="section section-tight">
   <div class="container">
@@ -822,8 +852,8 @@ export function renderAll() {
   const checks = [];
   const pages = [
     { path: 'index.html', title: site.seo?.title, desc: site.seo?.description, body: () => pageIndex(), attrs: 'data-hero data-gallery data-custom-build' },
-    { path: 'gallery/index.html', title: 'Gallery — Mika Creator | 18+', desc: 'Browse the 18+ photo collections of Mika. Safe blurred previews, original content, seven worlds to explore.', body: () => pageGallery(), attrs: 'data-gallery' },
-    { path: 'connect/index.html', title: 'Connect — Mika Creator', desc: 'Reach Mika on WhatsApp, Telegram or email. Full gallery access and custom set requests happen here.', body: () => pageConnect(), attrs: 'data-reviews' },
+    { path: 'gallery/index.html', title: 'Gallery — Mika Creator | 18+', desc: 'Browse the 18+ photo collections of Mika. Safe blurred previews, original content, eight worlds to explore.', body: () => pageGallery(), attrs: 'data-gallery' },
+    { path: 'connect/index.html', title: 'Connect — Mika Creator', desc: 'Reach Mika on WhatsApp, Telegram or email — based in Pretoria, South Africa. Full gallery access and custom set requests happen here.', body: () => pageConnect(), attrs: 'data-reviews' },
     { path: 'terms/index.html', title: 'Terms of use — Mika Creator', desc: 'Terms of use for the Mika Creator website.', body: () => legalPage(LEGAL_TEXT.terms), attrs: '' },
     { path: 'privacy-18.html', title: 'Privacy (18+) — Mika Creator', desc: 'Privacy policy for the adult website Mika Creator.', body: () => legalPage(LEGAL_TEXT.privacy), attrs: '' },
     { path: '404.html', title: 'Page not found — Mika Creator', desc: 'The page you wanted could not be found.', body: () => page404(), attrs: '', robots: 'noindex,follow' },
@@ -847,7 +877,7 @@ export function renderAll() {
       title: `${col.title} — Mika Creator | 18+ gallery`,
       description: `${col.subtitle || col.offer || col.title}. ${col.count} original 18+ photos by Mika, shown as safe previews.`,
       path: `/gallery/${col.slug}/`,
-      bodyAttrs: ` data-gallery data-collection="${col.slug}" data-likes data-comments`,
+      bodyAttrs: ` data-gallery data-collection="${col.slug}" data-collection-title="${esc(col.title)}" data-likes data-comments`,
       content: pageCollection(col),
     });
     rendered.push([`gallery/${col.slug}/index.html`, html]);
