@@ -584,12 +584,25 @@ insert into _legacy_vote_map (record_key, object_type, object_id) values
     ('Waterpark|5', 'asset', 'waterpark-img-20260607-162034'),
     ('Waterpark|6', 'asset', 'waterpark-img-20260607-162042');
 
--- 3) backfill (actions preserved; like+switch semantics unchanged)
-update public.votes v
-set object_type = m.object_type,
-    object_id   = m.object_id
-from _legacy_vote_map m
-where v.record_key = m.record_key;
+-- 3) backfill (actions preserved; like+switch semantics unchanged).
+--    Only runs when votes is still the legacy v1 shape (has record_key).
+--    If votes is already v2 (no record_key column — e.g. created fresh by
+--    schema.sql inside the same bootstrap, or 001 already ran), the backfill
+--    is skipped so the file can never error on record_key.
+do $$
+begin
+  if exists (
+    select 1 from information_schema.columns
+    where table_schema = 'public' and table_name = 'votes' and column_name = 'record_key'
+  ) then
+    update public.votes v
+    set object_type = m.object_type,
+        object_id   = m.object_id
+    from _legacy_vote_map m
+    where v.record_key = m.record_key;
+  end if;
+end;
+$$;
 
 -- 4) votes pointing at content that no longer exists are dropped
 delete from public.votes
@@ -654,13 +667,35 @@ CREATE INDEX IF NOT EXISTS comments_object_idx
 ALTER TABLE public.comments ENABLE ROW LEVEL SECURITY;
 
 -- Anon can INSERT (submit comment) and SELECT approved only
-CREATE POLICY IF NOT EXISTS comments_insert_policy
-  ON public.comments FOR INSERT
-  TO anon WITH CHECK (true);
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'comments'
+      AND policyname = 'comments_insert_policy'
+  ) THEN
+    CREATE POLICY comments_insert_policy
+      ON public.comments FOR INSERT
+      TO anon WITH CHECK (true);
+  END IF;
+END;
+$$;
 
-CREATE POLICY IF NOT EXISTS comments_select_approved
-  ON public.comments FOR SELECT
-  TO anon USING (status = 'approved');
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'comments'
+      AND policyname = 'comments_select_approved'
+  ) THEN
+    CREATE POLICY comments_select_approved
+      ON public.comments FOR SELECT
+      TO anon USING (status = 'approved');
+  END IF;
+END;
+$$;
 
 -- =====================================================================
 -- 2. ANALYTICS EVENTS TABLE
@@ -692,9 +727,20 @@ CREATE INDEX IF NOT EXISTS analytics_events_date_idx
 ALTER TABLE public.analytics_events ENABLE ROW LEVEL SECURITY;
 
 -- Anon can INSERT events (public tracking) but NOT SELECT
-CREATE POLICY IF NOT EXISTS analytics_insert_policy
-  ON public.analytics_events FOR INSERT
-  TO anon WITH CHECK (true);
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'analytics_events'
+      AND policyname = 'analytics_insert_policy'
+  ) THEN
+    CREATE POLICY analytics_insert_policy
+      ON public.analytics_events FOR INSERT
+      TO anon WITH CHECK (true);
+  END IF;
+END;
+$$;
 
 -- =====================================================================
 -- 3. ADMIN USERS TABLE
