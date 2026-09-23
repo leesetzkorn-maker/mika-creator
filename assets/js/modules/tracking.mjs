@@ -7,14 +7,19 @@
  *
  * Events tracked:
  *   page_view           (GA4 page view, fired manually to control metadata)
- *   whatsapp_click      page_path, page_title, button_location, gallery_name, device_category
- *   telegram_click      page_path, page_title, button_location, gallery_name, device_category
+ *   whatsapp_click      page_path, page_title, button_location, gallery_name, cta_label, source, campaign, device_category
+ *   telegram_click      page_path, page_title, button_location, gallery_name, cta_label, source, campaign, device_category
  *   gallery_open        gallery_name, page_path, device_category
  *   new_shoot_open      gallery_name = "New Shoot", device_category
  *   gallery_image_view  gallery_name, image_index, device_category
  *   hero_slide_view     slide_number, slide_image, device_category
  *   hero_next_click     current_slide, next_slide
  *   hero_previous_click current_slide, previous_slide
+ *   generate_lead       location, cta_label, source, campaign (fired on custom-build submission)
+ *
+ * GA4 key events ("conversions"): whatsapp_click and generate_lead are the two
+ * revenue-relevant events. GA4 key events cannot be marked from the client —
+ * mark them in GA4 Admin → Events → Mark as key event (G-V1V3P6YJE3).
  *
  * No message content, names, phone numbers or emails are ever collected — only
  * navigation + engagement metadata needed to understand traffic and conversion.
@@ -51,6 +56,7 @@ function baseParams() {
     page_path: window.location.pathname + window.location.search,
     page_title: document.title,
     device_category: device(),
+    ...attribution(), // source + campaign + utm_* when known
   };
 }
 
@@ -75,6 +81,50 @@ function captureUtm() {
 
 function storedUtm() {
   try { return JSON.parse(sessionGet(UTM_STORAGE) || '{}'); } catch { return {}; }
+}
+
+// Canonical traffic-source buckets — kept in sync with analytics.mjs / migration
+// 003's lead_source(). Attribution is only ever derived from real data: utm
+// source, or the referrer. No utm + no referrer = Direct.
+const SOURCE_MAP = {
+  tiktok: 'TikTok', facebook: 'Facebook', instagram: 'Instagram', reddit: 'Reddit',
+  google: 'Google', telegram: 'Telegram', twitter: 'Twitter', x: 'Twitter',
+  snapchat: 'Snapchat', youtube: 'YouTube', whatsapp: 'WhatsApp',
+};
+
+function normalizeSource(s) {
+  const v = String(s || '').toLowerCase().trim();
+  if (!v) return null;
+  if (SOURCE_MAP[v] !== undefined) return SOURCE_MAP[v];
+  if (v.includes('tiktok')) return 'TikTok';
+  if (v.includes('facebook')) return 'Facebook';
+  if (v.includes('instagram')) return 'Instagram';
+  if (v.includes('reddit')) return 'Reddit';
+  if (v.includes('google')) return 'Google';
+  if (v.includes('telegram')) return 'Telegram';
+  if (v.includes('twitter')) return 'Twitter';
+  if (v.includes('whatsapp')) return 'WhatsApp';
+  return 'Other';
+}
+
+function referrerSource() {
+  const r = document.referrer || '';
+  if (!r) return 'Direct';
+  return normalizeSource(r) || (/^https?:\/\//i.test(r) ? 'Other' : 'Direct');
+}
+
+// First-touch UTM source if present, otherwise the referrer-derived source.
+function sourceName() {
+  const utm = storedUtm();
+  return (utm.utm_source ? normalizeSource(utm.utm_source) : null) || referrerSource();
+}
+
+function attribution() {
+  const utm = storedUtm();
+  const meta = { source: sourceName() };
+  if (utm.utm_campaign) meta.campaign = utm.utm_campaign;
+  for (const k of UTM_KEYS) if (utm[k]) meta[k] = utm[k];
+  return meta;
 }
 
 // Appends previously captured UTM params to internal links so attribution
@@ -113,6 +163,12 @@ function galleryName(el) {
   return document.body.dataset.collectionTitle || null;
 }
 
+function ctaLabel(el) {
+  try {
+    return String(el.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 80) || null;
+  } catch { return null; }
+}
+
 function onClick(e) {
   const cfg = window.MIKA_CONFIG || {};
   const contact = cfg.contact || {};
@@ -138,13 +194,14 @@ function onClick(e) {
 
   const loc = buttonLocation(el);
   const gname = galleryName(el);
+  const cta = ctaLabel(el);
 
   if (isWhatsApp) {
-    track('whatsapp_click', { button_location: loc, gallery_name: gname });
+    track('whatsapp_click', { button_location: loc, gallery_name: gname, cta_label: cta });
     return;
   }
   if (isTelegram) {
-    track('telegram_click', { button_location: loc, gallery_name: gname });
+    track('telegram_click', { button_location: loc, gallery_name: gname, cta_label: cta });
     return;
   }
 

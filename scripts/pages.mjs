@@ -227,7 +227,8 @@ const HERO = () => `<section class="hero" id="hero" aria-label="Introduction">
     <h1 class="hero-title">MIKA <span class="serif-i">creator</span></h1>
     <p class="hero-tagline">${site.brand?.tagline || ''} — original editorial galleries, captured in natural light. All content exclusive, all content real.</p>
     <div class="hero-actions">
-      <a class="btn btn-primary btn-lg" href="/gallery/">Enter gallery</a>
+      ${WA_CTA({ label: 'Get access on WhatsApp' })}
+      <a class="btn btn-ghost btn-lg" href="/gallery/">Enter gallery</a>
       <a class="btn btn-ghost btn-lg" href="/#collections">View collections</a>
     </div>
   </div>
@@ -263,15 +264,30 @@ function pageHero({ eyebrow, title, lead }) {
   </section>`;
 }
 
-function TEASER_CTA() {
+/**
+ * Wire-friendly WhatsApp CTA used across the site (hero, gallery, collections,
+ * contact). Same numbers live only in site.json — never hardcoded here. The
+ * prefilled hello message is intentionally short and never verbose.
+ */
+const waLink = (text) => `https://${c.whatsappDomain}/${c.whatsappNumber}${text ? `?text=${encodeURIComponent(text)}` : ''}`;
+
+function WA_CTA({ label, collection = null, primary = true, size = 'lg' } = {}) {
+  const msg = collection ? `Hi Mika! I'd like access to ${collection}.` : "Hi Mika! I'd like access.";
+  const kind = primary ? 'btn-primary' : 'btn-ghost';
+  const attrs = collection ? ` data-gallery-name="${esc(collection)}"` : '';
+  return `<a class="btn ${kind}${size ? ' btn-' + size : ''}" href="${waLink(msg)}" target="_blank" rel="noopener"${attrs} aria-label="${esc(label)}">${icons.whatsapp}<span>${esc(label)}</span></a>`;
+}
+
+function TEASER_CTA(collection = null) {
   return `<section class="section section-tight teaser-cta">
   <div class="container">
     <div class="cta-strip">
       <p class="eyebrow">full access</p>
       <h2 class="display">Want to see the real content?</h2>
-      <p class="lead">Get in touch with Mika.</p>
+      <p class="lead">Message Mika on WhatsApp — fast, private and direct.</p>
       <div class="hero-actions">
-        <a class="btn btn-primary btn-lg" href="/connect/">Get in touch with Mika</a>
+        ${WA_CTA({ label: 'Get access on WhatsApp', collection })}
+        <a class="btn btn-ghost btn-lg" href="/connect/">More ways to contact</a>
       </div>
       <p class="cta-note">Private galleries and full content available on request.</p>
     </div>
@@ -631,7 +647,8 @@ function pageCollection(col) {
   <div class="container">
     <div style="display:flex;gap:1rem;align-items:center;justify-content:center;flex-wrap:wrap">
       <button class="like-btn" id="like-btn" data-type="collection" data-object="${col.slug}" aria-pressed="false">${icons.heart}<span class="count" id="like-count">…</span><span>Likes</span></button>
-      <a class="btn btn-primary" href="/connect/">Get in touch</a>
+      ${WA_CTA({ label: 'Request access', collection: col.title })}
+      <a class="btn btn-ghost" href="/connect/">Get in touch</a>
     </div>
   </div>
 </section>
@@ -640,7 +657,7 @@ function pageCollection(col) {
     <div class="gallery-grid teaser-grid" id="gallery-grid"></div>
   </div>
 </section>
-${TEASER_CTA()}
+${TEASER_CTA(col.title)}
 <section class="section section-tight">
   <div class="container">
     <div class="panel panel-pad" style="max-width:760px;margin-inline:auto">
@@ -809,7 +826,7 @@ function pageAdmin() {
         <p class="eyebrow">sign in</p>
         <div class="gold-rule"></div>
         <h2 class="section-title" style="font-size:1.8rem">Authorised access only</h2>
-        <p class="muted" style="font-size:.9rem">Sign in with the account Mika created in the Supabase dashboard. This area is private — analytics and moderation live here.</p>
+        <p class="muted" style="font-size:.9rem">Private admin area for Monique. Sign in with the admin account created in the Supabase dashboard — analytics, leads, conversions and moderation live here.</p>
         <style>#admin-form .field{margin-bottom:1rem}</style>
         <form id="admin-form" style="margin-top:1.4rem">
           <div class="field"><label for="admin-email">Email</label><input id="admin-email" name="email" type="email" autocomplete="username" required></div>
@@ -835,6 +852,21 @@ function pageAdmin() {
         <div class="admin-grid-2">
           <div id="admin-sources"></div>
           <div id="admin-engagement"></div>
+        </div>
+
+        <p class="eyebrow" style="margin-top:2.5rem">leads &amp; conversions</p>
+        <div class="gold-rule"></div>
+        <h2 class="section-title" style="font-size:1.8rem">Lead funnel &amp; revenue</h2>
+
+        <div class="funnel-grid" id="admin-funnel"></div>
+
+        <div class="admin-grid-2">
+          <div id="admin-conv-sources"></div>
+          <div id="admin-conv-pages"></div>
+        </div>
+        <div class="admin-grid-2">
+          <div id="admin-leads"></div>
+          <div id="admin-customers"></div>
         </div>
 
         <p class="eyebrow" style="margin-top:2.5rem">moderation</p>

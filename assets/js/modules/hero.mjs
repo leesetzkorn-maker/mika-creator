@@ -110,6 +110,11 @@ export async function initHero() {
       slide_number: i + 1,
       slide_image: candidates[i].slug,
     });
+    window.MikaDbTrack?.('hero_slide_view', {
+      slide_number: i + 1,
+      slide_image: candidates[i].slug,
+      location: 'hero',
+    });
   };
 
   const schedule = () => {

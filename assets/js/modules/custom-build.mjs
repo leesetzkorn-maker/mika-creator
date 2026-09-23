@@ -1,5 +1,32 @@
 import { $, $$ } from './ui.mjs';
 
+const CB_INTENT_TAG = 'mika_cb_requested';
+const CB_LEAD_TAG = 'mika_cb_lead';
+
+// Intent: the visitor reached the request form. Fired once per session to both
+// the analytics DB and GA4.
+function once(key) {
+  try {
+    if (sessionStorage.getItem(key) === '1') return false;
+    sessionStorage.setItem(key, '1');
+  } catch {}
+  return true;
+}
+
+function fireRequestIntent() {
+  if (!once(CB_INTENT_TAG)) return;
+  window.MikaDbTrack?.('custom_request_click', { location: 'custom-build' });
+  window.MikaTrack?.('custom_request_click', { location: 'custom-build' });
+}
+
+// Conversion: the request was actually sent (stored or handed to WhatsApp/Telegram).
+function fireGenerateLead() {
+  if (!once(CB_LEAD_TAG)) return;
+  const pkg = field('package');
+  window.MikaDbTrack?.('generate_lead', { location: 'custom-build', collection: pkg || null, cta: 'Submit custom request' });
+  window.MikaTrack?.('generate_lead', { location: 'custom-build', collection: pkg || null, cta_label: 'Submit custom request' });
+}
+
 function setStep(n) {
   const form = $('#cb-form');
   if (!form) return;
@@ -150,6 +177,8 @@ async function submit(e) {
 
   const { stored } = await sendPayload();
 
+  fireGenerateLead();
+
   if (stored) {
     try { localStorage.setItem('mc_cb_last', String(now)); } catch {}
     form.hidden = true;
@@ -216,6 +245,7 @@ export function initCustomBuild() {
   bindChips();
   handlePackagesParam();
   setStep(1);
+  fireRequestIntent();
   const status = $('#cb-status');
   if (status) status.textContent = '';
 }

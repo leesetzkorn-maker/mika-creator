@@ -22,7 +22,7 @@
     "reviewsTable": "reviews",
     "toggleVoteFunc": "toggle_vote",
     "insertCommentFunc": "insert_comment",
-    "insertReviewFunc": "add_review"
+    "insertReviewFunc": "insert_review"
   },
   "services": {
     "packages": [
