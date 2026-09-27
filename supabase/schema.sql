@@ -43,8 +43,12 @@ begin
              where table_schema = 'public' and table_name = 'votes' and column_name = 'object_type')
      and exists (select 1 from information_schema.columns
              where table_schema = 'public' and table_name = 'votes' and column_name = 'object_id') then
-    execute 'create index if not exists public.votes_object_idx on public.votes (object_type, object_id)';
-    execute 'create index if not exists public.votes_voter_idx  on public.votes (voter_id)';
+    -- NOTE: the INDEX name must NOT be schema-qualified. PostgreSQL only allows
+    -- a qualified name for the TABLE (public.votes); `create index public.foo`
+    -- is a syntax error ("syntax error at or near ."). The index is created in
+    -- the table's own schema regardless.
+    execute 'create index if not exists votes_object_idx on public.votes (object_type, object_id)';
+    execute 'create index if not exists votes_voter_idx   on public.votes (voter_id)';
   else
     raise warning 'public.votes is still legacy v1 (no object_type/object_id) — run migrations/001_votes_v2.sql first; v2 indexes skipped';
   end if;
