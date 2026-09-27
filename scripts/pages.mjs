@@ -807,6 +807,27 @@ function page404() {
 </section>`;
 }
 
+function pageAdminLogin() {
+  return `
+  <section class="section section-tight" id="admin-app">
+    <div class="container" style="max-width:480px">
+      <div class="panel panel-pad" id="admin-login">
+        <p class="eyebrow">private · admin</p>
+        <div class="gold-rule"></div>
+        <h1 class="section-title" style="font-size:1.8rem;margin-bottom:.6rem">Authorised access only</h1>
+        <p class="muted" style="font-size:.9rem">Private admin area for Monique. Sign in with the admin account created in the Supabase dashboard — analytics, leads, conversions and moderation live here.</p>
+        <style>#admin-form .field{margin-bottom:1rem}</style>
+        <form id="admin-form" style="margin-top:1.4rem">
+          <div class="field"><label for="admin-email">Email</label><input id="admin-email" name="email" type="email" autocomplete="username" required></div>
+          <div class="field"><label for="admin-password">Password</label><input id="admin-password" name="password" type="password" autocomplete="current-password" required></div>
+          <button class="btn btn-primary" type="submit" id="admin-submit" style="width:100%">Sign in</button>
+          <p class="form-status" id="admin-form-status" role="status" style="text-align:center"></p>
+        </form>
+      </div>
+    </div>
+  </section>`;
+}
+
 function pageAdmin() {
   return `
   <section class="section section-tight" id="admin-app">
@@ -817,26 +838,13 @@ function pageAdmin() {
           <h1 class="section-title" style="margin-bottom:0">Dashboard</h1>
         </div>
         <div class="admin-head-actions">
-          <button class="btn btn-ghost" id="admin-refresh" hidden>Refresh</button>
-          <button class="btn btn-ghost" id="admin-logout" hidden>Sign out</button>
+          <span id="admin-name" style="font-size:.85rem;opacity:.7;align-self:center;max-width:22ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span>
+          <button class="btn btn-ghost" id="admin-refresh">Refresh</button>
+          <button class="btn btn-ghost" id="admin-logout">Sign out</button>
         </div>
       </div>
 
-      <div class="panel panel-pad" id="admin-login" style="max-width:420px;margin:2rem auto">
-        <p class="eyebrow">sign in</p>
-        <div class="gold-rule"></div>
-        <h2 class="section-title" style="font-size:1.8rem">Authorised access only</h2>
-        <p class="muted" style="font-size:.9rem">Private admin area for Monique. Sign in with the admin account created in the Supabase dashboard — analytics, leads, conversions and moderation live here.</p>
-        <style>#admin-form .field{margin-bottom:1rem}</style>
-        <form id="admin-form" style="margin-top:1.4rem">
-          <div class="field"><label for="admin-email">Email</label><input id="admin-email" name="email" type="email" autocomplete="username" required></div>
-          <div class="field"><label for="admin-password">Password</label><input id="admin-password" name="password" type="password" autocomplete="current-password" required></div>
-          <button class="btn btn-primary" type="submit" id="admin-submit" style="width:100%">Sign in</button>
-          <p class="form-status" id="admin-form-status" role="status" style="text-align:center"></p>
-        </form>
-      </div>
-
-      <div id="admin-view" style="display:none" data-loaded="">
+      <div id="admin-view" data-loaded="">
         <div id="admin-today" class="stat-card accent" style="margin-bottom:1rem"></div>
         <div class="stat-grid" id="admin-stats"></div>
 
@@ -889,6 +897,7 @@ export function renderAll() {
     { path: 'terms/index.html', title: 'Terms of use — Mika Creator', desc: 'Terms of use for the Mika Creator website.', body: () => legalPage(LEGAL_TEXT.terms), attrs: '' },
     { path: 'privacy-18.html', title: 'Privacy (18+) — Mika Creator', desc: 'Privacy policy for the adult website Mika Creator.', body: () => legalPage(LEGAL_TEXT.privacy), attrs: '' },
     { path: '404.html', title: 'Page not found — Mika Creator', desc: 'The page you wanted could not be found.', body: () => page404(), attrs: '', robots: 'noindex,follow' },
+    { path: 'admin/login/index.html', title: 'Sign in — Mika Creator', desc: 'Private admin sign in.', body: () => pageAdminLogin(), attrs: 'data-admin-login', robots: 'noindex,nofollow' },
     { path: 'admin/index.html', title: 'Admin — Mika Creator', desc: 'Private admin dashboard.', body: () => pageAdmin(), attrs: 'data-admin', robots: 'noindex,nofollow' },
   ];
 

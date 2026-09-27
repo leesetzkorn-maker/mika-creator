@@ -390,6 +390,10 @@ ALTER TABLE public.admin_users ENABLE ROW LEVEL SECURITY;
 
 -- =====================================================================
 -- 4. IS_ADMIN() FUNCTION
+--    Reads the email from the verified Supabase JWT (auth.jwt()), which is the
+--    same claim the sign-in response carries. auth.email() is not used: it is
+--    deprecated, and building the function on a missing helper would make the
+--    whole migration fail to compile.
 -- =====================================================================
 CREATE OR REPLACE FUNCTION public.is_admin()
 RETURNS boolean
@@ -398,9 +402,12 @@ SECURITY DEFINER
 STABLE
 SET search_path = public
 AS $$
-  SELECT EXISTS (
-    SELECT 1 FROM public.admin_users
-    WHERE email = lower(coalesce(auth.email(), ''))
+  SELECT coalesce(
+    EXISTS (
+      SELECT 1 FROM public.admin_users
+      WHERE email = lower(coalesce(auth.jwt() ->> 'email', ''))
+    ),
+    false
   );
 $$;
 
@@ -904,11 +911,17 @@ GRANT EXECUTE ON FUNCTION public.insert_review(smallint, smallint, smallint, tex
 GRANT EXECUTE ON FUNCTION public.get_review_stats()                                TO anon, authenticated;
 GRANT EXECUTE ON FUNCTION public.insert_event(text, text, text, text, text, jsonb) TO anon, authenticated;
 
--- Admin RPCs: only authenticated (is_admin check inside function body)
-GRANT EXECUTE ON FUNCTION public.admin_get_today_stats()           TO authenticated;
-GRANT EXECUTE ON FUNCTION public.admin_get_stats(int)              TO authenticated;
-GRANT EXECUTE ON FUNCTION public.admin_list_comments(text, int)    TO authenticated;
-GRANT EXECUTE ON FUNCTION public.admin_moderate_comment(uuid, text) TO authenticated;
+-- Admin RPCs: only authenticated (is_admin check inside function body).
+-- NOTE: admin_get_stats is declared as (p_days int, p_range text). Granting the
+-- one-arg form `admin_get_stats(int)` is a hard error
+-- ("function public.admin_get_stats(integer) does not exist") and, because the
+-- SQL Editor runs a pasted script in a single transaction, that error rolled
+-- back the ENTIRE migration including the grants below it. Always match the
+-- full identity signature.
+GRANT EXECUTE ON FUNCTION public.admin_get_today_stats()                    TO authenticated;
+GRANT EXECUTE ON FUNCTION public.admin_get_stats(int, text)                 TO authenticated;
+GRANT EXECUTE ON FUNCTION public.admin_list_comments(text, int)             TO authenticated;
+GRANT EXECUTE ON FUNCTION public.admin_moderate_comment(uuid, text)        TO authenticated;
 
 -- =====================================================================
 -- DONE. Remember to:

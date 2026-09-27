@@ -22,7 +22,13 @@ async function request(path, body) {
 
 export async function adminSignIn(email, password) {
   const d = await request('/auth/v1/token?grant_type=password', { email, password });
-  return { accessToken: d.access_token, refreshToken: d.refresh_token, user: d.user };
+  return {
+    accessToken: d.access_token,
+    refreshToken: d.refresh_token,
+    user: d.user,
+    // Seconds until the access token expires (Supabase sends this).
+    expiresIn: d.expires_in ?? 3600,
+  };
 }
 
 export async function adminRefresh(refreshToken) {

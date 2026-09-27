@@ -1,5 +1,10 @@
+// Admin dashboard (/admin/). Protected: with no valid session it bounces to
+// /admin/login/ and renders nothing. The login form lives in admin-login.mjs
+// on its own page — this module never draws one.
 import { $, $$ } from './ui.mjs';
-import { adminSignIn, ensureFreshSession, clearSession, getSession, adminRpc } from './admin-auth.mjs';
+import { ensureFreshSession, clearSession, getSession, adminRpc } from './admin-auth.mjs';
+
+const LOGIN_PATH = '/admin/login/';
 
 const esc = (s) => String(s || '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
@@ -90,26 +95,25 @@ function renderModeration(rows) {
       } catch (e) {
         window.MikaToast?.(e.status === 401 ? 'Session expired — sign in again.' : 'Could not update that comment.', 'err');
         btn.disabled = false;
-        if (e.status === 401) showLogin();
+        if (e.status === 401) toLogin();
       }
     });
   });
 }
 
-function showLogin() {
-  const view = $('#admin-view');
-  if (view) view.style.display = 'none';
-  const login = $('#admin-login');
-  if (login) login.style.display = '';
+// A 401 from any admin RPC means the access token is gone or the user is no
+// longer an admin. The session is unusable, so drop it and send them to the
+// dedicated login page rather than rendering a dead dashboard.
+function toLogin() {
+  clearSession();
+  window.location.replace(LOGIN_PATH);
 }
 
 async function loadDashboard() {
   const session = await ensureFreshSession();
-  if (!session) { showLogin(); return; }
+  if (!session) { toLogin(); return; }
   const view = $('#admin-view');
-  if (view) view.style.display = '';
-  const login = $('#admin-login');
-  if (login) login.style.display = 'none';
+  if (!view) { toLogin(); return; }
   if (view.dataset.loaded) return;
   view.dataset.loaded = '1';
 
@@ -135,7 +139,7 @@ async function loadDashboard() {
     if (engEl) engEl.innerHTML = `
       <div class="eng-row">${card('RedVelvet clicks', fmt(eng.redvelvet_clicks))}${card('ESA clicks', fmt(eng.esa_clicks))}${card('Contact clicks', fmt(eng.contact_clicks))}${card('Gallery interactions', fmt(eng.gallery_interactions))}</div>`;
   } catch (e) {
-    if (e.status === 401) { showLogin(); return; }
+    if (e.status === 401) { toLogin(); return; }
     const msg = e.message || '';
     if (/unauthorized/i.test(msg)) {
       if (statsEl) statsEl.innerHTML = '<div class="admin-error">This account is not authorised for the dashboard. Please use the admin account for Monique.</div>';
@@ -282,7 +286,7 @@ function bindLeads(rows) {
         item.remove();
       } catch (e) {
         window.MikaToast?.(e.status === 401 ? 'Session expired — sign in again.' : 'Could not update that lead.', 'err');
-        if (e.status === 401) showLogin();
+        if (e.status === 401) toLogin();
       }
     });
   });
@@ -303,7 +307,7 @@ function bindLeads(rows) {
       await loadConversions();
     } catch (err) {
       window.MikaToast?.(err.status === 401 ? 'Session expired — sign in again.' : 'Could not add that lead.', 'err');
-      if (err.status === 401) showLogin();
+      if (err.status === 401) toLogin();
     } finally {
       if (btn) btn.disabled = false;
     }
@@ -360,7 +364,7 @@ function bindCustomers(rows) {
         bindCustomers(rows.filter((c) => String(c.id) !== String(item.dataset.id)));
       } catch (e) {
         window.MikaToast?.(e.status === 401 ? 'Session expired — sign in again.' : 'Could not delete that entry.', 'err');
-        if (e.status === 401) showLogin();
+        if (e.status === 401) toLogin();
       }
     });
   });
@@ -382,7 +386,7 @@ function bindCustomers(rows) {
       await loadConversions();
     } catch (err) {
       window.MikaToast?.(err.status === 401 ? 'Session expired — sign in again.' : 'Could not add that entry.', 'err');
-      if (err.status === 401) showLogin();
+      if (err.status === 401) toLogin();
     } finally {
       if (btn) btn.disabled = false;
     }
@@ -401,7 +405,7 @@ async function loadConversions() {
     bindLeads(c.recent_leads || []);
     bindCustomers(c.recent_customers || []);
   } catch (e) {
-    if (e.status === 401) { showLogin(); return; }
+    if (e.status === 401) { toLogin(); return; }
     const msg = e.message || '';
     if (/does not exist|could not find|relation/i.test(msg)) {
       if (funnelEl) funnelEl.innerHTML = '<div class="admin-error">Run migration 003 (leads &amp; conversions) in the Supabase SQL Editor, then refresh.</div>';
@@ -420,56 +424,20 @@ export function initAdmin() {
     return;
   }
 
-  const login = $('#admin-login');
-  const form = $('#admin-form');
-  const status = $('#admin-form-status');
-  const btn = $('#admin-submit');
-  const emailInput = $('#admin-email');
-
-  if (emailInput) {
-    const s = localStorage.getItem('mika_admin_email');
-    if (s) emailInput.value = s;
-  }
-
-  const tryAuto = async () => {
-    if (await ensureFreshSession()) await loadDashboard();
-    else showLogin();
-  };
-
-  form?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const email = String(emailInput?.value || '').trim();
-    const password = String($('#admin-password')?.value || '');
-    if (!email || !password) { if (status) { status.className = 'form-status err'; status.textContent = 'Enter your email and password.'; } return; }
-    if (btn) btn.disabled = true;
-    if (status) { status.className = 'form-status'; status.textContent = 'Signing in…'; }
-    try {
-      const s = await adminSignIn(email, password);
-      localStorage.setItem('mika_admin_email', email);
-      saveSession({ ...s, expires_at: Date.now() + 3600 * 1000 });
-      if (status) status.textContent = '';
-      await loadDashboard();
-    } catch (err) {
-      if (status) {
-        status.className = 'form-status err';
-        status.textContent = err.message && !/failed/i.test(err.message) ? err.message : 'Incorrect email or password.';
-      }
-    } finally {
-      if (btn) btn.disabled = false;
-    }
-  });
+  // Gate immediately, before any panel is populated: no session -> login page.
+  if (!getSession()) { toLogin(); return; }
 
   $('#admin-logout')?.addEventListener('click', () => {
     clearSession();
-    showLogin();
     window.MikaToast?.('Signed out.');
+    window.location.replace(LOGIN_PATH);
   });
 
-  $('#admin-refresh')?.addEventListener('click', () => {
+  $('#admin-refresh')?.addEventListener('click', async () => {
     const view = $('#admin-view');
-    if (view) { delete view.dataset.loaded; view.style.display = 'none'; }
-    loadDashboard();
+    if (view) delete view.dataset.loaded;
+    await loadDashboard();
   });
 
-  tryAuto();
+  loadDashboard();
 }

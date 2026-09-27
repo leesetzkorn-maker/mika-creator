@@ -9,6 +9,7 @@ import { initGallery } from './modules/gallery.mjs';
 import { initLikes, initComments, initReviews } from './modules/community.mjs';
 import { initAnalytics } from './modules/analytics.mjs';
 import { initAdmin } from './modules/admin-dashboard.mjs';
+import { initAdminLogin } from './modules/admin-login.mjs';
 import { initCustomBuild } from './modules/custom-build.mjs';
 
 function boot() {
@@ -25,6 +26,7 @@ function boot() {
   if (document.body.dataset.reviews !== undefined) initReviews();
   if (document.body.dataset.gallery !== undefined) initGallery();
   if (document.body.dataset.admin !== undefined) initAdmin();
+  if (document.body.dataset.adminLogin !== undefined) initAdminLogin();
   initCustomBuild();
 }
 

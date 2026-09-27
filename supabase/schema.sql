@@ -18,6 +18,15 @@ create extension if not exists pgcrypto;
 -- 1. votes — per object (asset | collection) like/dislike.
 --    v1 stored record_key "<Category>|<index>"; v2 stores object_type/id.
 -- ---------------------------------------------------------------------
+-- IMPORTANT (idempotency across project states):
+--   A project upgraded from v1 may ALREADY have public.votes in the legacy shape
+--   (id, created_at, record_key, action, voter_id) with no object_type/object_id.
+--   In that case `create table if not exists` below is a no-op, and a plain
+--   `create index ... (object_type, object_id)` aborts the whole script with
+--   `column "object_type" does not exist`. The v1 -> v2 column add + backfill
+--   lives in migrations/001_votes_v2.sql, which MUST run first (the generated
+--   production_bootstrap.sql does exactly that). The guard below keeps this file
+--   runnable on its own against either state instead of erroring out.
 create table if not exists public.votes (
   id          bigint generated always as identity primary key,
   created_at  timestamptz not null default now(),
@@ -28,8 +37,19 @@ create table if not exists public.votes (
   constraint votes_object_voter_unique unique (object_type, object_id, action, voter_id)
 );
 
-create index if not exists votes_object_idx on public.votes (object_type, object_id);
-create index if not exists votes_voter_idx on public.votes (voter_id);
+do $$
+begin
+  if exists (select 1 from information_schema.columns
+             where table_schema = 'public' and table_name = 'votes' and column_name = 'object_type')
+     and exists (select 1 from information_schema.columns
+             where table_schema = 'public' and table_name = 'votes' and column_name = 'object_id') then
+    execute 'create index if not exists public.votes_object_idx on public.votes (object_type, object_id)';
+    execute 'create index if not exists public.votes_voter_idx  on public.votes (voter_id)';
+  else
+    raise warning 'public.votes is still legacy v1 (no object_type/object_id) — run migrations/001_votes_v2.sql first; v2 indexes skipped';
+  end if;
+end;
+$$;
 
 alter table public.votes enable row level security;
 -- NO anon select — that is the whole point of v2 (voter_id privacy).
@@ -40,7 +60,7 @@ alter table public.votes enable row level security;
 create table if not exists public.comments (
   id          uuid primary key default gen_random_uuid(),
   created_at  timestamptz not null default now(),
-  object_type text not null constraint comments_object_type_check check (object_type in ('asset','collection')),
+  object_type text not null constraint comments_object_type_check check (object_type in ('asset','collection','global')),
   object_id   text not null,
   voter_id    text not null,
   name        text not null default 'Guest',
