@@ -5,6 +5,13 @@ export function initPremiumCards() {
   if(!cards.length)return;
   const photos=()=>cards.forEach(card=>card.querySelectorAll('[data-sharp]').forEach(img=>{img.src=img.dataset.sharp;delete img.dataset.sharp;}));
   if(isVerified())photos();else document.addEventListener('mika:gate-passed',photos,{once:true});
+  // Existing enquiry selection gets the same picture as its source card.
+  const field=document.querySelector('#cb-package');
+  const requestImage=document.querySelector('.request-photo-card .photo-depth');
+  if(field&&requestImage)fetch('/assets/data/red-editorial.json').then(r=>{if(!r.ok)throw new Error();return r.json();}).then(({images})=>{
+    const update=()=>{const index=field.value==='video-call'?1:Math.max(0,['content-1','content-2','content-3','content-4'].indexOf(field.value));const image=images[index];if(!image)return;requestImage.dataset.sharp=image.urls.card;requestImage.src=isVerified()?image.urls.card:image.urls.blur;};
+    field.addEventListener('change',update);update();
+  }).catch(()=>{});
   const fine=matchMedia('(hover: hover) and (pointer: fine)');
   const reduced=matchMedia('(prefers-reduced-motion: reduce)');
   for(const card of cards){

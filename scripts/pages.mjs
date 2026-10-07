@@ -12,6 +12,7 @@ import {
 const site = loadJson(SITE_JSON, {});
 const gallery = loadJson(GALLERY_JSON, { collections: [], assets: [] });
 const heroes = loadJson(HERO_JSON, { candidates: [] });
+const editorial = loadJson(path.join(DATA_DIR, 'red-editorial.json'), { images: [] }).images;
 const domain = (site.brand?.domain || 'https://www.mikacreator.co.za').replace(/\/$/, '');
 const rta = site.seo?.rtaToken || 'RTA-5042-1996-1400-1577-RTA';
 const c = site.contact || {};
@@ -326,7 +327,7 @@ function CONTENT_PACKAGES() {
     <div class="pkg-grid">
       ${svcPackages.map((p, index) => `
       <article class="pkg-card premium-photo${p.featured ? ' is-featured' : ''}" data-tilt>
-        ${PHOTO_LAYER(['mika-river-img-20260702-151220', 'mountain-img-20260609-113532', 'indoor-img-20260521-152821', 'waterpark-img-20260607-161245'][index % 4])}
+        ${PHOTO_LAYER(editorial[index % editorial.length]?.slug || 'mika-river-img-20260702-151220')}
         <div class="photo-content">
         ${p.featured ? '<span class="pkg-badge">Featured package</span>' : ''}
         <h3 class="pkg-name">${esc(p.name)}</h3>
@@ -352,7 +353,7 @@ function VIDEO_CALL() {
   <div class="container">
     <div class="vc-experience">
     <div class="vc-card premium-photo" data-tilt>
-      ${PHOTO_LAYER('mika-river-img-20260702-151220')}
+      ${PHOTO_LAYER('mika-red-editorial-kneeling')}
       <div class="vc-booking photo-content">
       <div class="vc-icon">${icons.camera}</div>
       <p class="eyebrow">video call</p>
@@ -373,9 +374,9 @@ function VIDEO_CALL() {
 }
 
 function PHOTO_LAYER(slug) {
-  const asset = gallery.assets.find(item => item.slug === slug);
+  const asset = editorial.find(item => item.slug === slug) || gallery.assets.find(item => item.slug === slug);
   if (!asset) return '';
-  return `<div class="photo-scene" aria-hidden="true"><img class="photo-depth" src="${asset.urls.blur}" data-sharp="${asset.urls.full}" alt="" loading="lazy" decoding="async" draggable="false"><div class="photo-scrim"></div></div><div class="photo-glare" aria-hidden="true"></div>`;
+  return `<div class="photo-scene" aria-hidden="true"><img class="photo-depth" src="${asset.urls.blur}" data-sharp="${asset.urls.card || asset.urls.full}" alt="" loading="lazy" decoding="async" draggable="false"><div class="photo-scrim"></div></div><div class="photo-glare" aria-hidden="true"></div>`;
 }
 
 function NAUGHTY_SPIN() {
@@ -522,7 +523,9 @@ function CUSTOM_BUILD() {
       </div>
 
       <aside class="quality-panel">
-        <div class="quality-card">
+        <div class="quality-card premium-photo request-photo-card" data-tilt>
+          ${PHOTO_LAYER('mika-red-editorial-front')}
+          <div class="photo-content">
           <p class="eyebrow">the promise</p>
           <div class="gold-rule"></div>
           <h3 class="section-title" style="font-size:1.7rem">Quality custom shoots</h3>
@@ -540,6 +543,7 @@ function CUSTOM_BUILD() {
             <li>Customer instructions</li>
           </ul>
           <p class="muted" style="font-size:.9rem">Nothing is promised automatically — all custom requests remain subject to Mika's confirmation and availability.</p>
+          </div>
         </div>
       </aside>
     </div>
