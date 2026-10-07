@@ -16,6 +16,7 @@ function once(key) {
 function fireRequestIntent() {
   if (!once(CB_INTENT_TAG)) return;
   window.MikaDbTrack?.('custom_request_click', { location: 'custom-build' });
+  window.MikaDbTrack?.('enquiry_click', { location: 'custom-build' });
   window.MikaTrack?.('custom_request_click', { location: 'custom-build' });
 }
 
@@ -23,7 +24,9 @@ function fireRequestIntent() {
 function fireGenerateLead() {
   if (!once(CB_LEAD_TAG)) return;
   const pkg = field('package');
-  window.MikaDbTrack?.('generate_lead', { location: 'custom-build', collection: pkg || null, cta: 'Submit custom request' });
+  const extra = { location: 'custom-build', collection: pkg || null, cta: 'Submit custom request' };
+  window.MikaDbTrack?.('generate_lead', extra);
+  window.MikaDbTrack?.('lead_submit', extra);
   window.MikaTrack?.('generate_lead', { location: 'custom-build', collection: pkg || null, cta_label: 'Submit custom request' });
 }
 

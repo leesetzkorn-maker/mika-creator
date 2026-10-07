@@ -9,14 +9,15 @@
  * preserved for the rest of that session, so attribution survives internal
  * navigation without overwriting the original source.
  *
- * Event types emitted here (mirrored in migration 003's CHECK constraint):
+ * Event types emitted here (mirrored in the analytics_events CHECK constraint):
  *   page_view, session_start, hero_slide_view, gallery_open, collection_open,
  *   cta_click, whatsapp_click, telegram_click, contact_click, pricing_view,
  *   custom_request_click, generate_lead, outbound_click, like, review_submit,
- *   gallery_interaction, redvelvet_click, esa_click
+ *   gallery_interaction, redvelvet_click, esa_click,
+ *   video_call_click, content_click, gallery_click, enquiry_click, lead_submit
  *
- * Privacy: no message content, names, phone numbers or emails are collected.
- * For WhatsApp/Telegram only the base destination is stored, never the text.
+ * Privacy: no message content, names, phone numbers, emails or proof uploads
+ * are collected. For WhatsApp/Telegram only the base destination is stored.
  */
 import { visitorId } from './supabase.mjs';
 
@@ -177,6 +178,35 @@ function ctaLabel(el) {
   } catch { return null; }
 }
 
+function clickIntent(el, href, cta) {
+  const pkg = el.closest('[data-package]')?.getAttribute('data-package') || null;
+  const videoCall =
+    Boolean(el.closest('#video-call, .vc-card, .vc-actions, .vc-booking')) ||
+    /#video-call/.test(href) ||
+    /request=video-call/i.test(href) ||
+    /video.?call/i.test(`${cta || ''} ${href}`);
+  const content =
+    Boolean(el.closest('#packages, .pkg-card, .pkg-grid, .pkg-cta')) ||
+    /#packages/.test(href) ||
+    /[?&]pkg=content-/i.test(href) ||
+    Boolean(pkg);
+  const gallery =
+    Boolean(el.closest('.card-link, .glimpse-item, [data-gallery-name]')) ||
+    /\/gallery(\/|$|\?)/.test(href);
+  const enquiry =
+    Boolean(el.closest('#custom-build, .cb-form-panel, #cb-done, .hero-chat')) ||
+    /#custom-build/.test(href) ||
+    /enquiry/i.test(`${cta || ''} ${href}`);
+  return { videoCall, content, gallery, enquiry, pkg };
+}
+
+function trackIntent(intent, extra) {
+  if (intent.videoCall) track('video_call_click', extra);
+  else if (intent.content) track('content_click', { ...extra, package: intent.pkg });
+  else if (intent.enquiry) track('enquiry_click', extra);
+  else if (intent.gallery) track('gallery_click', extra);
+}
+
 function onClick(e) {
   const cfg = window.MIKA_CONFIG || {};
   const c = cfg.contact || {};
@@ -194,6 +224,8 @@ function onClick(e) {
   const loc = buttonLocation(el);
   const gname = galleryName(anchor);
   const cta = ctaLabel(el);
+  const intent = clickIntent(el, href, cta);
+  const extra = { location: loc, cta, collection: gname };
 
   // WhatsApp — the primary lead CTA. Fire the event before the destination
   // opens. Only the base destination is stored (never the message text).
@@ -202,7 +234,8 @@ function onClick(e) {
     /^https:\/\/api\.whatsapp\.com\//.test(href) ||
     (waDomain !== 'wa.me' && href.indexOf(`https://${waDomain}`) === 0);
   if (isWhatsApp) {
-    track('whatsapp_click', { location: loc, cta, collection: gname, dest: cleanBase(href) });
+    track('whatsapp_click', { ...extra, dest: cleanBase(href) });
+    trackIntent(intent, extra);
     return;
   }
 
@@ -210,21 +243,32 @@ function onClick(e) {
     /^https:\/\/t\.me\//.test(href) ||
     (c.telegram && href.indexOf(c.telegram) === 0);
   if (isTelegram) {
-    track('telegram_click', { location: loc, cta, collection: gname, dest: cleanBase(href) });
+    track('telegram_click', { ...extra, dest: cleanBase(href) });
+    trackIntent(intent, extra);
     return;
   }
 
   if (c.redvelvet && href.indexOf(c.redvelvet) === 0) { track('redvelvet_click', { location: loc, href: cleanBase(href) }); return; }
   if (c.esa && href.indexOf(c.esa) === 0) { track('esa_click', { location: loc, href: cleanBase(href) }); return; }
-  if (/^mailto:/i.test(href) || /^tel:/i.test(href)) { track('contact_click', { location: loc, cta, channel: /^mailto:/i.test(href) ? 'email' : 'phone' }); return; }
+  if (/^mailto:/i.test(href) || /^tel:/i.test(href)) {
+    track('contact_click', { location: loc, cta, channel: /^mailto:/i.test(href) ? 'email' : 'phone' });
+    if (intent.enquiry) track('enquiry_click', extra);
+    return;
+  }
 
   if (el.closest('.card-link, .glimpse-item')) {
     track('gallery_open', { location: loc, collection: gname });
+    track('gallery_click', { location: loc, collection: gname });
     return;
   }
 
   if (/^https?:/i.test(href) && href.indexOf(window.location.origin) !== 0) {
     track('outbound_click', { location: loc, href: cleanBase(href) });
+    return;
+  }
+
+  if (intent.videoCall || intent.content || intent.enquiry || intent.gallery) {
+    trackIntent(intent, { ...extra, href: cleanBase(href) });
     return;
   }
 
@@ -258,6 +302,8 @@ function initPricingTracking() {
 export function initAnalytics() {
   if (initialised) return;
   if (!(window.MIKA_CONFIG?.supabase?.url)) return;
+  if (document.body?.dataset?.admin !== undefined || document.body?.dataset?.adminLogin !== undefined) return;
+  if (/^\/admin(\/|$)/.test(location.pathname)) return;
   initialised = true;
 
   // Shared tracker for other modules (hero, lightbox, custom-build) so DB and

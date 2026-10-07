@@ -2,7 +2,7 @@
 // /admin/login/ and renders nothing. The login form lives in admin-login.mjs
 // on its own page — this module never draws one.
 import { $, $$ } from './ui.mjs';
-import { ensureFreshSession, clearSession, getSession, adminRpc } from './admin-auth.mjs';
+import { ensureFreshSession, clearSession, getSession, adminRpc, classifyAdminError, sessionClaims, checkIsAdmin, parseIsAdmin } from './admin-auth.mjs';
 
 const LOGIN_PATH = '/admin/login/';
 
@@ -10,6 +10,50 @@ const esc = (s) => String(s || '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '
 
 const fmt = (n) => Number(n || 0).toLocaleString('en-ZA');
 const pct = (n, t) => (t ? Math.round((Number(n) / Number(t)) * 100) : 0);
+
+function errorContext(error) {
+  return [error?.status ? `HTTP ${error.status}` : '', error?.code, error?.rpc].filter(Boolean).join(' · ');
+}
+
+function adminErrorMarkup(error, section, note = '') {
+  const classified = classifyAdminError(error);
+  const extra = [error?.details, error?.hint, note].filter(Boolean).join(' ');
+  const context = errorContext(error);
+  return `<div class="admin-error" role="alert" data-error-kind="${esc(classified.kind)}">
+    <strong>${esc(classified.title)} — ${esc(section)}</strong>
+    <p>${esc(classified.message)}</p>
+    ${context ? `<small>${esc(context)}</small>` : ''}
+    ${extra ? `<details open><summary>Database details</summary><p>${esc(extra)}</p></details>` : ''}
+  </div>`;
+}
+
+async function describeAdminAccess() {
+  try {
+    const allowed = parseIsAdmin(await adminRpc('is_admin'));
+    return allowed
+      ? 'is_admin() returned true for this session. The failing RPC is missing from the API schema cache or its signature does not match the call.'
+      : 'is_admin() returned false. This Auth user is signed in but is not listed in admin_users.';
+  } catch (e) {
+    const kind = classifyAdminError(e).kind;
+    if (kind === 'unauthenticated') throw e;
+    if (kind === 'unauthorized') return 'is_admin() rejected this session as unauthorized.';
+    if (kind === 'schema_cache' || kind === 'missing_object') {
+      return `is_admin() is also invisible to PostgREST (${e.code || e.status}). The API schema cache does not expose admin functions to this JWT role.`;
+    }
+    return `is_admin() probe failed: ${e.message || kind}`;
+  }
+}
+
+function notifyAdminActionError(error, action) {
+  const classified = classifyAdminError(error);
+  if (classified.kind === 'unauthenticated') {
+    window.MikaToast?.('Session expired — sign in again.', 'err');
+    toLogin();
+    return;
+  }
+  const context = errorContext(error);
+  window.MikaToast?.(`${classified.title}: ${action}. ${classified.message}${context ? ` (${context})` : ''}`, 'err');
+}
 
 function fmtDay(day) {
   try { return new Date(day + 'T00:00:00').toLocaleDateString('en-ZA', { day: 'numeric', month: 'short' }); } catch { return day; }
@@ -23,10 +67,49 @@ function barChart(days) {
   if (!days?.length) return '<p class="muted admin-empty">No page views yet.</p>';
   const max = Math.max(...days.map((d) => d.visitors || 0), 1);
   return `<div class="bar-chart">${days.map((d) => `
-    <div class="bar-col" title="${fmtDay(d.day)} — ${fmt(d.visitors)} visitor${d.visitors === 1 ? '' : 's'}">
-      <div class="bar" style="height:${Math.max(4, Math.round((d.visitors / max) * 100))}%"></div>
+    <div class="bar-col" title="${fmtDay(d.day)} — ${fmt(d.visitors)} visitors, ${fmt(d.page_views)} page views">
+      <div class="bar${d.visitors ? '' : ' is-empty'}" style="height:${d.visitors ? Math.max(4, Math.round((d.visitors / max) * 100)) : 0}%"></div>
       <div class="bar-label">${fmtDay(d.day)}</div>
+      <div class="bar-meta" aria-label="${fmt(d.page_views)} page views">${fmt(d.page_views)} pv</div>
     </div>`).join('')}</div>`;
+}
+
+function dailyTable(days) {
+  if (!days?.length) return '';
+  return `<div class="adm-table-wrap" style="margin-top:1rem"><table class="adm-table">
+    <thead><tr><th>Day</th><th>Visitors</th><th>Page views</th><th>Sessions</th></tr></thead>
+    <tbody>${days.map((d) => `
+      <tr>
+        <td>${esc(fmtDay(d.day))}</td>
+        <td>${fmt(d.visitors)}</td>
+        <td>${fmt(d.page_views)}</td>
+        <td>${fmt(d.sessions)}</td>
+      </tr>`).join('')}</tbody>
+  </table></div>`;
+}
+
+function eventBreakdown(rows, engagement) {
+  const fromRpc = Array.isArray(rows) && rows.length
+    ? rows.map((r) => [r.event_type, r.count])
+    : [];
+  const fromEng = [
+    ['whatsapp_click', engagement.whatsapp_clicks],
+    ['video_call_click', engagement.video_call_clicks],
+    ['content_click', engagement.content_clicks],
+    ['gallery_click', engagement.gallery_clicks],
+    ['gallery_open', engagement.gallery_opens],
+    ['enquiry_click', engagement.enquiry_clicks],
+    ['lead_submit', engagement.lead_submits],
+    ['generate_lead', engagement.generate_lead],
+    ['telegram_click', engagement.telegram_clicks],
+    ['cta_click', engagement.cta_clicks],
+    ['session_start', engagement.sessions],
+  ].filter(([, n]) => Number(n) > 0);
+  const list = fromRpc.length ? fromRpc : fromEng;
+  if (!list.length) return '<p class="muted admin-empty">No events recorded yet.</p>';
+  const total = list.reduce((a, [, n]) => a + Number(n || 0), 0);
+  return `<ul class="admin-list">${list.map(([name, n]) => `<li>${esc(name)} <span class="pct-num">${fmt(n)}</span></li>`).join('')}</ul>
+    <p class="admin-hint">${fmt(total)} events in this range</p>`;
 }
 
 function listBlock(title, rows, empty = 'Nothing here yet.') {
@@ -44,20 +127,30 @@ function fmtPctBar(v, total) {
 function renderStats(s) {
   const eng = s.engagement || {};
   const todayCard = document.getElementById('admin-today');
+  const day = new Date().toISOString().slice(0, 10);
+  const today = (s.daily || []).find((d) => String(d.day).slice(0, 10) === day);
+  const viewsToday = s.page_views_today ?? today?.page_views ?? 0;
+  const visitorsToday = s.visitors_today ?? today?.visitors ?? 0;
+  const sessionsToday = s.sessions_today ?? today?.sessions ?? 0;
   if (todayCard) {
-    try {
-      const day = new Date().toISOString().slice(0, 10);
-      const today = (s.daily || []).find((d) => String(d.day).slice(0, 10) === day);
-      todayCard.innerHTML = card('Visitors today', fmt(today?.visitors), fmt(today?.page_views) + ' page views', true);
-    } catch {}
+    todayCard.innerHTML = card(
+      'Page views today',
+      fmt(viewsToday),
+      `${fmt(visitorsToday)} visitors · ${fmt(sessionsToday)} sessions`,
+      true,
+    );
   }
   return `
-    ${card('Total visitors', fmt(s.total_visitors), s.total_sessions + ' sessions')}
-    ${card('Page views', fmt(s.total_page_views))}
-    ${card('New visitors', fmt(s.new_visitors))}
-    ${card('Likes', fmt(eng.likes))}
-    ${card('Reviews', fmt(eng.reviews))}
-    ${card('Clicks (RV/ESA/Cta)', fmt((eng.redvelvet_clicks || 0) + (eng.esa_clicks || 0) + (eng.contact_clicks || 0)))}
+    ${card('Page views (7 days)', fmt(s.page_views_7d ?? s.total_page_views), `${fmt(s.visitors_7d ?? s.total_visitors)} visitors · ${fmt(s.sessions_7d ?? s.total_sessions)} sessions`)}
+    ${card('Page views (30 days)', fmt(s.page_views_30d), `${fmt(s.visitors_30d)} visitors · ${fmt(s.sessions_30d)} sessions`)}
+    ${card('Visitors (7 days)', fmt(s.visitors_7d ?? s.total_visitors), `${fmt(s.sessions_7d ?? s.total_sessions)} sessions`)}
+    ${card('Visitors (30 days)', fmt(s.visitors_30d), `${fmt(s.sessions_30d)} sessions`)}
+    ${card('WhatsApp clicks', fmt(eng.whatsapp_clicks))}
+    ${card('Video Call clicks', fmt(eng.video_call_clicks))}
+    ${card('Content clicks', fmt(eng.content_clicks))}
+    ${card('Gallery clicks', fmt(eng.gallery_clicks))}
+    ${card('Enquiry clicks', fmt(eng.enquiry_clicks))}
+    ${card('Leads', fmt(Number(eng.lead_submits) || Number(eng.generate_lead) || 0))}
   `;
 }
 
@@ -65,7 +158,7 @@ function renderModeration(rows) {
   const wrap = $('#admin-moderation');
   if (!wrap) return;
   if (!rows?.length) {
-    wrap.innerHTML = '<p class="muted admin-empty">No comments waiting for review. Nothing pending — enjoy the quiet.</p>';
+    wrap.innerHTML = '<p class="muted admin-empty">No comments awaiting moderation.</p>';
     return;
   }
   wrap.innerHTML = `<div class="admin-list">${rows.map((c) => `
@@ -93,9 +186,8 @@ function renderModeration(rows) {
         window.MikaToast?.(status === 'approved' ? 'Comment approved.' : 'Comment hidden.', status === 'approved' ? 'ok' : undefined);
         item.remove();
       } catch (e) {
-        window.MikaToast?.(e.status === 401 ? 'Session expired — sign in again.' : 'Could not update that comment.', 'err');
+        notifyAdminActionError(e, 'comment moderation');
         btn.disabled = false;
-        if (e.status === 401) toLogin();
       }
     });
   });
@@ -109,6 +201,18 @@ function toLogin() {
   window.location.replace(LOGIN_PATH);
 }
 
+function renderUnauthorized(email) {
+  const view = $('#admin-view');
+  if (!view) return;
+  view.hidden = false;
+  view.dataset.loaded = '1';
+  view.dataset.gate = 'denied';
+  view.innerHTML = `<div class="admin-error" role="alert" data-error-kind="unauthorized">
+    <strong>Authenticated, not authorized</strong>
+    <p>Signed in as ${esc(email || 'this account')}. This Auth user is not listed in admin_users, so private analytics, leads, conversions and moderation stay hidden.</p>
+  </div>`;
+}
+
 async function loadDashboard() {
   const session = await ensureFreshSession();
   if (!session) { toLogin(); return; }
@@ -118,44 +222,107 @@ async function loadDashboard() {
   view.dataset.loaded = '1';
 
   const statsEl = $('#admin-stats');
+  const todayEl = $('#admin-today');
   const chartEl = $('#admin-chart');
   const pagesEl = $('#admin-pages');
   const devicesEl = $('#admin-devices');
   const sourcesEl = $('#admin-sources');
   const engEl = $('#admin-engagement');
   const nameEl = $('#admin-name');
+  const claims = sessionClaims(session);
+  const email = claims.email || session.user?.email || '';
+  if (nameEl) nameEl.textContent = email || 'Admin';
+
+  view.hidden = true;
+  try {
+    const allowed = await checkIsAdmin();
+    if (!allowed) {
+      renderUnauthorized(email);
+      return;
+    }
+  } catch (e) {
+    const classified = classifyAdminError(e);
+    if (classified.kind === 'unauthenticated') { toLogin(); return; }
+    if (classified.kind === 'unauthorized' || classified.kind === 'permission') {
+      renderUnauthorized(email);
+      return;
+    }
+    view.hidden = false;
+    view.dataset.gate = 'denied';
+    view.innerHTML = adminErrorMarkup(e, 'admin authorization', 'Private analytics were not loaded because is_admin() could not be verified.');
+    return;
+  }
+  view.hidden = false;
+
+  for (const el of [todayEl, statsEl, chartEl, pagesEl, devicesEl, sourcesEl, engEl]) {
+    if (el) el.replaceChildren();
+  }
 
   try {
     const s = await adminRpc('admin_get_stats', { p_days: 7 });
-    if (nameEl) nameEl.textContent = session.user?.email || 'Mika';
+    let daily = s.daily || [];
+    let breakdown = null;
+    try { daily = await adminRpc('admin_daily_traffic', { p_days: 7 }) || daily; } catch (inner) {
+      if (classifyAdminError(inner).kind === 'unauthenticated') { toLogin(); return; }
+    }
+    try { breakdown = await adminRpc('admin_event_breakdown', { p_days: 7 }); } catch (inner) {
+      if (classifyAdminError(inner).kind === 'unauthenticated') { toLogin(); return; }
+    }
     if (statsEl) statsEl.innerHTML = renderStats(s);
-    if (chartEl) chartEl.innerHTML = barChart(s.daily || []);
+    if (chartEl) chartEl.innerHTML = `${barChart(daily)}${dailyTable(daily)}`;
     if (pagesEl) pagesEl.innerHTML = listBlock('Top pages', (s.top_pages || []).map((p) => `${esc(p.path)} <span class="pct-num">${fmt(p.views)}</span>`), 'No page views recorded yet.');
     const devTotal = (s.devices || []).reduce((a, d) => a + d.count, 0);
     if (devicesEl) devicesEl.innerHTML = listBlock('Devices', (s.devices || []).map((d) => fmtPctBar(`${d.device} (${fmt(d.count)})`, devTotal)), 'No data collected yet.');
     const srcTotal = (s.traffic_sources || []).reduce((a, d) => a + d.count, 0);
     if (sourcesEl) sourcesEl.innerHTML = listBlock('Traffic sources', (s.traffic_sources || []).map((d) => fmtPctBar(d.source, srcTotal)), 'No traffic recorded yet.');
     const eng = s.engagement || {};
-    if (engEl) engEl.innerHTML = `
-      <div class="eng-row">${card('RedVelvet clicks', fmt(eng.redvelvet_clicks))}${card('ESA clicks', fmt(eng.esa_clicks))}${card('Contact clicks', fmt(eng.contact_clicks))}${card('Gallery interactions', fmt(eng.gallery_interactions))}</div>`;
+    if (engEl) {
+      const trackedEvents = [
+        ['WhatsApp clicks', eng.whatsapp_clicks],
+        ['Video Call clicks', eng.video_call_clicks],
+        ['Content clicks', eng.content_clicks],
+        ['Gallery clicks', eng.gallery_clicks],
+        ['Enquiry clicks', eng.enquiry_clicks],
+        ['Lead submits', eng.lead_submits],
+        ['Telegram clicks', eng.telegram_clicks],
+        ['Email clicks', eng.email_clicks],
+        ['Gallery opens', eng.gallery_opens],
+        ['CTA clicks', eng.cta_clicks],
+        ['Pricing views', eng.pricing_views],
+        ['Custom request clicks', eng.custom_request_clicks],
+        ['Leads generated', eng.generate_lead],
+        ['Hero slide views', eng.hero_slide_views],
+        ['Likes', eng.likes],
+        ['Reviews', eng.reviews],
+      ];
+      engEl.innerHTML = `<div class="admin-panel"><h3>Tracked events <span class="admin-hint">last 7 days</span></h3><div class="eng-row">${trackedEvents.map(([label, value]) => card(label, fmt(value))).join('')}</div>
+        <h3 style="margin-top:1.4rem">Event breakdown</h3>
+        ${eventBreakdown(breakdown, eng)}
+      </div>`;
+    }
   } catch (e) {
-    if (e.status === 401) { toLogin(); return; }
-    const msg = e.message || '';
-    if (/unauthorized/i.test(msg)) {
-      if (statsEl) statsEl.innerHTML = '<div class="admin-error">This account is not authorised for the dashboard. Please use the admin account for Monique.</div>';
-    } else if (/does not exist|could not find|relation/i.test(msg)) {
-      if (statsEl) statsEl.innerHTML = '<div class="admin-error">The analytics tables/functions have not been created yet. Run the migration 002 SQL in the Supabase SQL Editor, then reload.</div>';
-    } else {
-      if (statsEl) statsEl.innerHTML = `<div class="admin-error">Could not load analytics: ${esc(msg)}</div>`;
+    const classified = classifyAdminError(e);
+    if (classified.kind === 'unauthenticated') { toLogin(); return; }
+    let note = '';
+    try { note = await describeAdminAccess(); } catch (probe) {
+      if (classifyAdminError(probe).kind === 'unauthenticated') { toLogin(); return; }
+    }
+    if (statsEl) statsEl.innerHTML = adminErrorMarkup(e, 'analytics', note);
+    for (const el of [todayEl, chartEl, pagesEl, devicesEl, sourcesEl, engEl]) {
+      if (el) el.innerHTML = '<p class="muted admin-empty">Analytics unavailable; see the error above.</p>';
     }
   }
 
+  const moderation = $('#admin-moderation');
+  if (moderation) moderation.innerHTML = '<p class="muted admin-empty">Loading comments…</p>';
   try {
     const rows = await adminRpc('admin_list_comments', { p_status: 'pending', p_limit: 50 });
     renderModeration(rows);
   } catch (e) {
+    const classified = classifyAdminError(e);
+    if (classified.kind === 'unauthenticated') { toLogin(); return; }
     const mod = $('#admin-moderation');
-    if (mod) mod.innerHTML = '<p class="muted admin-empty">Could not load comments for moderation.</p>';
+    if (mod) mod.innerHTML = adminErrorMarkup(e, 'comment moderation');
   }
 
   loadConversions();
@@ -178,7 +345,13 @@ function funnelCard(b, label) {
     <h4>${label}</h4>
     <dl class="funnel-rows">
       <div><dt>Visitors</dt><dd>${fmt(b.visitors)}</dd></div>
+      <div><dt>Page views</dt><dd>${fmt(b.page_views)}</dd></div>
       <div><dt>WhatsApp clicks</dt><dd>${fmt(b.whatsapp_clicks)}</dd></div>
+      <div><dt>Video Call clicks</dt><dd>${fmt(b.video_call_clicks)}</dd></div>
+      <div><dt>Content clicks</dt><dd>${fmt(b.content_clicks)}</dd></div>
+      <div><dt>Enquiry clicks</dt><dd>${fmt(b.enquiry_clicks)}</dd></div>
+      <div><dt>Telegram clicks</dt><dd>${fmt(b.telegram_clicks)}</dd></div>
+      <div><dt>Email clicks</dt><dd>${fmt(b.email_clicks)}</dd></div>
       <div><dt>Leads</dt><dd><strong>${fmt(b.leads)}</strong></dd></div>
       <div><dt>Customers</dt><dd>${fmt(b.customers)}</dd></div>
       <div><dt>Revenue</dt><dd><strong>${money(b.revenue)}</strong></dd></div>
@@ -191,12 +364,14 @@ function convSourcesTable(rows) {
   if (!rows?.length) return '<div class="admin-panel"><h3>Traffic source report</h3><p class="muted admin-empty">No data yet.</p></div>';
   return `<div class="admin-panel"><h3>Traffic source report <span class="admin-hint">28 days</span></h3>
     <div class="adm-table-wrap"><table class="adm-table">
-      <thead><tr><th>Source</th><th>Visitors</th><th>WA clicks</th><th>Leads</th><th>Conv.</th></tr></thead>
+      <thead><tr><th>Source</th><th>Visitors</th><th>WA clicks</th><th>Telegram clicks</th><th>Email clicks</th><th>Leads</th><th>Conv.</th></tr></thead>
       <tbody>${rows.map((r) => `
         <tr>
           <td>${esc(r.source)}</td>
           <td>${fmt(r.visitors)}</td>
           <td>${fmt(r.whatsapp_clicks)}</td>
+          <td>${fmt(r.telegram_clicks)}</td>
+          <td>${fmt(r.email_clicks)}</td>
           <td>${fmt(r.leads)}</td>
           <td>${Number(r.conversion_rate || 0).toFixed(1)}%</td>
         </tr>`).join('')}</tbody>
@@ -255,7 +430,7 @@ function leadsBoard(rows) {
           ${STATUSES.filter((s) => s !== l.status).map((s) => `<button class="chip chip-sm" data-lead-status="${s}">${STATUS_LABEL[s]}</button>`).join('')}
           <button class="btn btn-ghost chip-sm" type="button" data-lead-del="1">Delete</button>
         </div>
-      </li>`).join('')}</ul>` : '<p class="muted admin-empty">No leads for this filter yet.'}
+      </li>`).join('')}</ul>` : `<p class="muted admin-empty">${leadFilter === 'all' ? 'No leads recorded yet.' : 'No leads for this filter yet.'}</p>`}
   </div>`;
 }
 
@@ -285,8 +460,7 @@ function bindLeads(rows) {
         }
         item.remove();
       } catch (e) {
-        window.MikaToast?.(e.status === 401 ? 'Session expired — sign in again.' : 'Could not update that lead.', 'err');
-        if (e.status === 401) toLogin();
+        notifyAdminActionError(e, 'lead update');
       }
     });
   });
@@ -306,8 +480,7 @@ function bindLeads(rows) {
       form.reset();
       await loadConversions();
     } catch (err) {
-      window.MikaToast?.(err.status === 401 ? 'Session expired — sign in again.' : 'Could not add that lead.', 'err');
-      if (err.status === 401) toLogin();
+      notifyAdminActionError(err, 'lead creation');
     } finally {
       if (btn) btn.disabled = false;
     }
@@ -363,8 +536,7 @@ function bindCustomers(rows) {
         window.MikaToast?.('Customer entry deleted.');
         bindCustomers(rows.filter((c) => String(c.id) !== String(item.dataset.id)));
       } catch (e) {
-        window.MikaToast?.(e.status === 401 ? 'Session expired — sign in again.' : 'Could not delete that entry.', 'err');
-        if (e.status === 401) toLogin();
+        notifyAdminActionError(e, 'customer entry deletion');
       }
     });
   });
@@ -385,8 +557,7 @@ function bindCustomers(rows) {
       form.reset();
       await loadConversions();
     } catch (err) {
-      window.MikaToast?.(err.status === 401 ? 'Session expired — sign in again.' : 'Could not add that entry.', 'err');
-      if (err.status === 401) toLogin();
+      notifyAdminActionError(err, 'customer entry');
     } finally {
       if (btn) btn.disabled = false;
     }
@@ -395,22 +566,26 @@ function bindCustomers(rows) {
 
 async function loadConversions() {
   const funnelEl = $('#admin-funnel');
+  const sourceEl = $('#admin-conv-sources');
+  const pagesEl = $('#admin-conv-pages');
+  const leadsEl = $('#admin-leads');
+  const customersEl = $('#admin-customers');
+  for (const el of [funnelEl, sourceEl, pagesEl, leadsEl, customersEl]) {
+    if (el) el.replaceChildren();
+  }
   try {
     const c = await adminRpc('admin_get_conversions');
     if (funnelEl) funnelEl.innerHTML = `${funnelCard(c.today, 'Today')}${funnelCard(c.last7, 'Last 7 days')}${funnelCard(c.last28, 'Last 28 days')}`;
-    const cs = $('#admin-conv-sources');
-    if (cs) cs.innerHTML = convSourcesTable(c.sources || []);
-    const cp = $('#admin-conv-pages');
-    if (cp) cp.innerHTML = convPagesTable(c.pages || []);
+    if (sourceEl) sourceEl.innerHTML = convSourcesTable(c.sources || []);
+    if (pagesEl) pagesEl.innerHTML = convPagesTable(c.pages || []);
     bindLeads(c.recent_leads || []);
     bindCustomers(c.recent_customers || []);
   } catch (e) {
-    if (e.status === 401) { toLogin(); return; }
-    const msg = e.message || '';
-    if (/does not exist|could not find|relation/i.test(msg)) {
-      if (funnelEl) funnelEl.innerHTML = '<div class="admin-error">Run migration 003 (leads &amp; conversions) in the Supabase SQL Editor, then refresh.</div>';
-    } else if (funnelEl) {
-      funnelEl.innerHTML = `<div class="admin-error">Could not load conversions: ${esc(msg)}</div>`;
+    const classified = classifyAdminError(e);
+    if (classified.kind === 'unauthenticated') { toLogin(); return; }
+    if (funnelEl) funnelEl.innerHTML = adminErrorMarkup(e, 'leads and conversions');
+    for (const el of [sourceEl, pagesEl, leadsEl, customersEl]) {
+      if (el) el.innerHTML = '<p class="muted admin-empty">Conversions unavailable; see the error above.</p>';
     }
   }
 }
@@ -419,8 +594,8 @@ export function initAdmin() {
   const root = $('#admin-app');
   if (!root) return;
   const cfg = window.MIKA_CONFIG || {};
-  if (!cfg.supabase?.url) {
-    root.innerHTML = '<div class="admin-error">Admin tools require Supabase to be configured.</div>';
+  if (!cfg.supabase?.url || !cfg.supabase?.anonKey) {
+    root.innerHTML = adminErrorMarkup(Object.assign(new Error('Supabase is not configured.'), { code: 'SUPABASE_NOT_CONFIGURED' }), 'the dashboard');
     return;
   }
 
@@ -435,6 +610,10 @@ export function initAdmin() {
 
   $('#admin-refresh')?.addEventListener('click', async () => {
     const view = $('#admin-view');
+    if (view?.dataset.gate === 'denied') {
+      window.location.reload();
+      return;
+    }
     if (view) delete view.dataset.loaded;
     await loadDashboard();
   });
