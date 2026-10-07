@@ -31,7 +31,7 @@ const pubCss = allFiles(path.join(ROOT, 'assets', 'css'), ['.css']);
 
 console.log('\n== 1. forbidden content ==');
 {
-  const forbidden = ['booking', 'localhost', '127.0.0.1', ':4173'];
+  const forbidden = ['get access', 'unlock access', 'localhost', '127.0.0.1', ':4173'];
   for (const term of forbidden) {
     const hits = htmlFiles.filter((f) => fs.readFileSync(f, 'utf8').toLowerCase().includes(term));
     check(`html contains no "${term}"`, hits.length === 0, hits.map((h) => path.relative(ROOT, h)).join(', '));

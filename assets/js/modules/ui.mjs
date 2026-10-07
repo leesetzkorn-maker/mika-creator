@@ -27,6 +27,17 @@ export function initUI() {
     if (e.key === 'Escape') setMenu(false);
   });
 
+  if (!document.body.matches('[data-admin], [data-admin-login]')) {
+    const updateMenu = () => { const open = menu?.classList.contains('open'); menu?.setAttribute('aria-hidden', String(!open)); if (menu) menu.inert = !open; };
+    updateMenu(); toggle?.addEventListener('click', updateMenu);
+    $$('.mobile-menu a').forEach(a => a.addEventListener('click', updateMenu));
+    document.addEventListener('keydown', e => { if(e.key === 'Escape') updateMenu(); });
+    window.matchMedia('(min-width:901px)').addEventListener('change', e => { if(e.matches) { setMenu(false); updateMenu(); } });
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window) {
+      const observer = new IntersectionObserver(entries => entries.forEach(e => { if(e.isIntersecting){e.target.classList.add('is-visible');observer.unobserve(e.target);} }), {threshold: .08});
+      $$('.section-head, .vc-card, .pkg-card, .persona, .cta-strip').forEach(el => {el.classList.add('reveal-pending');observer.observe(el);});
+    }
+  }
   let toastTimer;
   const toast = $('#toast');
   window.MikaToast = (msg, kind = '') => {

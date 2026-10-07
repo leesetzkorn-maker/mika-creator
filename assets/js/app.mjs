@@ -11,6 +11,8 @@ import { initAnalytics } from './modules/analytics.mjs';
 import { initAdmin } from './modules/admin-dashboard.mjs';
 import { initAdminLogin } from './modules/admin-login.mjs';
 import { initCustomBuild } from './modules/custom-build.mjs';
+import { initNaughtySpin } from './modules/naughty-spin.mjs';
+import { initPremiumCards } from './modules/premium-cards.mjs';
 
 function boot() {
   initUI();
@@ -28,6 +30,8 @@ function boot() {
   if (document.body.dataset.admin !== undefined) initAdmin();
   if (document.body.dataset.adminLogin !== undefined) initAdminLogin();
   initCustomBuild();
+  initNaughtySpin();
+  initPremiumCards();
 }
 
 if (document.readyState === 'loading') {

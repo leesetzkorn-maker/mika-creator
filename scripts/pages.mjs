@@ -23,9 +23,9 @@ const CONFIG = () =>
   `<script>window.MIKA_CONFIG=${JSON.stringify({ ...site, assets: { base: '/assets/data/' } })}</script>`;
 
 const CSP = () =>
-  `<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://ssl.google-analytics.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' ${supabase.url || ''} https://www.google-analytics.com https://www.googletagmanager.com; base-uri 'self'; form-action 'self' https://wa.me https://t.me; frame-src 'none'">`;
+  `<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://ssl.google-analytics.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; media-src 'self' blob:; connect-src 'self' ${supabase.url || ''} https://www.google-analytics.com https://www.googletagmanager.com; base-uri 'self'; form-action 'self' https://wa.me https://t.me; frame-src 'none'">`;
 
-const FAVICON = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230a0a0e'/%3E%3Ctext x='32' y='44' font-family='Georgia,serif' font-size='40' font-weight='700' text-anchor='middle' fill='%23d8b98a'%3EM%3C/text%3E%3C/svg%3E`;
+const FAVICON = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230a0a0e'/%3E%3Ctext x='32' y='44' font-family='Georgia,serif' font-size='40' font-weight='700' text-anchor='middle' fill='%23ec9bff'%3EM%3C/text%3E%3C/svg%3E`;
 
 const FONTS = `<link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -71,6 +71,7 @@ ${CSP()}
 <link rel="icon" type="image/svg+xml" href="${FAVICON}">
 ${FONTS}
 <link rel="stylesheet" href="${APP_CSS}">
+${bodyAttrs.includes("data-admin") ? "" : '<link rel="stylesheet" href="/assets/css/luxury.css"><link rel="stylesheet" href="/assets/css/premium-cards.css">'}
 ${CONFIG()}
 <script type="application/ld+json">${JSON.stringify(STRUCTURED_DATA())}</script>
 </head>
@@ -94,6 +95,7 @@ function STRUCTURED_DATA() {
       '@id': `${domain}/#organization`,
       url: domain,
       name: `${site.brand?.name} ${site.brand?.suffix}`,
+      telephone: "+27704782029",
       logo: `${domain}/${site.seo?.ogImage || 'assets/images/brand/og-cover.jpg'}`,
     },
   ];
@@ -117,20 +119,11 @@ const NAV = () => {
     <a class="brand" href="/" aria-label="Mika Creator — home">
       <span class="brand-name">MIKA</span><span class="brand-suffix">Creator</span>
     </a>
-    <nav class="site-nav" aria-label="Primary">
-      <a href="/gallery/" data-nav="gallery">Gallery</a>
-      <a href="/#collections" data-nav="collections">Collections</a>
-      <a href="/connect/" data-nav="connect">Connect</a>
-    </nav>
-    <button class="nav-toggle" aria-expanded="false" aria-label="Menu"><span></span></button>
+    <nav class="site-nav" aria-label="Primary"><a href="/">Home</a><a href="/#video-call">Video Calls</a><a href="/#packages">Content</a><a href="/gallery/">Gallery</a><a href="/#about">About</a><a href="/#contact">Contact</a></nav>
+    <button class="nav-toggle" aria-expanded="false" aria-controls="mobile-menu" aria-label="Menu"><span></span></button>
   </div>
 </header>
-<div class="mobile-menu" id="mobile-menu">
-  <a href="/">Home</a>
-  <a href="/gallery/">Gallery</a>
-  <a href="/#collections">Collections</a>
-  <a href="/connect/">Connect</a>
-  <div class="social-row">
+<div class="mobile-menu" id="mobile-menu"><a href="/">Home</a><a href="/#video-call">Video Calls</a><a href="/#packages">Content</a><a href="/gallery/">Gallery</a><a href="/#about">About</a><a href="/#contact">Contact</a><div class="social-row">
     <a class="social-btn" href="https://${c.whatsappDomain}/${c.whatsappNumber}" target="_blank" rel="noopener" aria-label="WhatsApp">${icons.whatsapp}</a>
     <a class="social-btn" href="${c.telegram}" target="_blank" rel="noopener" aria-label="Telegram">${icons.telegram}</a>
     <a class="social-btn" href="mailto:${c.email}" aria-label="Email">${icons.mail}</a>
@@ -152,7 +145,7 @@ const FOOTER = () => `<footer class="site-footer">
     <div class="footer-grid">
       <div class="footer-brand">
         <a class="brand" href="/"><span class="brand-name">MIKA</span><span class="brand-suffix">Creator</span></a>
-        <p class="footer-desc">Premium 18+ editorial content, captured naturally and honestly. Every photo is original and owned by Mika.</p>
+        <p class="footer-desc">Premium video calls and exclusive content with Mika. Adults 18+ only.</p>
         <div class="social-row" style="justify-content:flex-start;margin-top:1.2rem">
           <a class="social-btn" href="https://${c.whatsappDomain}/${c.whatsappNumber}" target="_blank" rel="noopener" aria-label="WhatsApp">${icons.whatsapp}</a>
           <a class="social-btn" href="${c.telegram}" target="_blank" rel="noopener" aria-label="Telegram">${icons.telegram}</a>
@@ -164,7 +157,7 @@ const FOOTER = () => `<footer class="site-footer">
         <ul>
           <li><a href="/">Home</a></li>
           <li><a href="/gallery/">Gallery</a></li>
-          <li><a href="/connect/">Connect</a></li>
+          <li><a href="/#video-call">Video Calls</a></li><li><a href="/#packages">Content</a></li><li><a href="/#contact">Contact</a></li>
           <li><a href="/sitemap.xml">Sitemap</a></li>
         </ul>
       </div>
@@ -220,23 +213,9 @@ const AGE_GATE = () => `<div class="age-gate" id="age-gate" role="dialog" aria-m
 </div>`;
 
 const HERO = () => `<section class="hero" id="hero" aria-label="Introduction">
-  <div class="hero-bg" id="hero-bg" role="img" aria-label="Featured photo preview"></div>
-  <div class="hero-overlay"></div>
-  <div class="hero-inner container">
-    <p class="eyebrow hero-eyebrow">18+ premium creator content</p>
-    <h1 class="hero-title">MIKA <span class="serif-i">creator</span></h1>
-    <p class="hero-tagline">${site.brand?.tagline || ''} — original editorial galleries, captured in natural light. All content exclusive, all content real.</p>
-    <div class="hero-actions">
-      ${WA_CTA({ label: 'Get access on WhatsApp' })}
-      <a class="btn btn-ghost btn-lg" href="/gallery/">Enter gallery</a>
-      <a class="btn btn-ghost btn-lg" href="/#collections">View collections</a>
-    </div>
-  </div>
-  <button class="hero-ctrl hero-prev" id="hero-prev" type="button" aria-label="Previous slide">‹</button>
-  <button class="hero-ctrl hero-next" id="hero-next" type="button" aria-label="Next slide">›</button>
-  <div class="hero-dots" id="hero-dots" aria-label="Slideshow navigation"></div>
-  <div class="hero-scroll">Scroll</div>
-</section>`;
+<div class="hero-bg" id="hero-bg" role="img" aria-label="Mika — existing featured photo"></div><div class="hero-overlay"></div>
+<div class="hero-inner container"><p class="eyebrow hero-eyebrow"><span class="live-dot"></span> A private world with Mika · 18+ only</p><h1 class="hero-title">MIKA <span class="serif-i">Creator</span></h1><p class="hero-tagline">Private. Personal.<br><em>Unforgettable.</em></p><p class="hero-offers">Premium Video Calls <span>✦</span> Exclusive Content</p><div class="hero-actions"><a class="btn btn-primary btn-lg" href="/#video-call">Video Calls <span aria-hidden="true">↗</span></a><a class="btn btn-ghost btn-lg" href="/#packages">View Content <span aria-hidden="true">↗</span></a></div><a class="hero-chat" href="${waLink("Hi Mika! I would like to enquire.")}" target="_blank" rel="noopener">${icons.whatsapp} Chat on WhatsApp</a></div>
+<div class="hero-bottom container"><span>Personal connection. Original content.</span><a href="#video-call">Discover Mika ↓</a></div></section>`;
 
 function collectionCard(col) {
   return `<article class="card">
@@ -272,7 +251,7 @@ function pageHero({ eyebrow, title, lead }) {
 const waLink = (text) => `https://${c.whatsappDomain}/${c.whatsappNumber}${text ? `?text=${encodeURIComponent(text)}` : ''}`;
 
 function WA_CTA({ label, collection = null, primary = true, size = 'lg' } = {}) {
-  const msg = collection ? `Hi Mika! I'd like access to ${collection}.` : "Hi Mika! I'd like access.";
+  const msg = collection ? `Hi Mika! I'd like to enquire about content from ${collection}.` : "Hi Mika! I'd like to enquire about your content packages.";
   const kind = primary ? 'btn-primary' : 'btn-ghost';
   const attrs = collection ? ` data-gallery-name="${esc(collection)}"` : '';
   return `<a class="btn ${kind}${size ? ' btn-' + size : ''}" href="${waLink(msg)}" target="_blank" rel="noopener"${attrs} aria-label="${esc(label)}">${icons.whatsapp}<span>${esc(label)}</span></a>`;
@@ -282,11 +261,11 @@ function TEASER_CTA(collection = null) {
   return `<section class="section section-tight teaser-cta">
   <div class="container">
     <div class="cta-strip">
-      <p class="eyebrow">full access</p>
+      <p class="eyebrow">exclusive content</p>
       <h2 class="display">Want to see the real content?</h2>
       <p class="lead">Message Mika on WhatsApp — fast, private and direct.</p>
       <div class="hero-actions">
-        ${WA_CTA({ label: 'Get access on WhatsApp', collection })}
+        ${WA_CTA({ label: 'Enquire on WhatsApp', collection })}
         <a class="btn btn-ghost btn-lg" href="/connect/">More ways to contact</a>
       </div>
       <p class="cta-note">Private galleries and full content available on request.</p>
@@ -341,13 +320,15 @@ function CONTENT_PACKAGES() {
     <div class="section-head">
       <p class="eyebrow">content packages</p>
       <div class="gold-rule"></div>
-      <h2 class="section-title">Content packages</h2>
-      <p class="lead">Flexible content packages — captured naturally, delivered privately. Choose a package, then request your build below.</p>
+      <h2 class="section-title">Exclusive Content</h2>
+      <p class="lead">Choose your collection of original videos and photos. Confirm availability directly with Mika.</p>
     </div>
     <div class="pkg-grid">
-      ${svcPackages.map((p) => `
-      <article class="pkg-card${p.featured ? ' is-featured' : ''}">
-        ${p.featured ? '<span class="pkg-badge">Most chosen</span>' : ''}
+      ${svcPackages.map((p, index) => `
+      <article class="pkg-card premium-photo${p.featured ? ' is-featured' : ''}" data-tilt>
+        ${PHOTO_LAYER(['mika-river-img-20260702-151220', 'mountain-img-20260609-113532', 'indoor-img-20260521-152821', 'waterpark-img-20260607-161245'][index % 4])}
+        <div class="photo-content">
+        ${p.featured ? '<span class="pkg-badge">Featured package</span>' : ''}
         <h3 class="pkg-name">${esc(p.name)}</h3>
         <div class="pkg-price">${esc(p.price)}</div>
         <ul class="pkg-spec">
@@ -355,7 +336,8 @@ function CONTENT_PACKAGES() {
           <li><strong>${p.photos}</strong> photo${p.photos === 1 ? '' : 's'}</li>
           <li class="pkg-note">${esc(p.note || '')}</li>
         </ul>
-        <a class="btn btn-primary pkg-cta" href="/?pkg=${esc(p.id)}#custom-build">Request this package</a>
+        <a class="btn btn-primary pkg-cta" href="${waLink(`Hi Mika! I would like to order ${p.name} (${p.price}, ${p.videos} videos and ${p.photos} photos).`)}" target="_blank" rel="noopener" data-package="${esc(p.id)}">Order content ↗</a><a class="pkg-custom" href="/?pkg=${esc(p.id)}#custom-build">Personalise this package</a>
+        </div>
       </article>`).join('')}
     </div>
     <p class="pkg-foot-note muted">Prices in South African Rand (ZAR). Packages are produced as original, individually planned content — contact Mika to confirm availability before ordering.</p>
@@ -368,20 +350,57 @@ function VIDEO_CALL() {
   const dur = videoCall.duration || '10–15 minutes';
   return `<section class="section section-tight" id="video-call">
   <div class="container">
-    <div class="vc-card">
+    <div class="vc-experience">
+    <div class="vc-card premium-photo" data-tilt>
+      ${PHOTO_LAYER('mika-river-img-20260702-151220')}
+      <div class="vc-booking photo-content">
       <div class="vc-icon">${icons.camera}</div>
       <p class="eyebrow">video call</p>
-      <h2 class="section-title">Spend time with ${'Mika'}</h2>
+      <h2 class="section-title">Private Video Calls</h2>
       <p class="vc-meta"><span class="vc-price">${esc(price)}</span><span class="vc-dur">${esc(dur)}</span></p>
       <p class="vc-tag muted">${esc(videoCall.tag || 'A personal, 1-on-1 chat — the closest way to connect.')}</p>
       <div class="hero-actions vc-actions">
-        <a class="btn btn-primary btn-lg" href="/?request=video-call#custom-build">Book / request video call</a>
-        <a class="btn btn-ghost btn-lg" href="/connect/" >Prefer WhatsApp?</a>
+        <a class="btn btn-primary btn-lg" href="${waLink(`Hi Mika! I would like to book a video call (${price}, ${dur}).`)}" target="_blank" rel="noopener">Book on WhatsApp ↗</a>
+        <a class="btn btn-ghost btn-lg" href="/?request=video-call#custom-build">Send a booking enquiry</a>
       </div>
       <p class="cta-note">Scheduled at a time that works for you. Availability confirmed directly with Mika.</p>
+      </div>
+    </div>
+      ${NAUGHTY_SPIN()}
     </div>
   </div>
 </section>`;
+}
+
+function PHOTO_LAYER(slug) {
+  const asset = gallery.assets.find(item => item.slug === slug);
+  if (!asset) return '';
+  return `<div class="photo-scene" aria-hidden="true"><img class="photo-depth" src="${asset.urls.blur}" data-sharp="${asset.urls.full}" alt="" loading="lazy" decoding="async" draggable="false"><div class="photo-scrim"></div></div><div class="photo-glare" aria-hidden="true"></div>`;
+}
+
+function NAUGHTY_SPIN() {
+  const labels = [['Lucky', 'Kiss 💋'], ['Truth or', 'Dare 😈'], ['Send Mika a', 'Compliment'], ['Pick a Number', '1–10'], ['Mystery', 'Challenge'], ['Mika', 'Chooses'], ['Double', 'Trouble'], ['Spin', 'Again']];
+  const point = (angle, radius) => [180 + radius * Math.cos(angle * Math.PI / 180), 180 + radius * Math.sin(angle * Math.PI / 180)];
+  const segments = labels.map((label, i) => {
+    const angle = i * 45 - 90;
+    const [x1, y1] = point(angle - 22.5, 169);
+    const [x2, y2] = point(angle + 22.5, 169);
+    const [x, y] = point(angle, 111);
+    const rotation = i * 45 > 90 && i * 45 < 270 ? i * 45 + 180 : i * 45;
+    return `<path d="M180 180 L${x1} ${y1} A169 169 0 0 1 ${x2} ${y2} Z" fill="${['#53226f', '#862b68', '#3b205b', '#a53276'][i % 4]}" stroke="#f5b8ec40" stroke-width="1"/><text x="${x}" y="${y - 5}" transform="rotate(${rotation} ${x} ${y})" text-anchor="middle"><tspan x="${x}">${label[0]}</tspan><tspan x="${x}" dy="16">${label[1]}</tspan></text>`;
+  }).join('');
+  return `<aside class="spin-game" id="naughty-spin" aria-labelledby="spin-title">
+        <p class="eyebrow">A little playful distraction · 18+</p>
+        <h3 id="spin-title">MIKA'S <span class="serif-i">NAUGHTY SPIN</span></h3>
+        <p class="spin-intro">Feeling lucky? <span>Spin Mika's wheel while you decide...</span></p>
+        <div class="spin-stage">
+          <div class="spin-pointer" aria-hidden="true"></div>
+          <svg class="spin-wheel" id="spin-wheel" viewBox="0 0 360 360" aria-hidden="true"><circle cx="180" cy="180" r="177" fill="#180b26" stroke="#e59cdc" stroke-width="2"/>${segments}<circle cx="180" cy="180" r="39" fill="#1b0d2c" stroke="#eea2e3" stroke-width="2"/><text class="spin-monogram" x="180" y="191" text-anchor="middle">M</text></svg>
+        </div>
+        <button class="btn-primary spin-button" id="spin-button" type="button">Spin the Wheel</button>
+        <div class="spin-result" id="spin-result" role="status" aria-live="polite" aria-atomic="true"><span class="spin-result-label">Your next little moment</span><strong id="spin-result-text">What will Mika's wheel choose?</strong></div>
+        <p class="spin-note">Just for fun. No prizes, payments or obligations.</p>
+      </aside>`;
 }
 
 function CUSTOM_BUILD() {
@@ -538,70 +557,12 @@ function pageIndex() {
     ['100%', 'Original & owned'],
   ];
   return `${HERO()}
-<section class="section section-tight" id="about">
-  <div class="container">
-    <div class="persona">
-      <div>
-        <p class="eyebrow">the muse</p>
-        <div class="gold-rule"></div>
-        <h2 class="section-title">Meet <span class="serif-i">${persona.name || 'Mika'}</span></h2>
-        <p class="lead">${persona.bio || site.brand?.tagline || ''}</p>
-        <div style="margin-top:1.2rem">
-          <span class="persona-sign">${persona.signature || persona.name || ''}</span>
-        </div>
-        <div class="persona-stats">
-          ${stats.map(([n, cap]) => `<div class="persona-stat"><div class="num">${n}</div><div class="cap">${cap}</div></div>`).join('')}
-        </div>
-      </div>
-      <div class="panel panel-pad" style="text-align:center">
-        <p class="eyebrow">a glimpse of mika</p>
-        <p class="lead" style="font-size:1.15rem">This is a curated showcase — a small selection of preview photos from each collection. The full sets stay between Mika and those she invites closer.</p>
-        <a class="btn btn-primary" href="/connect/" style="margin-top:.6rem">Get in touch</a>
-      </div>
-    </div>
-  </div>
-</section>
-${glimpseGrid() ? `<section class="section section-tight" id="glimpse">
-  <div class="container">
-    <div class="section-head">
-      <p class="eyebrow">a glimpse of mika</p>
-      <div class="gold-rule"></div>
-      <h2 class="section-title">A glimpse inside</h2>
-      <p class="lead">A small, curated selection — one preview from each world.</p>
-    </div>
-    ${glimpseGrid()}
-  </div>
-</section>` : ''}
-${CONTENT_PACKAGES()}
-${VIDEO_CALL()}
+<div class="experience-bar container"><span>18+ Adults only</span><span>Video Calls</span><span>Exclusive Content</span><span>Direct enquiries</span></div>
+${VIDEO_CALL()}${CONTENT_PACKAGES()}
+<section class="section" id="collections"><div class="container"><div class="section-head"><p class="eyebrow">The visual diary</p><h2 class="section-title">A world of <span class="serif-i">Mika.</span></h2><p class="lead">Explore every existing collection. A glimpse of the places, moods and moments behind the content.</p></div><div class="collection-grid">${gallery.collections.map(collectionCard).join('')}</div><div class="center gallery-more"><a class="btn btn-ghost" href="/gallery/">Explore the gallery ↗</a></div></div></section>
+<section class="section" id="about"><div class="container persona"><div><p class="eyebrow">The woman behind the lens</p><h2 class="section-title">Meet <span class="serif-i">Mika.</span></h2><p class="lead">${esc(persona.bio || '')}</p><span class="persona-sign">${esc(persona.signature || 'Mika')}</span></div><div class="panel panel-pad"><p class="eyebrow">Your experience, your way</p><h3>Something more personal.</h3><p class="lead">Choose a video call or a content package. For a personalised shoot, share your ideas through the enquiry form below.</p><a class="btn btn-ghost" href="#custom-build">Create your enquiry ↗</a></div></div></section>
 ${CUSTOM_BUILD()}
-<section class="section section-tight" id="collections">
-  <div class="container">
-    <div class="section-head">
-      <p class="eyebrow">the gallery</p>
-      <div class="gold-rule"></div>
-      <h2 class="section-title">Collections</h2>
-      <p class="lead">A curated preview from each world. Full galleries are shared privately — get in touch to see more.</p>
-    </div>
-    <div class="collection-grid">
-      ${gallery.collections.map((col) => collectionCard(col)).join('')}
-    </div>
-    <div style="display:grid;place-items:center;margin-top:3rem">
-      <a class="btn btn-ghost btn-lg" href="/gallery/">Open the full gallery</a>
-    </div>
-  </div>
-</section>
-<section class="section section-tight">
-  <div class="container">
-    <div class="cta-strip">
-      <p class="eyebrow">ready to know more?</p>
-      <h2 class="display">Get in touch with Mika</h2>
-      <p class="lead">Full gallery access, custom sets and collaborations. Pick the channel that feels right.</p>
-      ${CTA_REDVELVET_ESA()}
-      <p class="cta-note">Private galleries and full content available on request.</p>
-    </div>
-  </div>
-</section>`;
+<section class="section" id="contact"><div class="container"><div class="cta-strip"><p class="eyebrow">Let's make it personal</p><h2 class="display">Say hello to <span class="serif-i">Mika.</span></h2><p class="lead">Video-call bookings and exclusive content enquiries, directly on WhatsApp.</p>${WA_CTA({label:'Chat on WhatsApp'})}<a class="contact-number" href="tel:+27704782029">${esc(c.whatsappDisplay)}</a><a class="contact-more" href="/connect/">Telegram, email &amp; reviews ↗</a><p class="cta-note">18+ only. All bookings and orders subject to confirmation and availability.</p></div></div></section>`;
 }
 
 function pageGallery() {
@@ -647,7 +608,7 @@ function pageCollection(col) {
   <div class="container">
     <div style="display:flex;gap:1rem;align-items:center;justify-content:center;flex-wrap:wrap">
       <button class="like-btn" id="like-btn" data-type="collection" data-object="${col.slug}" aria-pressed="false">${icons.heart}<span class="count" id="like-count">…</span><span>Likes</span></button>
-      ${WA_CTA({ label: 'Request access', collection: col.title })}
+      ${WA_CTA({ label: 'Order content', collection: col.title })}
       <a class="btn btn-ghost" href="/connect/">Get in touch</a>
     </div>
   </div>
@@ -685,7 +646,7 @@ function pageConnect() {
   return `${pageHero({
     eyebrow: 'connect',
     title: 'Talk to Mika',
-    lead: 'Based in Pretoria, South Africa — the fastest way to full gallery access and custom requests is to pick your favourite channel below.',
+    lead: 'Based in Pretoria, South Africa — the fastest way to exclusive content and custom requests is to pick your favourite channel below.',
   })}
 <section class="section section-tight">
   <div class="container">
@@ -849,7 +810,7 @@ function pageAdmin() {
         <div class="stat-grid" id="admin-stats"></div>
 
         <div class="admin-panel">
-          <h3>Daily visitors (7 days)</h3>
+          <h3>Daily visitors and page views (7 days)</h3>
           <div id="admin-chart"></div>
         </div>
 
@@ -893,7 +854,7 @@ export function renderAll() {
   const pages = [
     { path: 'index.html', title: site.seo?.title, desc: site.seo?.description, body: () => pageIndex(), attrs: 'data-hero data-gallery data-custom-build' },
     { path: 'gallery/index.html', title: 'Gallery — Mika Creator | 18+', desc: 'Browse the 18+ photo collections of Mika. Safe blurred previews, original content, eight worlds to explore.', body: () => pageGallery(), attrs: 'data-gallery' },
-    { path: 'connect/index.html', title: 'Connect — Mika Creator', desc: 'Reach Mika on WhatsApp, Telegram or email — based in Pretoria, South Africa. Full gallery access and custom set requests happen here.', body: () => pageConnect(), attrs: 'data-reviews' },
+    { path: 'connect/index.html', title: 'Connect — Mika Creator', desc: 'Reach Mika on WhatsApp, Telegram or email — based in Pretoria, South Africa. Exclusive content and custom set requests happen here.', body: () => pageConnect(), attrs: 'data-reviews' },
     { path: 'terms/index.html', title: 'Terms of use — Mika Creator', desc: 'Terms of use for the Mika Creator website.', body: () => legalPage(LEGAL_TEXT.terms), attrs: '' },
     { path: 'privacy-18.html', title: 'Privacy (18+) — Mika Creator', desc: 'Privacy policy for the adult website Mika Creator.', body: () => legalPage(LEGAL_TEXT.privacy), attrs: '' },
     { path: '404.html', title: 'Page not found — Mika Creator', desc: 'The page you wanted could not be found.', body: () => page404(), attrs: '', robots: 'noindex,follow' },
@@ -903,6 +864,8 @@ export function renderAll() {
 
   const rendered = [];
   for (const page of pages) {
+    // Preserve the private admin shell and dashboard during public rebrands.
+    if (page.attrs.includes("data-admin") && fs.existsSync(path.join(ROOT, page.path))) continue;
     const html = SHELL({
       title: page.title,
       description: page.desc,

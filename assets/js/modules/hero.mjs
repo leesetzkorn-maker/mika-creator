@@ -2,7 +2,7 @@ import { $ } from './ui.mjs';
 import { isVerified } from './age-gate.mjs';
 
 const MOBILE_QUERY = '(max-width: 700px)';
-const SLIDE_MS = 4600;
+const SLIDE_MS = 9000;
 const mq = () => window.matchMedia(MOBILE_QUERY);
 const reduceMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -23,9 +23,19 @@ export async function initHero() {
 
   let candidates = [];
   try {
-    const res = await fetch(`${url}hero-candidates.json`, { cache: 'no-cache' });
+    const res = await fetch(`${url}gallery.json`, { cache: 'no-cache' });
     if (!res.ok) throw new Error('hero fetch failed');
-    candidates = (await res.json()).candidates || [];
+    const assets = (await res.json()).assets || [];
+    const portrait = assets.find((asset) => asset.slug === 'mika-river-img-20260702-151220');
+    candidates = portrait ? [{
+      slug: portrait.slug,
+      url: portrait.urls.blur,
+      fallback: portrait.urls.blur,
+      // Use the uncropped existing derivative: the landscape hero export
+      // cuts away the upper part of this portrait.
+      sharpUrl: portrait.urls.full,
+      mobile: portrait.urls.full,
+    }] : [];
   } catch {
     candidates = [];
   }
@@ -36,8 +46,8 @@ export async function initHero() {
     return;
   }
 
-  // Mobile uses a dedicated portrait derivative (9:16) so the subject stays
-  // framed on phone viewports; desktop keeps the cinematic 16:9 hero crop.
+  // Both layouts use the existing uncropped portrait. CSS controls its
+  // positioning separately on desktop and mobile without altering the photo.
   const sharpSrc = (c) => {
     const onMobile = mq().matches;
     return onMobile ? (c.mobile || c.sharpUrl || c.hero || '') : (c.sharpUrl || c.hero || '');

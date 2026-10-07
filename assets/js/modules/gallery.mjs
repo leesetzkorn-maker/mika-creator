@@ -4,20 +4,20 @@ const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (x) => ({ '&': '&amp;', '
 
 const base = window.MIKA_CONFIG?.assets?.base || 'assets/data/';
 
-function accessModal(item) {
+function contentEnquiryModal(item) {
   const cfg = window.MIKA_CONFIG || {};
   const c = cfg.contact || {};
-  const wa = c.whatsappNumber ? `https://${c.whatsappDomain || 'wa.me'}/${c.whatsappNumber}?text=${encodeURIComponent(`Hi Mika I would like access to the ${item?.collectionTitle || 'full'} collection.`)}` : null;
-  const tg = c.telegram ? `${c.telegram}?text=${encodeURIComponent('Hi Mika — I like your content and would like access.')}` : null;
-  const mail = c.email ? `mailto:${c.email}?subject=${encodeURIComponent('Full gallery access request')}` : null;
+  const wa = c.whatsappNumber ? `https://${c.whatsappDomain || 'wa.me'}/${c.whatsappNumber}?text=${encodeURIComponent(`Hi Mika I would like to enquire about content from the ${item?.collectionTitle || 'full'} collection.`)}` : null;
+  const tg = c.telegram ? `${c.telegram}?text=${encodeURIComponent('Hi Mika — I like your content and would like to enquire about a content package.')}` : null;
+  const mail = c.email ? `mailto:${c.email}?subject=${encodeURIComponent('Exclusive content enquiry')}` : null;
 
   const wrap = document.createElement('div');
   wrap.className = 'lightbox access-modal';
   wrap.id = 'access-modal';
   wrap.innerHTML = `
     <div class="access-panel panel panel-pad" style="max-width:420px;width:90vw;text-align:center">
-      <h3 style="font-size:1.5rem">See the real content</h3>
-      <p class="muted" style="font-size:.9rem;margin-top:.6rem">This is a preview. Reach Mika directly for the full ${item?.collectionTitle || 'gallery'}.</p>
+      <h3 style="font-size:1.5rem">Exclusive content enquiries</h3>
+      <p class="muted" style="font-size:.9rem;margin-top:.6rem">This is a preview. Enquire with Mika about content from the ${item?.collectionTitle || 'gallery'}.</p>
       <div style="display:grid;gap:.8rem;margin-top:1.6rem">
         ${wa ? `<a class="btn btn-primary" href="${wa}" target="_blank" rel="noopener" data-gallery-name="${esc(item.collectionTitle || '')}">WhatsApp Mika</a>` : ''}
         ${tg ? `<a class="btn btn-ghost" href="${tg}" target="_blank" rel="noopener" data-gallery-name="${esc(item.collectionTitle || '')}">Telegram</a>` : ''}
@@ -51,15 +51,16 @@ function tile(item) {
   `;
   el.querySelector('.item-open').addEventListener('click', () => {
     if (item.visibility === 'public') {
-      const { openLightbox } = import('./lightbox.mjs');
+      import('./lightbox.mjs').then(({ openLightbox }) => {
       openLightbox([{
         collectionTitle: item.collectionTitle,
         collection: item.collection,
         urls: item.urls,
         visibility: 'public',
       }], 0);
+      });
     } else {
-      accessModal(item);
+      contentEnquiryModal(item);
     }
   });
   return el;
