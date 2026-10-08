@@ -215,7 +215,7 @@ const AGE_GATE = () => `<div class="age-gate" id="age-gate" role="dialog" aria-m
 
 const HERO = () => `<section class="hero" id="hero" aria-label="Introduction">
 <div class="hero-bg" id="hero-bg" role="img" aria-label="Mika — existing featured photo"></div><div class="hero-overlay"></div>
-<div class="hero-inner container"><p class="eyebrow hero-eyebrow"><span class="live-dot"></span> A private world with Mika · 18+ only</p><h1 class="hero-title">MIKA <span class="serif-i">Creator</span></h1><p class="hero-tagline">Private. Personal.<br><em>Unforgettable.</em></p><p class="hero-offers">Premium Video Calls <span>✦</span> Exclusive Content</p><div class="hero-actions"><a class="btn btn-primary btn-lg" href="/#video-call">Video Calls <span aria-hidden="true">↗</span></a><a class="btn btn-ghost btn-lg" href="/#packages">View Content <span aria-hidden="true">↗</span></a></div><a class="hero-chat" href="${waLink("Hi Mika! I would like to enquire.")}" target="_blank" rel="noopener">${icons.whatsapp} Chat on WhatsApp</a></div>
+<div class="hero-inner container"><p class="eyebrow hero-eyebrow"><span class="live-dot"></span> A private world with Mika · 18+ only</p><h1 class="hero-title">MIKA <span class="serif-i">Creator</span></h1><p class="hero-tagline">Private. Personal.<br><em>Unforgettable.</em></p><p class="hero-offers">Premium Video Calls <span>✦</span> Exclusive Content</p><p class="cta-note">Available 10:00–22:00 · No advance booking needed</p><div class="hero-actions"><a class="btn btn-primary btn-lg" href="${waLink("Hi Mika 🌸 I'm interested in a video call. Are you available?")}" target="_blank" rel="noopener" data-conversion="hero-whatsapp">WhatsApp Mika Now <span aria-hidden="true">↗</span></a><a class="btn btn-ghost btn-lg" href="/#packages">View Content <span aria-hidden="true">↗</span></a></div><a class="hero-chat" href="/#video-call">Video Call details</a></div>
 <div class="hero-bottom container"><span>Personal connection. Original content.</span><a href="#video-call">Discover Mika ↓</a></div></section>`;
 
 function collectionCard(col) {
@@ -337,7 +337,7 @@ function CONTENT_PACKAGES() {
           <li><strong>${p.photos}</strong> photo${p.photos === 1 ? '' : 's'}</li>
           <li class="pkg-note">${esc(p.note || '')}</li>
         </ul>
-        <a class="btn btn-primary pkg-cta" href="${waLink(`Hi Mika! I would like to order ${p.name} (${p.price}, ${p.videos} videos and ${p.photos} photos).`)}" target="_blank" rel="noopener" data-package="${esc(p.id)}">Order content ↗</a><a class="pkg-custom" href="/?pkg=${esc(p.id)}#custom-build">Personalise this package</a>
+        <a class="btn btn-primary pkg-cta" href="${waLink(`Hi Mika 🌸 I'd like to order ${p.name} (${p.price}, ${p.videos} videos and ${p.photos} photos). Is it available?`)}" target="_blank" rel="noopener" data-package="${esc(p.id)}" data-conversion="content-whatsapp">Order on WhatsApp ↗</a><a class="pkg-custom" href="/?pkg=${esc(p.id)}#custom-build">Personalise this package</a>
         </div>
       </article>`).join('')}
     </div>
@@ -361,10 +361,10 @@ function VIDEO_CALL() {
       <p class="vc-meta"><span class="vc-price">${esc(price)}</span><span class="vc-dur">${esc(dur)}</span></p>
       <p class="vc-tag muted">${esc(videoCall.tag || 'A personal, 1-on-1 chat — the closest way to connect.')}</p>
       <div class="hero-actions vc-actions">
-        <a class="btn btn-primary btn-lg" href="${waLink(`Hi Mika! I would like to book a video call (${price}, ${dur}).`)}" target="_blank" rel="noopener">Book on WhatsApp ↗</a>
-        <a class="btn btn-ghost btn-lg" href="/?request=video-call#custom-build">Send a booking enquiry</a>
+        <a class="btn btn-primary btn-lg" href="${waLink(`Hi Mika 🌸 I'm interested in a video call (${price}, ${dur}). Are you available?`)}" target="_blank" rel="noopener" data-conversion="video-call-whatsapp">WhatsApp Mika Now ↗</a>
+        <a class="btn btn-ghost btn-lg" href="/?request=video-call#custom-build">Custom request</a>
       </div>
-      <p class="cta-note">Scheduled at a time that works for you. Availability confirmed directly with Mika.</p>
+      <p class="cta-note">Available 10:00–22:00. No advance booking needed — message Mika to confirm availability.</p>
       </div>
     </div>
       ${NAUGHTY_SPIN()}
