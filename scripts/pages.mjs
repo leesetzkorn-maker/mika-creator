@@ -346,6 +346,39 @@ function CONTENT_PACKAGES() {
 </section>`;
 }
 
+function EFT_PAYMENT() {
+  const accountHolder = 'M Visser';
+  const accountNumber = '53003446638';
+  const bankName = 'GoTyme Bank';
+  const branchCode = '678910';
+  const accountType = 'Savings';
+  return `<section class="section section-tight" id="payment">
+  <div class="container">
+    <div class="panel panel-pad">
+      <p class="eyebrow">payment option</p>
+      <div class="gold-rule"></div>
+      <h2 class="section-title">Pay by EFT / Bank Transfer</h2>
+      <p class="lead">Prefer a direct bank transfer? Use the details below, then send your proof of payment to Mika on WhatsApp so the payment can be confirmed.</p>
+      <div class="pkg-grid">
+        <div>
+          <p><strong>Account holder</strong><br>${esc(accountHolder)}</p>
+          <p><strong>Bank</strong><br>${esc(bankName)}</p>
+          <p><strong>Account type</strong><br>${esc(accountType)}</p>
+        </div>
+        <div>
+          <p><strong>Account number</strong><br><span class="vc-price">${esc(accountNumber)}</span></p>
+          <p><strong>Branch code</strong><br>${esc(branchCode)}</p>
+        </div>
+      </div>
+      <div class="hero-actions">
+        <a class="btn btn-primary btn-lg" href="${waLink("Hi Mika 🌸 I have made an EFT payment and would like to send my proof of payment.")}" target="_blank" rel="noopener" data-conversion="eft-proof-whatsapp">${icons.whatsapp}<span>Send proof on WhatsApp</span></a>
+      </div>
+      <p class="cta-note">Your booking or content order is confirmed only after the payment has been received and verified. Never send card PINs, passwords or banking login details.</p>
+    </div>
+  </div>
+</section>`;
+}
+
 function VIDEO_CALL() {
   const price = videoCall.price || 'R450';
   const dur = videoCall.duration || '10–15 minutes';
@@ -562,7 +595,7 @@ function pageIndex() {
   ];
   return `${HERO()}
 <div class="experience-bar container"><span>18+ Adults only</span><span>Video Calls</span><span>Exclusive Content</span><span>Direct enquiries</span></div>
-${VIDEO_CALL()}${CONTENT_PACKAGES()}
+${VIDEO_CALL()}${CONTENT_PACKAGES()}${EFT_PAYMENT()}
 <section class="section" id="collections"><div class="container"><div class="section-head"><p class="eyebrow">The visual diary</p><h2 class="section-title">A world of <span class="serif-i">Mika.</span></h2><p class="lead">Explore every existing collection. A glimpse of the places, moods and moments behind the content.</p></div><div class="collection-grid">${gallery.collections.map(collectionCard).join('')}</div><div class="center gallery-more"><a class="btn btn-ghost" href="/gallery/">Explore the gallery ↗</a></div></div></section>
 <section class="section" id="about"><div class="container persona"><div><p class="eyebrow">The woman behind the lens</p><h2 class="section-title">Meet <span class="serif-i">Mika.</span></h2><p class="lead">${esc(persona.bio || '')}</p><span class="persona-sign">${esc(persona.signature || 'Mika')}</span></div><div class="panel panel-pad"><p class="eyebrow">Your experience, your way</p><h3>Something more personal.</h3><p class="lead">Choose a video call or a content package. For a personalised shoot, share your ideas through the enquiry form below.</p><a class="btn btn-ghost" href="#custom-build">Create your enquiry ↗</a></div></div></section>
 ${CUSTOM_BUILD()}
