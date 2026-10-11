@@ -928,3 +928,12 @@ body::after {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
   html { scroll-behavior: auto; }
 }
+/* Gallery privacy: persistent blur on collection covers, tiles and viewer.
+   Hover and age verification must not reveal these photos. */
+body[data-gallery] .collection-grid .card-media { overflow: hidden; }
+body[data-gallery] .collection-grid .card-media img,
+body[data-gallery] .gallery-item img,
+#lightbox #lightbox-img,
+#lightbox #lightbox-img.preview {
+  filter: blur(24px) !important;
+}
