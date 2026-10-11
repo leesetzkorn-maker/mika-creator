@@ -44,7 +44,8 @@ function tile(item) {
   const el = document.createElement('article');
   el.className = 'gallery-item';
   el.dataset.slug = item.slug;
-  const src = item.urls.thumb || item.urls.blur;
+  const src = item.urls.blur || item.urls.thumb;
+  // Always keep gallery previews blurred, including public teaser assets.
   el.innerHTML = `
     <button class="item-open" aria-label="Preview — ${item.collectionTitle}"></button>
     <img src="${src}" alt="${item.collectionTitle || ''} teaser — Mika Creator" loading="lazy" draggable="false">
