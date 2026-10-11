@@ -16,28 +16,10 @@ function show(preview, name) {
   const cap = $('#lightbox-caption');
   const note = $('#lightbox-preview-note');
   const it = items[current];
-  const gatePassed = document.body.classList.contains('gate-passed');
-
-  const isPreviewItem = preview || !it || (it && it.visibility !== 'public');
-  const locked = !gatePassed && isPreviewItem;
-
-  if (!it?.urls) {
-    img.src = '';
-  } else if (locked) {
-    img.src = it.urls.blur;
-  } else if (isPreviewItem) {
-    img.src = it.urls.sharp || it.urls.thumb || it.urls.blur;
-  } else {
-    img.src = it.urls.full || it.urls.sharp || it.urls.blur;
-  }
-
-  if (locked) {
-    img.classList.add('preview');
-    if (note) note.hidden = false;
-  } else {
-    img.classList.remove('preview');
-    if (note) note.hidden = true;
-  }
+  // The image viewer must never reveal a sharp gallery asset.
+  img.src = it?.urls?.blur || it?.urls?.thumb || '';
+  img.classList.add('preview');
+  if (note) note.hidden = false;
   const c = it?.collectionTitle || it?.collection || name;
   if (cap) cap.textContent = c ? `${c} — Mika Creator` : '';
   lb.classList.add('open');
