@@ -933,7 +933,7 @@ body::after {
 body[data-gallery] .collection-grid .card-media { overflow: hidden; }
 body[data-gallery] .collection-grid .card-media img,
 body[data-gallery] .gallery-item img,
-#lightbox #lightbox-img,
-#lightbox #lightbox-img.preview {
+body[data-gallery] #lightbox #lightbox-img,
+body[data-gallery] #lightbox #lightbox-img.preview {
   filter: blur(24px) !important;
 }
