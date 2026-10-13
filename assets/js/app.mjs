@@ -1,3 +1,4 @@
+import { initSpecials } from './modules/specials-20261013.mjs';
 import './modules/ui.mjs';
 import { initUI } from './modules/ui.mjs';
 import { initTracking } from './modules/tracking.mjs';
@@ -15,6 +16,7 @@ import { initNaughtySpin } from './modules/naughty-spin.mjs';
 import { initPremiumCards } from './modules/premium-cards.mjs';
 
 function boot() {
+  initSpecials();
   initUI();
   initTracking();
   initProtection();
