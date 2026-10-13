@@ -6,6 +6,20 @@ export function initUI() {
   const toggle = $('.nav-toggle');
   const menu = $('#mobile-menu');
 
+  // Use the cards' EXISTING WhatsApp links when visitors tap unused photo/text space.
+  // No markup, pricing, imagery or layout is changed. Links/buttons inside the
+  // cards keep their own behaviour and take precedence.
+  $('.vc-card, .pkg-card').forEach((card) => {
+    const primary = card.querySelector('a[data-conversion][href^="https://wa.me/"]');
+    if (!primary) return;
+    card.style.cursor = 'pointer';
+    card.addEventListener('click', (event) => {
+      if (event.defaultPrevented || event.target.closest('a, button, input, textarea, select, label, [role="button"]')) return;
+      if (window.getSelection?.()?.toString()) return;
+      primary.click();
+    });
+  });
+
   const onScroll = () => {
     header?.classList.toggle('scrolled', window.scrollY > 24);
   };
