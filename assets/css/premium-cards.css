@@ -46,3 +46,9 @@
 .hero-photo-pause{position:absolute;right:max(18px,calc((100vw - 1240px)/2));bottom:58px;z-index:3;padding:8px 14px;min-height:44px;border:1px solid #d5a3e638;border-radius:999px;background:#160b2440;backdrop-filter:blur(8px);color:#ffe6f7;font-size:.63rem;letter-spacing:.08em;text-transform:uppercase}
 .hero-photo-pause:hover{background:#3e164e77}
 @media(max-width:600px){.hero-photo-pause{right:18px;top:88px;bottom:auto;font-size:.58rem;min-height:44px;padding:6px 10px}.request-photo-card .photo-content{margin-top:150px}}
+
+/* Keep video-call controls in a stable 2D hit-testing plane. */
+.vc-card.premium-photo,.vc-card.premium-photo:hover,.vc-card.premium-photo.is-pointed{transform:none;transform-style:flat}
+.vc-card.premium-photo .photo-content,.vc-card.premium-photo .photo-content .btn,.vc-card.premium-photo .photo-content .btn:hover{transform:none;transform-style:flat}
+.vc-card.premium-photo .vc-actions{position:relative;z-index:3;pointer-events:auto}
+.vc-card.premium-photo .vc-actions a{position:relative;pointer-events:auto}
