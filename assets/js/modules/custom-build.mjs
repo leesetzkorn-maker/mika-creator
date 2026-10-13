@@ -16,7 +16,6 @@ function once(key) {
 function fireRequestIntent() {
   if (!once(CB_INTENT_TAG)) return;
   window.MikaDbTrack?.('custom_request_click', { location: 'custom-build' });
-  window.MikaDbTrack?.('enquiry_click', { location: 'custom-build' });
   window.MikaTrack?.('custom_request_click', { location: 'custom-build' });
 }
 
@@ -180,9 +179,9 @@ async function submit(e) {
 
   const { stored } = await sendPayload();
 
-  fireGenerateLead();
-
   if (stored) {
+    // Count a submitted request only after the server confirms receipt.
+    fireGenerateLead();
     try { localStorage.setItem('mc_cb_last', String(now)); } catch {}
     form.hidden = true;
     const done = $('#cb-done');
@@ -195,10 +194,19 @@ async function submit(e) {
   const done = $('#cb-done');
   const links = $('#cb-done-links');
   if (links) links.innerHTML = doneChannels();
-  if (done) done.hidden = false;
+  // The server has NOT accepted this request. Do not display a false receipt.
+  if (done) {
+    done.hidden = false;
+    const title = done.querySelector('h3');
+    const help = done.querySelector('.cb-help');
+    const mark = done.querySelector('.cb-done-mark');
+    if (title) title.textContent = 'Ready to send your request';
+    if (help) help.textContent = 'Your request has NOT been sent yet. Please choose WhatsApp, Telegram or email below and actually send the message.';
+    if (mark) mark.textContent = '→';
+  }
   form.hidden = true;
   try { localStorage.setItem('mc_cb_last', String(now)); } catch {}
-  window.MikaToast && MikaToast('Please send your request via one of the channels', 'ok');
+  window.MikaToast && MikaToast('Not sent yet — choose a contact channel');
 }
 
 function handlePackagesParam() {
@@ -229,9 +237,42 @@ function bindChips() {
   });
 }
 
+// Lightweight alternative to the full six-step request: all existing fields
+// and steps stay available, and this only adds a direct contact option.
+function addQuickWhatsapp(form) {
+  const nr = window.MIKA_CONFIG?.contact?.whatsappNumber;
+  if (!nr || form.parentElement.querySelector('.cb-quick-whatsapp')) return;
+  const link = document.createElement('a');
+  link.className = 'btn btn-ghost cb-quick-whatsapp';
+  link.textContent = 'Quick WhatsApp enquiry (skip the form)';
+  link.target = '_blank';
+  link.rel = 'noopener';
+  link.dataset.conversion = 'quick-custom-whatsapp';
+  const update = () => {
+    const pkg = field('package');
+    const subject = pkg === 'video-call' ? 'a video call' :
+      /^content-[1-4]$/.test(pkg) ? pkg.replace('content-', 'Content ') : 'your content and video calls';
+    link.href = 'https://wa.me/' + nr + '?text=' +
+      encodeURIComponent("Hi Mika, I would like to enquire about " + subject + ". Can you please send me the details?");
+  };
+  update();
+  link.addEventListener('click', update);
+  const holder = document.createElement('p');
+  holder.appendChild(link);
+  form.before(holder);
+}
+
 export function initCustomBuild() {
   if (document.body.dataset.customBuild === undefined || !$('#cb-form')) return;
   const form = $('#cb-form');
+  addQuickWhatsapp(form);
+  // A visit to the page is NOT an enquiry. Count only a real form interaction.
+  form.addEventListener('focusin', (event) => {
+    if (event.target.matches('input:not([type="hidden"]), textarea, select')) fireRequestIntent();
+  });
+  form.addEventListener('input', (event) => {
+    if (event.target.matches('input:not([type="hidden"]), textarea, select')) fireRequestIntent();
+  });
 
   $('.cb-next', form)?.addEventListener('click', () => {
     const cur = Number($('.cb-step.is-active', form)?.dataset.step || 1);
@@ -248,7 +289,6 @@ export function initCustomBuild() {
   bindChips();
   handlePackagesParam();
   setStep(1);
-  fireRequestIntent();
   const status = $('#cb-status');
   if (status) status.textContent = '';
 }
