@@ -70,7 +70,7 @@ function storedUtm() {
 }
 
 const SOURCE_MAP = {
-  tiktok: 'TikTok', facebook: 'Facebook', instagram: 'Instagram', reddit: 'Reddit',
+  esa: 'ESA', tiktok: 'TikTok', facebook: 'Facebook', instagram: 'Instagram', reddit: 'Reddit',
   google: 'Google', telegram: 'Telegram', twitter: 'Twitter', x: 'Twitter',
   snapchat: 'Snapchat', youtube: 'YouTube', whatsapp: 'WhatsApp',
 };
@@ -78,6 +78,7 @@ const SOURCE_MAP = {
 function normalizeSource(s) {
   const v = String(s || '').toLowerCase().trim();
   if (!v) return null;
+  if (v.includes('esa.co.za') || v.includes('escort south africa')) return 'ESA';
   if (SOURCE_MAP[v] !== undefined) return SOURCE_MAP[v];
   if (v.includes('tiktok')) return 'TikTok';
   if (v.includes('facebook')) return 'Facebook';
