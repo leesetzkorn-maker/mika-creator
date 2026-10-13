@@ -145,12 +145,12 @@ function renderStats(s) {
     ${card('Page views (30 days)', fmt(s.page_views_30d), `${fmt(s.visitors_30d)} visitors · ${fmt(s.sessions_30d)} sessions`)}
     ${card('Visitors (7 days)', fmt(s.visitors_7d ?? s.total_visitors), `${fmt(s.sessions_7d ?? s.total_sessions)} sessions`)}
     ${card('Visitors (30 days)', fmt(s.visitors_30d), `${fmt(s.sessions_30d)} sessions`)}
-    ${card('WhatsApp clicks', fmt(eng.whatsapp_clicks))}
-    ${card('Video Call clicks', fmt(eng.video_call_clicks))}
-    ${card('Content clicks', fmt(eng.content_clicks))}
+    ${card('WhatsApp link clicks', fmt(eng.whatsapp_clicks))}
+    ${card('Video-call interactions', fmt(eng.video_call_clicks))}
+    ${card('Content interactions', fmt(eng.content_clicks))}
     ${card('Gallery clicks', fmt(eng.gallery_clicks))}
-    ${card('Enquiry clicks', fmt(eng.enquiry_clicks))}
-    ${card('Leads', fmt(Number(eng.lead_submits) || Number(eng.generate_lead) || 0))}
+    ${card('Enquiry interactions', fmt(eng.enquiry_clicks))}
+    ${card('Submitted requests', fmt(Number(eng.lead_submits) || Number(eng.generate_lead) || 0))}
   `;
 }
 
@@ -278,24 +278,25 @@ async function loadDashboard() {
     const eng = s.engagement || {};
     if (engEl) {
       const trackedEvents = [
-        ['WhatsApp clicks', eng.whatsapp_clicks],
-        ['Video Call clicks', eng.video_call_clicks],
-        ['Content clicks', eng.content_clicks],
+        ['WhatsApp link clicks', eng.whatsapp_clicks],
+        ['Video-call interactions', eng.video_call_clicks],
+        ['Content interactions', eng.content_clicks],
         ['Gallery clicks', eng.gallery_clicks],
-        ['Enquiry clicks', eng.enquiry_clicks],
+        ['Enquiry interactions', eng.enquiry_clicks],
         ['Lead submits', eng.lead_submits],
         ['Telegram clicks', eng.telegram_clicks],
         ['Email clicks', eng.email_clicks],
-        ['Gallery opens', eng.gallery_opens],
+        ['Gallery / collection opens', eng.gallery_opens],
         ['CTA clicks', eng.cta_clicks],
         ['Pricing views', eng.pricing_views],
-        ['Custom request clicks', eng.custom_request_clicks],
-        ['Leads generated', eng.generate_lead],
+        ['Custom form interactions', eng.custom_request_clicks],
+        ['Confirmed form submissions', eng.generate_lead],
         ['Hero slide views', eng.hero_slide_views],
         ['Likes', eng.likes],
         ['Reviews', eng.reviews],
       ];
       engEl.innerHTML = `<div class="admin-panel"><h3>Tracked events <span class="admin-hint">last 7 days</span></h3><div class="eng-row">${trackedEvents.map(([label, value]) => card(label, fmt(value))).join('')}</div>
+        <p class="admin-hint" style="margin-top:.75rem">Clicks are link interactions, not delivered WhatsApp messages or paid sales. Custom form interactions and confirmed submissions are separate events. Older event history remains unchanged.</p>
         <h3 style="margin-top:1.4rem">Event breakdown</h3>
         ${eventBreakdown(breakdown, eng)}
       </div>`;
@@ -346,13 +347,13 @@ function funnelCard(b, label) {
     <dl class="funnel-rows">
       <div><dt>Visitors</dt><dd>${fmt(b.visitors)}</dd></div>
       <div><dt>Page views</dt><dd>${fmt(b.page_views)}</dd></div>
-      <div><dt>WhatsApp clicks</dt><dd>${fmt(b.whatsapp_clicks)}</dd></div>
-      <div><dt>Video Call clicks</dt><dd>${fmt(b.video_call_clicks)}</dd></div>
-      <div><dt>Content clicks</dt><dd>${fmt(b.content_clicks)}</dd></div>
-      <div><dt>Enquiry clicks</dt><dd>${fmt(b.enquiry_clicks)}</dd></div>
+      <div><dt>WhatsApp link clicks</dt><dd>${fmt(b.whatsapp_clicks)}</dd></div>
+      <div><dt>Video-call interactions</dt><dd>${fmt(b.video_call_clicks)}</dd></div>
+      <div><dt>Content interactions</dt><dd>${fmt(b.content_clicks)}</dd></div>
+      <div><dt>Enquiry interactions</dt><dd>${fmt(b.enquiry_clicks)}</dd></div>
       <div><dt>Telegram clicks</dt><dd>${fmt(b.telegram_clicks)}</dd></div>
       <div><dt>Email clicks</dt><dd>${fmt(b.email_clicks)}</dd></div>
-      <div><dt>Leads</dt><dd><strong>${fmt(b.leads)}</strong></dd></div>
+      <div><dt>Potential leads</dt><dd><strong>${fmt(b.leads)}</strong></dd></div>
       <div><dt>Customers</dt><dd>${fmt(b.customers)}</dd></div>
       <div><dt>Revenue</dt><dd><strong>${money(b.revenue)}</strong></dd></div>
       <div class="funnel-rate"><dt>Conversion</dt><dd>${Number(b.conversion_rate || 0).toFixed(1)}%</dd></div>
@@ -364,7 +365,7 @@ function convSourcesTable(rows) {
   if (!rows?.length) return '<div class="admin-panel"><h3>Traffic source report</h3><p class="muted admin-empty">No data yet.</p></div>';
   return `<div class="admin-panel"><h3>Traffic source report <span class="admin-hint">28 days</span></h3>
     <div class="adm-table-wrap"><table class="adm-table">
-      <thead><tr><th>Source</th><th>Visitors</th><th>WA clicks</th><th>Telegram clicks</th><th>Email clicks</th><th>Leads</th><th>Conv.</th></tr></thead>
+      <thead><tr><th>Source</th><th>Visitors</th><th>WA link clicks</th><th>Telegram clicks</th><th>Email clicks</th><th>Potential leads</th><th>Conv.</th></tr></thead>
       <tbody>${rows.map((r) => `
         <tr>
           <td>${esc(r.source)}</td>
@@ -382,7 +383,7 @@ function convPagesTable(rows) {
   if (!rows?.length) return '<div class="admin-panel"><h3>Page &amp; collection conversion</h3><p class="muted admin-empty">No data yet.</p></div>';
   return `<div class="admin-panel"><h3>Page &amp; collection <span class="admin-hint">28 days</span></h3>
     <div class="adm-table-wrap"><table class="adm-table">
-      <thead><tr><th>Page / collection</th><th>Visitors</th><th>Views</th><th>Gallery opens</th><th>WA clicks</th><th>Leads</th></tr></thead>
+      <thead><tr><th>Page / collection</th><th>Visitors</th><th>Views</th><th>Gallery opens</th><th>WA link clicks</th><th>Potential leads</th></tr></thead>
       <tbody>${rows.map((r) => `
         <tr>
           <td class="adm-cell-path">${r.collection ? `<span class="admin-tag">collection</span> ` : ''}${esc(r.label)}</td>
