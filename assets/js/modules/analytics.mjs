@@ -194,10 +194,14 @@ function clickIntent(el, href, cta) {
   const gallery =
     Boolean(el.closest('.card-link, .glimpse-item, [data-gallery-name]')) ||
     /\/gallery(\/|$|\?)/.test(href);
+  // Moving between steps or choosing a field is not another enquiry.
+  // Actual form engagement is counted once by custom-build.mjs.
   const enquiry =
-    Boolean(el.closest('#custom-build, .cb-form-panel, #cb-done, .hero-chat')) ||
-    /#custom-build/.test(href) ||
-    /enquiry/i.test(`${cta || ''} ${href}`);
+    !el.closest('#cb-form') && (
+      Boolean(el.closest('#custom-build, .cb-form-panel, #cb-done, .hero-chat')) ||
+      /#custom-build/.test(href) ||
+      /enquiry/i.test(`${cta || ''} ${href}`)
+    );
   return { videoCall, content, gallery, enquiry, pkg };
 }
 
