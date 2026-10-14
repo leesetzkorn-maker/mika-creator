@@ -9,7 +9,7 @@ export function initUI() {
   // Use the cards' EXISTING WhatsApp links when visitors tap unused photo/text space.
   // No markup, pricing, imagery or layout is changed. Links/buttons inside the
   // cards keep their own behaviour and take precedence.
-  $('.vc-card, .pkg-card').forEach((card) => {
+  $$('.vc-card, .pkg-card').forEach((card) => {
     const primary = card.querySelector('a[data-conversion][href^="https://wa.me/"]');
     if (!primary) return;
     card.style.cursor = 'pointer';
